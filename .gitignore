@@ -1,22 +1,3 @@
-# Godot 4 reimports everything in .godot/ on clone — never commit it.
+# Godot 4+ specific ignores
 .godot/
 /android/
-
-# Export output and crash dumps.
-export/
-builds/
-*.pck
-*.zip
-*.translation
-
-# OS noise.
-*.tmp
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Team Create is per-machine collaboration state, not project content.
-addons/team_create/
-
-# Source art stays out of the import pipeline; export PNGs into assets/.
-art_source/
