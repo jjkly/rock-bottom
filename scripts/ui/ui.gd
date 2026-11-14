@@ -18,7 +18,12 @@ static func button(text: String, width := 220.0, size := 20) -> Button:
 	b.add_theme_font_size_override("font_size", size)
 	# Keyboard focus would make Space press the last button instead of the reel.
 	b.focus_mode = Control.FOCUS_NONE
+	style_button(b)
+	return b
 
+
+## Apply the house button look to a Button that lives in a scene file.
+static func style_button(b: Button) -> void:
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.14, 0.15, 0.19)
 	normal.border_color = Color(0.32, 0.35, 0.42)
@@ -30,7 +35,6 @@ static func button(text: String, width := 220.0, size := 20) -> Button:
 	hover.bg_color = Color(0.20, 0.22, 0.28)
 	b.add_theme_stylebox_override("hover", hover)
 	b.add_theme_stylebox_override("pressed", hover)
-	return b
 
 
 static func panel(bg := Color(0.07, 0.07, 0.10, 0.92)) -> PanelContainer:

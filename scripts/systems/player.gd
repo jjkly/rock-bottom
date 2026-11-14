@@ -3,34 +3,20 @@ extends CharacterBody2D
 ## ============================================================================
 ## The player during evening service. Movement only.
 ##
-## Built entirely in code so the scene file stays trivial and merge-safe.
-## Sprite direction swaps on the dominant axis; left is the side frame flipped.
-## Carrying plates is handled by the evening scene (selection + serve), not here.
+## The node tree lives in scenes/player.tscn (Sprite + CollisionShape2D), so
+## the sprite can be swapped in the editor. Left is the side frame flipped.
+## Carrying plates is the evening scene's job, not this one.
 ## ============================================================================
 
 const SPEED := 215.0
 
-var _sprite: Sprite2D
+@onready var _sprite: Sprite2D = $Sprite
 var _tex := {}
 
 
 func _ready() -> void:
-	collision_layer = 2
-	collision_mask = 0  # tables are walk-through; only world geometry blocks
-
-	var shape := CollisionShape2D.new()
-	var rect := RectangleShape2D.new()
-	rect.size = Vector2(18, 12)
-	shape.shape = rect
-	shape.position = Vector2(0, 18)
-	add_child(shape)
-
 	for dir in ["down", "up", "side"]:
 		_tex[dir] = load("res://assets/sprites/characters/player_%s_0.png" % dir)
-	_sprite = Sprite2D.new()
-	_sprite.texture = _tex["down"]
-	_sprite.position = Vector2(0, -22)
-	add_child(_sprite)
 
 
 func _physics_process(_delta: float) -> void:

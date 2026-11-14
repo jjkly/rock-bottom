@@ -97,6 +97,10 @@ Duplicate an existing `.tres` and edit it; the game loads by `id`.
 
 ## Scene contract
 
+- **Scenes own their node trees.** Every phase is built in its `.tscn`
+  (labels, panels, sprites, player instance); scripts only fill text and
+  connect signals. Do not build UI with `add_child()` in a phase script —
+  it hides the scene from the editor and from whoever does art.
 - One `Table` node per table, `setup(def)` then `seat()`; call `tick(delta)`
   via `_process` (the node does it itself once seated).
   `Table.serve_plate(value, matched)` only records satisfaction — money and the

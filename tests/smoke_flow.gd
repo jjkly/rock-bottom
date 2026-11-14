@@ -46,7 +46,7 @@ func _ready() -> void:
 	else:
 		var fish: FishInstance = RunState.stock[0]
 		evening._selected = fish
-		evening._player.position = evening.BOARD_POS
+		evening._player.position = evening._board_pos
 		evening._cut()
 		if not fish.prepared:
 			_fail("cut did not prepare the fish")

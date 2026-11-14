@@ -2,73 +2,33 @@ extends Control
 ## ============================================================================
 ## NIGHT — pay the minimum, then spend what is left.
 ##
-## Two tabs on one screen: durable gear (data/gear/*.tres) and a 3-of-N
-## training offer (Luck / Fishing / Speed). Luck can discount an offer — that
-## is the only thing luck does here; odds stay out of the shop.
-##
-## Sleep calls end_day(). If the minimum is unpaid, RunState ends the run and
-## the router swaps to the results screen.
+## Static nodes live in scenes/shop.tscn. Gear rows and the 3 training offers
+## are built from data/gear/*.tres and the run's stats, because they are
+## content, not layout.
 ## ============================================================================
+
+@onready var _cash_label: Label = $CashLabel
+@onready var _due_label: Label = $DueLabel
+@onready var _msg: Label = $Message
+@onready var _pay_btn: Button = $PayButton
+@onready var _sleep_btn: Button = $SleepButton
+@onready var _gear_box: VBoxContainer = $GearBox
+@onready var _train_box: VBoxContainer = $TrainBox
 
 var _gear: Array[GearDef] = []
 var _rows: Array[Dictionary] = []
 var _offers: Array[Dictionary] = []
-var _cash_label: Label
-var _due_label: Label
-var _msg: Label
-var _pay_btn: Button
-var _sleep_btn: Button
-var _train_box: VBoxContainer
 
 
 func _ready() -> void:
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(UI.backdrop(Color(0.05, 0.05, 0.07)))
-	_load_gear()
-
-	var title := UI.label("Night — the ledger", 34)
-	title.position = Vector2(80, 70)
-	add_child(title)
-
-	_cash_label = UI.label("", 24, Color(0.9, 0.9, 0.85))
-	_cash_label.position = Vector2(80, 125)
-	add_child(_cash_label)
-
-	_due_label = UI.label("", 22, Color(1.0, 0.8, 0.5))
-	_due_label.position = Vector2(80, 165)
-	add_child(_due_label)
-
-	# Gear column.
-	var gear_box := VBoxContainer.new()
-	gear_box.position = Vector2(80, 230)
-	gear_box.add_theme_constant_override("separation", 6)
-	add_child(gear_box)
-	gear_box.add_child(UI.label("EQUIPMENT", 18, Color(0.65, 0.8, 0.95)))
-	for g in _gear:
-		gear_box.add_child(_make_gear_row(g))
-
-	# Training column.
-	_train_box = VBoxContainer.new()
-	_train_box.position = Vector2(770, 230)
-	_train_box.add_theme_constant_override("separation", 8)
-	add_child(_train_box)
-	_train_box.add_child(UI.label("TRAINING — one offer each", 18, Color(0.95, 0.8, 0.55)))
-	_roll_offers()
-
-	_pay_btn = UI.button("Pay minimum", 220, 20)
-	_pay_btn.position = Vector2(80, 620)
+	UI.style_button(_pay_btn)
+	UI.style_button(_sleep_btn)
 	_pay_btn.pressed.connect(_pay)
-	add_child(_pay_btn)
-
-	_sleep_btn = UI.button("Sleep", 220, 20)
-	_sleep_btn.position = Vector2(960, 620)
 	_sleep_btn.pressed.connect(_sleep)
-	add_child(_sleep_btn)
 
-	_msg = UI.label("", 17, Color(0.8, 0.8, 0.8))
-	_msg.position = Vector2(80, 585)
-	add_child(_msg)
-
+	_load_gear()
+	_build_gear_rows()
+	_roll_offers()
 	_refresh()
 
 
@@ -81,17 +41,18 @@ func _load_gear() -> void:
 	_gear.sort_custom(func(a, b): return a.id < b.id)
 
 
-func _make_gear_row(g: GearDef) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	var l := UI.label("", 18)
-	l.custom_minimum_size = Vector2(240, 0)
-	row.add_child(l)
-	var b := UI.button("", 160, 16)
-	b.pressed.connect(func(): _buy_gear(g))
-	row.add_child(b)
-	_rows.append({"gear": g, "label": l, "button": b})
-	return row
+func _build_gear_rows() -> void:
+	for g in _gear:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		var l := UI.label("", 18)
+		l.custom_minimum_size = Vector2(240, 0)
+		row.add_child(l)
+		var b := UI.button("", 160, 16)
+		b.pressed.connect(func(): _buy_gear(g))
+		row.add_child(b)
+		_gear_box.add_child(row)
+		_rows.append({"gear": g, "label": l, "button": b})
 
 
 func _buy_gear(g: GearDef) -> void:
@@ -109,19 +70,19 @@ func _buy_gear(g: GearDef) -> void:
 
 func _roll_offers() -> void:
 	var stats := ["luck", "fishing", "speed"]
-	stats.shuffle()  # unique offers: heading promises "one offer each"
+	stats.shuffle()  # unique offers: the heading promises "one offer each"
 	for i in 3:
 		var stat: String = stats[i]
 		var cost := 60 + 25 * int(RunState.stats.get(stat, 0))
 		var discount: bool = int(RunState.stats.get("luck", 0)) > 0 and RunState.rng.randf() < 0.25
 		if discount:
 			cost = int(round(cost * 0.75))
-		_offers.append({"stat": stat, "cost": cost, "bought": false, "discount": discount})
-	for offer in _offers:
+		var offer := {"stat": stat, "cost": cost, "bought": false, "discount": discount}
 		var b := UI.button("", 320, 17)
 		b.pressed.connect(func(): _buy_training(offer, b))
 		_train_box.add_child(b)
 		offer["button"] = b
+		_offers.append(offer)
 	_refresh_offers()
 
 

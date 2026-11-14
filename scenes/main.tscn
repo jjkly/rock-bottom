@@ -4,3 +4,38 @@
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
+
+[node name="PhaseHolder" type="Node" parent="."]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="HudBg" type="ColorRect" parent="HUD"]
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 620.0
+offset_bottom = 54.0
+color = Color(0.07, 0.07, 0.1, 0.92)
+
+[node name="Row" type="HBoxContainer" parent="HUD"]
+offset_left = 26.0
+offset_top = 18.0
+offset_right = 610.0
+offset_bottom = 48.0
+theme_override_constants/separation = 22
+
+[node name="DayLabel" type="Label" parent="HUD/Row"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Day 1/7"
+
+[node name="MoneyLabel" type="Label" parent="HUD/Row"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "$0  ·  debt $2000"
+
+[node name="WeatherLabel" type="Label" parent="HUD/Row"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "CLEAR"

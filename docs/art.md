@@ -48,6 +48,10 @@ that folder so Godot never imports it.
 3. Nothing else — the fishing tank and freezer read `sprite` and fall back to
    a debug rectangle when it's null.
 
+Character and table art is wired in their component scenes:
+`scenes/player.tscn` (Sprite2D) and `scenes/table.tscn` (Sprite2D, swapped by
+`TableDef.seats`). Replace the texture there, not in code.
+
 Modifiers tint the sprite via `ModifierDef.tint`, so draw fish in neutral
 colours and let the data tint Golden/Chroma/Ice Cold.
 

@@ -12,6 +12,8 @@ const SCENES := [
 	"res://scenes/evening.tscn",
 	"res://scenes/shop.tscn",
 	"res://scenes/results.tscn",
+	"res://scenes/player.tscn",
+	"res://scenes/table.tscn",
 ]
 
 
@@ -28,4 +30,7 @@ static func run(t) -> void:
 		# A scene still instantiates when its root script fails to parse —
 		# assert the script is actually attached, or parse errors pass silently.
 		t.check(node.get_script() != null, "scene script attached: " + path)
+		# Regression: phases used to build every node in code, leaving the
+		# editor's Scene tab with only the root.
+		t.check(node.get_child_count() > 0, "scene has nodes: " + path)
 		node.free()

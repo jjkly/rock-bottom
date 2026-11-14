@@ -1,3 +1,16 @@
-# Godot 4+ specific ignores
+# Godot 4 reimports everything in .godot/ on clone — never commit it.
 .godot/
 /android/
+
+# Export output and crash dumps.
+export/
+builds/
+*.pck
+*.zip
+*.translation
+
+# OS noise.
+*.tmp
+.DS_Store
+Thumbs.db
+desktop.ini

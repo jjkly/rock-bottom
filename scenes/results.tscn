@@ -8,3 +8,72 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_results")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.04, 0.04, 0.06, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 120.0
+offset_top = 170.0
+offset_right = 1100.0
+offset_bottom = 220.0
+theme_override_font_sizes/font_size = 40
+text = "Dawn, day eight."
+
+[node name="Subtitle" type="Label" parent="."]
+offset_left = 120.0
+offset_top = 230.0
+offset_right = 1100.0
+offset_bottom = 260.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "The debt is settled with whatever you had left."
+
+[node name="Big" type="Label" parent="."]
+offset_left = 120.0
+offset_top = 300.0
+offset_right = 1100.0
+offset_bottom = 390.0
+theme_override_colors/font_color = Color(1, 0.78, 0.35, 1)
+theme_override_font_sizes/font_size = 64
+text = "0% repaid"
+
+[node name="PaidLabel" type="Label" parent="."]
+offset_left = 120.0
+offset_top = 410.0
+offset_right = 1100.0
+offset_bottom = 442.0
+theme_override_font_sizes/font_size = 24
+text = "Paid $0 of $2000"
+
+[node name="OwedLabel" type="Label" parent="."]
+offset_left = 120.0
+offset_top = 448.0
+offset_right = 1100.0
+offset_bottom = 480.0
+theme_override_colors/font_color = Color(1, 0.55, 0.45, 1)
+theme_override_font_sizes/font_size = 22
+text = "Still owed: $2000"
+
+[node name="MissedLabel" type="Label" parent="."]
+visible = false
+offset_left = 120.0
+offset_top = 490.0
+offset_right = 1100.0
+offset_bottom = 520.0
+theme_override_colors/font_color = Color(0.9, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "You missed a minimum. The week ended early."
+
+[node name="AgainButton" type="Button" parent="."]
+offset_left = 120.0
+offset_top = 560.0
+offset_right = 380.0
+offset_bottom = 604.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "New week"

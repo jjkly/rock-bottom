@@ -29,6 +29,10 @@ Do not edit a `.tscn` that another person owns, and do not edit
 The whole week runs: morning news -> fishing (reel + crate) -> evening (cut,
 serve, patience) -> night (shop, pay) -> results. Art is placeholder.
 
+Every phase is a real scene tree in `scenes/` (open one and the Scene tab
+shows its labels, panels and sprites); scripts only fill text and wire
+signals. `scenes/player.tscn` and `scenes/table.tscn` are reusable pieces.
+
 ```bash
 godot --path .                                        # play
 godot --headless --path . res://tests/smoke_flow.tscn # drives one day + results

@@ -1,12 +1,10 @@
 extends Control
 ## ============================================================================
-## FISHING — the reel bar, then the crate.
+## FISHING — the reel bar, then the crate. Nodes live in scenes/fishing.tscn.
 ##
 ## Space / E to cast, Space / E again to stop the marker. The stop position
 ## decides the fish size (3/4/6/8 slices), the crate decides the species and
-## rolls the ~8% rare slot. Odds are not shown: the bestiary is the reveal.
-##
-## Casts per day: 3 + day, capped at 8. When they run out, go to evening.
+## rolls the ~8% rare slot. Odds stay hidden; the bestiary is the reveal.
 ## ============================================================================
 
 enum State { IDLE, REEL, REVEAL }
@@ -14,9 +12,20 @@ enum State { IDLE, REEL, REVEAL }
 const BAR_X := 330.0
 const BAR_Y := 430.0
 const BAR_W := 620.0
-const BAR_H := 34.0
 const MARKER_W := 8.0
 const ZONE_W := 150.0
+
+@onready var _title: Label = $Title
+@onready var _caught: Label = $CaughtLabel
+@onready var _stock: Label = $StockLabel
+@onready var _slot_a: Label = $SlotA
+@onready var _slot_b: Label = $SlotB
+@onready var _slot_c: Label = $SlotC
+@onready var _rare: Label = $RareLabel
+@onready var _marker: ColorRect = $Marker
+@onready var _status: Label = $StatusLabel
+@onready var _cast_btn: Button = $CastButton
+@onready var _next_btn: Button = $NextButton
 
 var _state: State = State.IDLE
 var _casts_left := 0
@@ -30,90 +39,18 @@ var _pending_mod: ModifierDef = null
 var _pool: Array[SpeciesDef] = []
 var _mods: Array[ModifierDef] = []
 
-var _marker: ColorRect
-var _status: Label
-var _caught: Label
-var _stock: Label
-var _cast_btn: Button
-var _next_btn: Button
-var _slot_a: Label
-var _slot_b: Label
-var _slot_c: Label
-var _rare: Label
-
 
 func _ready() -> void:
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(UI.backdrop(Color(0.03, 0.08, 0.12)))
-
 	_load_content()
 	_casts_left = clampi(3 + RunState.day, 5, 8)
 
-	var title := UI.label("Fishing — %s" % RunState.weather_name(RunState.weather), 32)
-	title.position = Vector2(80, 70)
-	add_child(title)
+	_title.text = "Fishing — %s" % RunState.weather_name(RunState.weather)
+	_marker.position.x = BAR_X + (BAR_W - MARKER_W) * 0.5
 
-	_caught = UI.label("Press SPACE to cast.", 22, Color(0.8, 0.85, 0.9))
-	_caught.position = Vector2(80, 120)
-	add_child(_caught)
-
-	_stock = UI.label("", 18, Color(0.7, 0.75, 0.8))
-	_stock.position = Vector2(80, 155)
-	add_child(_stock)
-
-	# Reel bar.
-	var bar_bg := ColorRect.new()
-	bar_bg.color = Color(0.12, 0.15, 0.2)
-	bar_bg.position = Vector2(BAR_X, BAR_Y)
-	bar_bg.size = Vector2(BAR_W, BAR_H)
-	add_child(bar_bg)
-
-	var zone := ColorRect.new()
-	zone.color = Color(0.2, 0.55, 0.3, 0.65)
-	zone.position = Vector2(BAR_X + BAR_W * 0.5 - ZONE_W * 0.5, BAR_Y)
-	zone.size = Vector2(ZONE_W, BAR_H)
-	add_child(zone)
-
-	_marker = ColorRect.new()
-	_marker.color = Color(1.0, 0.9, 0.4)
-	_marker.size = Vector2(MARKER_W, BAR_H)
-	# Idle marker sits at the centre of the zone, not at the bar's left edge.
-	_marker.position = Vector2(BAR_X + (BAR_W - MARKER_W) * 0.5, BAR_Y)
-	add_child(_marker)
-
-	_status = UI.label("", 18, Color(0.75, 0.8, 0.85))
-	_status.position = Vector2(BAR_X, BAR_Y + 50)
-	add_child(_status)
-
-	# Crate slots.
-	var crate := UI.panel()
-	crate.position = Vector2(330, 200)
-	add_child(crate)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 26)
-	crate.add_child(row)
-	_slot_a = UI.label("???", 26, Color(0.85, 0.85, 0.9))
-	_slot_b = UI.label("???", 26, Color(0.85, 0.85, 0.9))
-	_slot_c = UI.label("???", 26, Color(0.85, 0.85, 0.9))
-	row.add_child(_slot_a)
-	row.add_child(_slot_b)
-	row.add_child(_slot_c)
-
-	_rare = UI.label("", 22, Color(1.0, 0.8, 0.3))
-	_rare.position = Vector2(330, 265)
-	add_child(_rare)
-
-	_cast_btn = UI.button("Cast (SPACE)", 220, 22)
-	_cast_btn.position = Vector2(80, 620)
+	UI.style_button(_cast_btn)
+	UI.style_button(_next_btn)
 	_cast_btn.pressed.connect(_on_cast)
-	add_child(_cast_btn)
-
-	_next_btn = UI.button("Go to evening", 240, 22)
-	_next_btn.position = Vector2(960, 620)
-	_next_btn.disabled = true
 	_next_btn.pressed.connect(func(): RunState.advance_phase())
-	add_child(_next_btn)
-
 	_update_counts()
 
 
@@ -215,7 +152,6 @@ func _settle_catch() -> void:
 	_slot_c.text = "+1 plate" if _pending_mod != null and _pending_mod.extra_plates > 0 else "—"
 	_rare.text = ("RARE: %s" % _pending_mod.display_name) if _pending_mod != null else ""
 	_caught.text = "Caught %s — worth $%d per plate" % [fish.display_name(), fish.value()]
-	_status.text = "Casts left: %d" % _casts_left
 	_update_counts()
 
 
@@ -223,5 +159,4 @@ func _update_counts() -> void:
 	_stock.text = "Casts left: %d   ·   stock: %d fish   ·   freezer: %d/%d" % [
 		_casts_left, RunState.stock.size(), RunState.freezer.size(), RunState.freezer_capacity
 	]
-	if _status.text == "":
-		_status.text = "Casts left: %d" % _casts_left
+	_status.text = "Casts left: %d" % _casts_left
