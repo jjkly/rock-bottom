@@ -53,12 +53,11 @@ func seat() -> void:
 	patience_changed.emit(hearts)
 
 
-func serve_plate(plate_value: int, plate_preference: String) -> void:
+func serve_plate(plate_value: int, matched: bool) -> void:
 	if not seated or closed:
 		return
-	var matched := plate_preference == definition.preference
-	if matched:
-		plate_value = int(round(plate_value * 1.2))
+	# Money is RunState's job (it already applied the +20% match); the table
+	# only records satisfaction. Never multiply here again.
 	served.emit(plate_value, matched)
 	plates_served += 1
 	if plates_served >= definition.plates_wanted:

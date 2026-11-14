@@ -236,7 +236,7 @@ func serve_plate(fish: FishInstance, table_preference: String) -> int:
 	if not stock.has(fish) or fish.plates_left <= 0:
 		return 0
 	var value := fish.value()
-	if fish.species.preference == table_preference:
+	if fish.matches(table_preference):
 		value = int(round(value * 1.2))
 	fish.plates_left -= 1
 	if fish.plates_left <= 0:

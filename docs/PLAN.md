@@ -24,6 +24,19 @@ godot --path .
 Do not edit a `.tscn` that another person owns, and do not edit
 `project.godot` without saying so in the group chat.
 
+## Playable now (2026-11-14)
+
+The whole week runs: morning news -> fishing (reel + crate) -> evening (cut,
+serve, patience) -> night (shop, pay) -> results. Art is placeholder.
+
+```bash
+godot --path .                                        # play
+godot --headless --path . res://tests/smoke_flow.tscn # drives one day + results
+```
+
+Still stubbed: cooking, the wash minigame, bestiary, meta unlocks, difficulty
+presets, audio, and all real art. Everything below still describes the target.
+
 ---
 
 ## Phase 0 — the place to put art (done, use it)
@@ -53,6 +66,9 @@ Godot, set **sprite** to the PNG, save. That is the only wiring step.
 ---
 
 ## Phase 1 — the evening scene (the big one)
+
+**Status:** playable. Player movement, stock panel, cut (instant), serve,
+preferences, patience, angry flow, auto-end. Cooking and wash are not wired.
 
 **Owner:** one person. **You own `scenes/evening.tscn`; nobody else opens it.**
 
@@ -91,6 +107,9 @@ RunState, assert cash rose. Register it in `tests/run_tests.gd`.
 
 ## Phase 2 — the fishing screen
 
+**Status:** playable. Reel bar, size roll, crate reveal, rare slot, rain-only
+pool, stock handoff. Bestiary/odds log is not built.
+
 **Owner:** one person. **You own `scenes/fishing.tscn`.**
 
 1. Root `Control` (it is a screen, not a world). One `Button` or `interact`
@@ -115,6 +134,9 @@ species; a golden fish's value matches `FishInstance.value()`.
 ---
 
 ## Phase 3 — morning, shop, phases (glue)
+
+**Status:** playable. Router, morning, HUD, shop, results, difficulty presets
+not started (replay rules are unimplemented).
 
 **Owner:** one person, can be the same person as Phase 2.
 

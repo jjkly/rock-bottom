@@ -142,14 +142,15 @@ presentation one.
 | Feature | Status | Scope | Summary | Docs |
 |---|---|---|---|---|
 | Run and debt | implemented | MVP | One week, fixed minimums, automatic settlement, score | `addons/framework/run_state.gd` |
+| Phase flow and HUD | implemented | MVP | Router, morning, shop, results, debug HUD | `scripts/main.gd` |
 | Freezer and aging | implemented | MVP | 3 slots (+2/tier), edomae aging peak, hot spoilage | `scripts/data/fish_instance.gd` |
 | Tables and patience | implemented | MVP | 45 s, 3 hearts, preference bonus, angry flow penalty | `scripts/systems/table.gd` |
-| Fishing reel | designed | MVP | Stardew bar sets fish size (3/4/6/8 slices) | this doc |
-| Crate and rares | designed | MVP | Species + one rare slot; odds hidden until caught | this doc |
-| Weather and news | designed | MVP | Clear / hot / rain, announced each morning | this doc |
-| Evening service | designed | MVP | Overcooked movement over 4–6 tables | this doc |
-| Stations and minigames | designed | MVP | Cut, cook, wash; one input each | `scripts/systems/station.gd` |
-| Shop and draft | designed | MVP | Equipment tabs + 3-of-N training offers | this doc |
+| Fishing reel | implemented | MVP | Stardew bar sets fish size (3/4/6/8 slices) | `scenes/fishing.tscn` |
+| Crate and rares | implemented | MVP | Species + one rare slot; odds hidden until caught | `scripts/phases/fishing.gd` |
+| Weather and news | implemented | MVP | Clear / hot / rain, announced each morning | `scripts/phases/morning.gd` |
+| Evening service | implemented | MVP | Overcooked movement over 4–6 tables | `scenes/evening.tscn` |
+| Stations and minigames | in progress | MVP | Cut works (instant); cook and wash are stubs | `scripts/systems/station.gd` |
+| Shop and draft | implemented | MVP | Equipment rows + 3 unique training offers | `scripts/phases/shop.gd` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
 | Audio pass | idea | later | Service diegetics, crate reveal, debt sting | — |
@@ -222,6 +223,10 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.2 (2026-11-14):** playable week — router, morning, fishing, evening, shop,
+results scenes; cut/serve/preferences wired; feature statuses moved to
+implemented. Stations remain in progress (cook/wash stubbed).
 
 **0.1 (2026-11-14):** first draft — summary, pillars, loop, weather, service,
 economy, feature map, M1 checklist, decisions D-001…D-010.

@@ -53,10 +53,10 @@ static func _test_serving(t) -> void:
 	var flags := {"finished": false}
 	tbl.finished.connect(func(satisfied): flags["finished"] = satisfied)
 	tbl.seat()
-	tbl.serve_plate(40, "lean")
+	tbl.serve_plate(40, true)
 	t.eq(tbl.plates_served, 1, "first plate counted")
 	t.eq(tbl.closed, false, "table still open after one of two plates")
-	tbl.serve_plate(40, "lean")
+	tbl.serve_plate(40, true)
 	t.eq(tbl.closed, true, "table closes after the second plate")
 	t.eq(flags["finished"], true, "finished fires satisfied")
 	tbl.free()
@@ -70,9 +70,9 @@ static func _test_preference(t) -> void:
 		got["value"] = value
 	)
 	tbl.seat()
-	tbl.serve_plate(50, "fatty")
-	t.eq(got["matched"], true, "matching preference is flagged")
-	t.eq(got["value"], 60, "matching preference pays +20%")
+	tbl.serve_plate(50, true)
+	t.eq(got["matched"], true, "table records a preference match")
+	t.eq(got["value"], 50, "table passes the value through — money lives in RunState")
 
 	var other = _table(2, "fatty")
 	var got2 := {"matched": true, "value": 0}
@@ -81,8 +81,8 @@ static func _test_preference(t) -> void:
 		got2["value"] = value
 	)
 	other.seat()
-	other.serve_plate(50, "lean")
-	t.eq(got2["matched"], false, "wrong preference is flagged")
-	t.eq(got2["value"], 50, "wrong preference pays base")
+	other.serve_plate(50, false)
+	t.eq(got2["matched"], false, "mismatch is recorded")
+	t.eq(got2["value"], 50, "mismatch does not alter the paid value")
 	tbl.free()
 	other.free()

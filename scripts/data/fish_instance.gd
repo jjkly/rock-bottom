@@ -33,6 +33,9 @@ var modifier: ModifierDef = null
 var age_days := 0
 var plates_left := 1
 var spoiled := false
+## Set at the cutting board. Raw fish cannot be served; the evening scene
+## enforces it, RunState stays policy-free.
+var prepared := false
 
 
 func _init(p_species: SpeciesDef, p_size_slices: int, p_modifier: ModifierDef = null) -> void:
@@ -60,6 +63,12 @@ func aging_multiplier() -> float:
 		return 1.0
 	var idx := clampi(age_days, 0, AGING_MULTIPLIERS.size() - 1)
 	return AGING_MULTIPLIERS[idx]
+
+
+## True when this fish fits what a table asked for. One definition, used by
+## both RunState (money) and the evening scene (ticket feedback).
+func matches(preference: String) -> bool:
+	return species != null and species.preference == preference
 
 
 ## For UI: "Golden Tuna (8 slices, age 2)". Keep display text in one place.

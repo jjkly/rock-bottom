@@ -99,6 +99,8 @@ Duplicate an existing `.tres` and edit it; the game loads by `id`.
 
 - One `Table` node per table, `setup(def)` then `seat()`; call `tick(delta)`
   via `_process` (the node does it itself once seated).
+  `Table.serve_plate(value, matched)` only records satisfaction — money and the
+  +20% match are `RunState.serve_plate`'s job. Never multiply twice.
 - One `Station` node per station; the player's interaction calls `interact()`
   and the station emits `plate_ready(fish)`.
 - Player carries plates with a 0.3 m attach / 0.55 m detach band (no flicker).

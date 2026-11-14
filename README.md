@@ -4,6 +4,7 @@
 
 ```bash
 godot --headless --path . -s res://tests/run_tests.gd   # before every push; must be 0 failures
+godot --headless --path . res://tests/smoke_flow.tscn   # drives a day through every phase
 godot --path .
 ```
 

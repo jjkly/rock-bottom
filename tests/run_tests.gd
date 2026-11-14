@@ -15,6 +15,7 @@ extends SceneTree
 
 const TestEconomy := preload("res://tests/test_economy.gd")
 const TestService := preload("res://tests/test_service.gd")
+const TestScenes := preload("res://tests/test_scenes.gd")
 
 var checks := 0
 var failures := 0
@@ -27,6 +28,7 @@ func _initialize() -> void:
 		check(InputMap.has_action(action), "input action exists: " + action)
 	TestEconomy.run(self)
 	TestService.run(self)
+	TestScenes.run(self)
 	print("== %d checks, %d failures ==" % [checks, failures])
 	quit(0 if failures == 0 else 1)
 

@@ -1,13 +1,2 @@
-# Normalise line endings: store LF in the repo on every machine.
+# Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
-
-# Godot scene/resource files: never let git try to merge them.
-*.tscn text eol=lf -merge
-*.tres text eol=lf -merge
-*.gd   text eol=lf
-
-# Binary: no diff, no auto-merge.
-*.png binary
-*.jpg binary
-*.ogg binary
-*.wav binary

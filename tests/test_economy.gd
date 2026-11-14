@@ -16,6 +16,7 @@ static func run(t) -> void:
 	_test_value(t)
 	_test_aging(t)
 	_test_hot_weather(t)
+	_test_serving_money(t)
 
 
 static func _new_run(seed_value: int = 7):
@@ -91,6 +92,17 @@ static func _test_aging(t) -> void:
 	var ice = _fish(28, 8, m)
 	ice.age_days = 5
 	t.eq(ice.aging_multiplier(), 1.0, "ice cold never ages")
+
+
+static func _test_serving_money(t) -> void:
+	var rs = _new_run()
+	var f = _fish(50, 4)  # lean, 4 slices -> x1.0
+	rs.add_to_stock(f)
+	t.eq(rs.serve_plate(f, "lean"), 60, "matching preference pays +20%")
+	t.eq(rs.cash, 60, "cash rose by the served value")
+	t.eq(f.plates_left, 0, "serving consumed the only plate")
+	t.eq(rs.stock.size(), 0, "empty fish leaves the stock")
+	rs.free()
 
 
 static func _test_hot_weather(t) -> void:
