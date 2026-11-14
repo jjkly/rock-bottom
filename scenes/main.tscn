@@ -265,6 +265,19 @@ layer = 10
 metadata/_tc_uuid = "2932685282601165567"
 
 [node name="HudBg" type="ColorRect" parent="HUD" unique_id=439313121]
+
+[node name="Main" type="Node" unique_id=1721246786]
+script = ExtResource("1_main")
+metadata/_tc_uuid = "515341849491253406"
+
+[node name="PhaseHolder" type="Node" parent="." unique_id=163016812]
+metadata/_tc_uuid = "8153952081468894618"
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1785461602]
+layer = 10
+metadata/_tc_uuid = "5001108397688181012"
+
+[node name="HudBg" type="ColorRect" parent="HUD" unique_id=917560772]
 offset_left = 12.0
 offset_top = 10.0
 offset_right = 620.0
@@ -273,6 +286,9 @@ color = Color(0.07, 0.07, 0.1, 0.92)
 metadata/_tc_uuid = "6104367593683264672"
 
 [node name="Row" type="HBoxContainer" parent="HUD" unique_id=908093905]
+metadata/_tc_uuid = "6926203504097015196"
+
+[node name="Row" type="HBoxContainer" parent="HUD" unique_id=1950594333]
 offset_left = 26.0
 offset_top = 18.0
 offset_right = 610.0
@@ -293,6 +309,21 @@ text = "$0  ·  debt $2000"
 metadata/_tc_uuid = "1315669844452340833"
 
 [node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=895549718]
+metadata/_tc_uuid = "5151537901869117101"
+
+[node name="DayLabel" type="Label" parent="HUD/Row" unique_id=849864063]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Day 1/7"
+metadata/_tc_uuid = "3939321956070685201"
+
+[node name="MoneyLabel" type="Label" parent="HUD/Row" unique_id=560170074]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "$0  ·  debt $2000"
+metadata/_tc_uuid = "8791862810948052965"
+
+[node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=1368632242]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 18
@@ -309,3 +340,4 @@ position = Vector2(91, 106)
 sprite_frames = SubResource("SpriteFrames_ip871")
 animation = &"fishing bite"
 metadata/_tc_offline_added = true
+metadata/_tc_uuid = "2883304671228580753"
