@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SpeciesDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_0hdgr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/eel.png" id="2_0kifx"]
+
+[resource]
+script = ExtResource("1_0hdgr")
+id = "eel"
+display_name = "Eel"
+base_price = 32
+preference = "fatty"
+rain_only = true
+sprite = ExtResource("2_0kifx")

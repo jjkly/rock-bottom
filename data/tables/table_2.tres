@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TableDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/table_def.gd" id="1_ve61k"]
+
+[resource]
+script = ExtResource("1_ve61k")
+id = "table_2"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ModifierDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/modifier_def.gd" id="1_86rwn"]
+
+[resource]
+script = ExtResource("1_86rwn")
+id = "double_serving"
+display_name = "Double Serving"
+extra_plates = 1

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GearDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/gear_def.gd" id="1_e2tte"]
+
+[resource]
+script = ExtResource("1_e2tte")
+id = "tray"
+display_name = "Tray"
+slot = "tray"
+effect = "carry_slots"
+costs = Array[int]([120, 240])
+values = Array[float]([0.0, 1.0, 2.0])
+description = "Carry two plates at once; halves the trips during service."

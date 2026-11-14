@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GearDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/gear_def.gd" id="1_1qb52"]
+
+[resource]
+script = ExtResource("1_1qb52")
+id = "knife"
+display_name = "Knife"
+slot = "knife"
+effect = "cut_speed"
+costs = Array[int]([50, 120, 220])
+values = Array[float]([0.0, 0.2, 0.4, 0.6])
+description = "Faster cutting at the board."

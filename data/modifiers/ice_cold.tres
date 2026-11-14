@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ModifierDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/modifier_def.gd" id="1_vb8m5"]
+
+[resource]
+script = ExtResource("1_vb8m5")
+id = "ice_cold"
+display_name = "Ice Cold"
+never_spoils = true
+tint = Color(0.75, 0.95, 1, 1)

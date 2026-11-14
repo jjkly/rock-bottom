@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TableDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/table_def.gd" id="1_d11n4"]
+
+[resource]
+script = ExtResource("1_d11n4")
+id = "table_4"
+seats = 4
+plates_wanted = 3
+preference = "fatty"

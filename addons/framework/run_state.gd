@@ -1,0 +1,372 @@
+extends Node
+## ============================================================================
+## RunState — the single source of truth for one week (7 days) of the game.
+##
+## WHY THIS EXISTS
+##   Every phase (fishing, evening, shop) needs the same numbers: cash, debt,
+##   day, stock, freezer, gear. If each scene keeps its own copy they drift,
+##   and "why did the shop show $80 when the HUD showed $120" eats a day.
+##   So: one autoload, one authority, everything else listens to signals.
+##
+## WHO EDITS THIS
+##   Framework owner. Gameplay scenes should ONLY call the public functions
+##   below and connect to the signals — never write these vars directly.
+##   If you need a new field, add it here and tell the others; do not stash
+##   state on a scene.
+##
+## WHAT TO CHANGE FIRST (design knobs, all near the top)
+##   START_DEBT / MIN_PAYMENTS  -> the difficulty curve of the week
+##   START_FREEZER_SLOTS        -> freezer pressure
+##   WEATHER_WEIGHTS            -> how often hot/rain happen
+##
+## TESTED BY res://tests/test_economy.gd (run: see docs/contract.md).
+## ============================================================================
+
+# --- The four phase types of a single day, in order. ------------------------
+# MORNING: news, shipments.  FISHING: the reel minigame + crate.
+# EVENING: Overcooked-style service.  NIGHT: pay minimum, shop, sleep.
+enum Phase { MORNING, FISHING, EVENING, NIGHT }
+
+# --- Weather is one enum, three states, no forecasts. -----------------------
+# CLEAR: baseline.  HOT: every freezer fish spoils at end of day.
+# RAIN: the catch table swaps in rain-only species.
+enum Weather { CLEAR, HOT, RAIN }
+
+# --- The week's economy. Sum(MIN_PAYMENTS) = 795 = ~40% of START_DEBT. ------
+# That ratio is deliberate: surviving the week is the floor, and the final
+# score (debt repaid) has room above it. Change one, re-check the other.
+const DAYS_PER_RUN := 7
+const START_DEBT := 2000
+const MIN_PAYMENTS: Array[int] = [60, 75, 90, 110, 130, 150, 180]
+
+const START_FREEZER_SLOTS := 3
+
+# Weights are relative, not percentages: 50/25/25 = 50% clear, 25% hot, 25% rain.
+const WEATHER_WEIGHTS := {
+	Weather.CLEAR: 50,
+	Weather.HOT: 25,
+	Weather.RAIN: 25,
+}
+
+# --- Signals: the only way scenes learn that something changed. -------------
+# Connect in _ready():  RunState.cash_changed.connect(_on_cash_changed)
+signal phase_changed(from_phase: int, to_phase: int)
+signal day_started(day: int)
+signal cash_changed(cash: int)
+signal debt_changed(remaining_debt: int)
+signal stock_changed
+signal freezer_changed
+signal gear_changed(slot: String, tier: int)
+signal quota_paid(day: int, amount: int)
+signal quota_missed(day: int)
+signal weather_changed(weather: int)
+signal run_ended(repaid_ratio: float, remaining_debt: int)
+
+# --- State. Read it, don't write it. ----------------------------------------
+var day := 1
+var phase: Phase = Phase.MORNING
+var cash := 0
+var debt := 0              # remaining debt (start - everything paid so far)
+var debt_start := 0
+var paid_total := 0        # what the score is computed from
+var minimum_paid_today := false
+var run_over := false
+
+var weather: Weather = Weather.CLEAR
+var weather_tomorrow: Weather = Weather.CLEAR
+
+# Fish caught but not yet served. Cleared/moved at end of day.
+var stock: Array[FishInstance] = []
+# Fish held across days. Aging raises value up to a peak, then it rots.
+var freezer: Array[FishInstance] = []
+var freezer_capacity := START_FREEZER_SLOTS
+
+# Gear tiers, 0 = stock starter item. Keys are fixed; the shop reads them.
+var gear := {"rod": 0, "knife": 0, "dishwasher": 0, "freezer": 0, "tray": 0}
+# Per-run training stats (bought in the nightly 3-of-N draft).
+var stats := {"luck": 0, "fishing": 0, "speed": 0}
+
+# Seeded so a run can be reproduced from a debug log.
+var rng := RandomNumberGenerator.new()
+
+
+func _ready() -> void:
+	# Nothing runs until the game calls start_run() — the dev harness in
+	# scripts/game.gd does it. Keeps tests in control of their own state.
+	pass
+
+
+# ============================================================================
+# PUBLIC API — scenes call these, nothing else.
+# ============================================================================
+
+## Wipe state and begin a new week. Call once when the run starts.
+func start_run(seed_value: int = 0) -> void:
+	day = 1
+	phase = Phase.MORNING
+	cash = 0
+	debt_start = START_DEBT
+	debt = START_DEBT
+	paid_total = 0
+	minimum_paid_today = false
+	run_over = false
+
+	stock.clear()
+	freezer.clear()
+	gear = {"rod": 0, "knife": 0, "dishwasher": 0, "freezer": 0, "tray": 0}
+	stats = {"luck": 0, "fishing": 0, "speed": 0}
+	freezer_capacity = START_FREEZER_SLOTS
+
+	# Day 1 is always clear: the player should learn the loop before weather.
+	weather = Weather.CLEAR
+	if seed_value == 0:
+		rng.randomize()
+	else:
+		rng.seed = seed_value
+	weather_tomorrow = _roll_weather()
+
+	day_started.emit(day)
+	cash_changed.emit(cash)
+	debt_changed.emit(debt)
+	weather_changed.emit(weather)
+	stock_changed.emit()
+	freezer_changed.emit()
+
+
+## MORNING -> FISHING -> EVENING -> NIGHT. Night ends via end_day().
+func advance_phase() -> void:
+	if run_over:
+		return
+	match phase:
+		Phase.MORNING: _set_phase(Phase.FISHING)
+		Phase.FISHING: _set_phase(Phase.EVENING)
+		Phase.EVENING: _set_phase(Phase.NIGHT)
+		Phase.NIGHT:
+			# The night is closed out by end_day(), which also checks payment.
+			push_warning("advance_phase() at NIGHT — call end_day() instead.")
+
+
+## Close the night: check the minimum was paid, spoil/age the freezer,
+## move leftovers, roll weather, start the next day (or end the run).
+## Returns false if the minimum was missed (run over).
+func end_day() -> bool:
+	if run_over:
+		return false
+	if phase != Phase.NIGHT:
+		push_warning("end_day() called outside NIGHT — ignored.")
+		return false
+
+	if not minimum_paid_today:
+		run_over = true
+		quota_missed.emit(day)
+		_settle_and_end()
+		return false
+
+	# Order matters: existing freezer contents feel tonight's heat and age
+	# one day; fish caught today are stored afterwards, so they start at 0.
+	_apply_end_of_day_weather()
+	_age_freezer()
+	_store_leftover_stock()
+
+	if day >= DAYS_PER_RUN:
+		_settle_and_end()
+		return true
+
+	day += 1
+	phase = Phase.MORNING
+	minimum_paid_today = false
+	weather = weather_tomorrow
+	weather_tomorrow = _roll_weather()
+
+	day_started.emit(day)
+	weather_changed.emit(weather)
+	phase_changed.emit(Phase.NIGHT, Phase.MORNING)
+	stock_changed.emit()
+	freezer_changed.emit()
+	return true
+
+
+## Pay tonight's minimum. Fails if it's the wrong phase, already paid, or
+## there isn't enough cash. The HUD should show the due amount from
+## minimum_today() so this never fails silently.
+func pay_minimum() -> bool:
+	if run_over or phase != Phase.NIGHT or minimum_paid_today:
+		return false
+	var due := minimum_today()
+	if cash < due:
+		return false
+	cash -= due
+	debt -= due
+	paid_total += due
+	minimum_paid_today = true
+	cash_changed.emit(cash)
+	debt_changed.emit(debt)
+	quota_paid.emit(day, due)
+	return true
+
+
+func minimum_today() -> int:
+	return MIN_PAYMENTS[clampi(day - 1, 0, MIN_PAYMENTS.size() - 1)]
+
+
+func spend(amount: int) -> bool:
+	if amount <= 0 or cash < amount:
+		return false
+	cash -= amount
+	cash_changed.emit(cash)
+	return true
+
+
+func earn(amount: int) -> void:
+	if amount <= 0:
+		return
+	cash += amount
+	cash_changed.emit(cash)
+
+
+## Add a freshly caught fish to today's stock.
+func add_to_stock(fish: FishInstance) -> void:
+	stock.append(fish)
+	stock_changed.emit()
+
+
+## Serve one plate from a stock fish. Returns the cash earned (0 if invalid).
+## Preference match is the omakase decision: serve what this table likes.
+func serve_plate(fish: FishInstance, table_preference: String) -> int:
+	if not stock.has(fish) or fish.plates_left <= 0:
+		return 0
+	var value := fish.value()
+	if fish.species.preference == table_preference:
+		value = int(round(value * 1.2))
+	fish.plates_left -= 1
+	if fish.plates_left <= 0:
+		stock.erase(fish)
+	cash += value
+	cash_changed.emit(cash)
+	stock_changed.emit()
+	return value
+
+
+## Put a fish in the freezer. False if full.
+func freeze(fish: FishInstance) -> bool:
+	if freezer.size() >= freezer_capacity:
+		return false
+	if stock.has(fish):
+		stock.erase(fish)
+	freezer.append(fish)
+	stock_changed.emit()
+	freezer_changed.emit()
+	return true
+
+
+## Sell a raw fish instead of serving it. Raw always pays less than a plate
+## (that gap is what makes cooking and serving the real business).
+func sell(fish: FishInstance, from_freezer: bool = false) -> int:
+	var pool := freezer if from_freezer else stock
+	if not pool.has(fish):
+		return 0
+	var value := int(round(fish.value() * 0.6))
+	pool.erase(fish)
+	cash += value
+	cash_changed.emit(cash)
+	stock_changed.emit()
+	freezer_changed.emit()
+	return value
+
+
+## Buy one tier of a gear slot. The shop UI is responsible for offering only
+## legal purchases; this enforces cost and tier bounds.
+func upgrade_gear(slot: String, cost: int) -> bool:
+	if not gear.has(slot):
+		return false
+	if not spend(cost):
+		return false
+	gear[slot] += 1
+	if slot == "freezer":
+		freezer_capacity = START_FREEZER_SLOTS + int(gear["freezer"])
+	gear_changed.emit(slot, gear[slot])
+	return true
+
+
+func add_stat(stat_name: String, amount: int = 1) -> void:
+	if stats.has(stat_name):
+		stats[stat_name] += amount
+
+
+# ============================================================================
+# INTERNALS — safe to read, don't call from scenes.
+# ============================================================================
+
+func _set_phase(next_phase: Phase) -> void:
+	var old := phase
+	phase = next_phase
+	phase_changed.emit(old, next_phase)
+
+
+func _roll_weather() -> Weather:
+	var roll := rng.randi_range(1, 100)
+	var acc := 0
+	for w in WEATHER_WEIGHTS:
+		acc += int(WEATHER_WEIGHTS[w])
+		if roll <= acc:
+			return w
+	return Weather.CLEAR
+
+
+## HOT spoils existing freezer fish. Ice cold ignores it (that's its job).
+func _apply_end_of_day_weather() -> void:
+	if weather != Weather.HOT:
+		return
+	for fish in freezer:
+		if fish.modifier != null and fish.modifier.never_spoils:
+			continue
+		fish.spoiled = true
+
+
+func _age_freezer() -> void:
+	for fish in freezer:
+		if fish.modifier != null and fish.modifier.never_spoils:
+			continue
+		fish.age_days += 1
+
+
+## Unserved stock goes in the freezer if there's room, otherwise it is lost.
+## Tune later: this is a design decision, not an implementation detail.
+func _store_leftover_stock() -> void:
+	for fish in stock:
+		if freezer.size() < freezer_capacity:
+			freezer.append(fish)
+	stock.clear()
+
+
+## Add leftover cash to the debt, compute the score, fire run_ended once.
+func _settle_and_end() -> void:
+	run_over = true
+	if cash > 0:
+		paid_total += cash
+		debt = maxi(0, debt - cash)
+		cash = 0
+	var ratio := float(paid_total) / float(maxi(debt_start, 1))
+	cash_changed.emit(cash)
+	debt_changed.emit(debt)
+	run_ended.emit(ratio, debt)
+
+
+# ============================================================================
+# DEBUG — required by the framework checklist: every system prints its state.
+# ============================================================================
+
+func debug_state() -> String:
+	return "day=%d/%d phase=%s cash=%d debt=%d paid=%d stock=%d freezer=%d/%d gear=%s stats=%s weather=%s" % [
+		day, DAYS_PER_RUN, phase_name(phase), cash, debt, paid_total,
+		stock.size(), freezer.size(), freezer_capacity, str(gear), str(stats),
+		weather_name(weather),
+	]
+
+
+static func phase_name(p: int) -> String:
+	return ["MORNING", "FISHING", "EVENING", "NIGHT"][p]
+
+
+static func weather_name(w: int) -> String:
+	return ["CLEAR", "HOT", "RAIN"][w]

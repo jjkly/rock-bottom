@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SpeciesDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_78v83"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/lean_tuna.png" id="2_440dd"]
+
+[resource]
+script = ExtResource("1_78v83")
+id = "lean_tuna"
+display_name = "Lean Tuna"
+base_price = 28
+sprite = ExtResource("2_440dd")
