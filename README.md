@@ -12,10 +12,11 @@ Full task order and file ownership: [docs/PLAN.md](docs/PLAN.md).
 
 ## Read in this order
 
-1. [docs/PLAN.md](docs/PLAN.md) — what to do next, where, done-when
-2. [docs/GDD.md](docs/GDD.md) — the design and every design number
-3. [docs/contract.md](docs/contract.md) — names, RunState API, signals, scene contract
-4. [docs/art.md](docs/art.md) — pixel grid, import, folder map
+1. [docs/SETUP.md](docs/SETUP.md) — **new teammate?** install, clone, play, push (no terminal)
+2. [docs/PLAN.md](docs/PLAN.md) — what to do next, where, done-when
+3. [docs/GDD.md](docs/GDD.md) — the design and every design number
+4. [docs/contract.md](docs/contract.md) — names, RunState API, signals, scene contract
+5. [docs/art.md](docs/art.md) — pixel grid, import, folder map
 
 ## Working together
 

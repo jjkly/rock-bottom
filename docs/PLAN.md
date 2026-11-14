@@ -11,6 +11,9 @@ exactly where to put a file, what to type, and how to know it is done.
 
 Rules that apply to every phase:
 
+- **New teammate, no coding experience?** Send them
+  [SETUP.md](SETUP.md) — install, clone, open, play, push, all with buttons.
+
 ```bash
 cd C:/Users/admin/Desktop/sashimi-debt
 
