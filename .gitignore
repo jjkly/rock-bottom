@@ -4,6 +4,7 @@
 
 # Export output and crash dumps.
 export/
+build/
 builds/
 *.pck
 *.zip
