@@ -83,4 +83,4 @@ offset_right = 1000.0
 offset_bottom = 538.0
 theme_override_colors/font_color = Color(0.5, 0.55, 0.6, 1)
 theme_override_font_sizes/font_size = 16
-text = "WASD / arrows to move in the evening  ·  E to interact"
+text = "WASD to move in the evening  ·  E to interact"

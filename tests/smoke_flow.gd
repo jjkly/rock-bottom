@@ -67,15 +67,13 @@ func _ready() -> void:
 				RunState.cash - before, table.plates_served, table.definition.plates_wanted
 			])
 
-	# --- shop: pay the minimum and sleep into day 2 -------------------------
+	# --- shop: sleep, auto-charging the installment -------------------------
 	RunState.advance_phase()
 	await _frames(3)
 	_expect("Shop")
 	RunState.earn(500)
-	if not RunState.pay_minimum():
-		_fail("could not pay the day minimum")
 	if not RunState.end_day():
-		_fail("end_day refused after paying")
+		_fail("end_day refused with enough cash for the installment")
 	await _frames(3)
 	_expect("Morning")
 	if RunState.day != 2:
@@ -84,7 +82,7 @@ func _ready() -> void:
 	# --- results: force the week's end --------------------------------------
 	RunState.day = 7
 	RunState.phase = 3  # NIGHT
-	RunState.minimum_paid_today = true
+	RunState.earn(1000)  # cover the $700 balloon
 	RunState.end_day()
 	await _frames(3)
 	_expect("Results")

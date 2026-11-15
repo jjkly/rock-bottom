@@ -18,4 +18,4 @@ func _ready() -> void:
 	_big.text = "%d%% repaid" % int(round(repaid_ratio * 100.0))
 	_paid.text = "Paid $%d of $%d" % [RunState.paid_total, RunState.debt_start]
 	_owed.text = "Still owed: $%d" % RunState.debt
-	_missed.visible = RunState.run_over and not RunState.minimum_paid_today
+	_missed.visible = RunState.missed_installment

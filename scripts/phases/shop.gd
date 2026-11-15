@@ -23,7 +23,7 @@ var _offers: Array[Dictionary] = []
 func _ready() -> void:
 	UI.style_button(_pay_btn)
 	UI.style_button(_sleep_btn)
-	_pay_btn.pressed.connect(_pay)
+	_pay_btn.pressed.connect(_pay_extra)
 	_sleep_btn.pressed.connect(_sleep)
 
 	_load_gear()
@@ -123,10 +123,10 @@ func _refresh() -> void:
 	if _cash_label == null:
 		return
 	_cash_label.text = "Cash $%d   ·   debt $%d" % [RunState.cash, RunState.debt]
-	_due_label.text = "Minimum tonight: $%d %s" % [
-		RunState.minimum_today(), "(paid)" if RunState.minimum_paid_today else ""
+	_due_label.text = "Installment %d/7 tonight: $%d (charged when you sleep)" % [
+		RunState.installment_number(), RunState.installment_today()
 	]
-	_pay_btn.disabled = RunState.minimum_paid_today or RunState.cash < RunState.minimum_today()
+	_pay_btn.disabled = RunState.cash < 100 or RunState.debt <= 0
 
 	for row in _rows:
 		var g: GearDef = row["gear"]
@@ -147,17 +147,15 @@ func _refresh() -> void:
 	_refresh_offers()
 
 
-func _pay() -> void:
-	if RunState.pay_minimum():
-		_msg.text = "Paid $%d. Debt now $%d." % [RunState.minimum_today(), RunState.debt]
+func _pay_extra() -> void:
+	if RunState.pay_extra(100):
+		_msg.text = "Paid $100 extra. Debt now $%d." % RunState.debt
 	else:
-		_msg.text = "Cannot pay that."
+		_msg.text = "Need $100 spare cash."
 	_refresh()
 
 
 func _sleep() -> void:
-	if not RunState.minimum_paid_today:
-		_msg.text = "Pay the minimum before sleeping."
-		return
-	if not RunState.end_day():
-		return  # run ended; the router shows results
+	# The installment is charged inside end_day(); if it cannot be paid the
+	# run ends and the router swaps to results.
+	RunState.end_day()

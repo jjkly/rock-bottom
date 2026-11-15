@@ -12,12 +12,13 @@ const FishInstanceScript := preload("res://scripts/data/fish_instance.gd")
 
 static func run(t) -> void:
 	_test_start(t)
-	_test_minimum(t)
+	_test_installment(t)
 	_test_value(t)
 	_test_aging(t)
 	_test_hot_weather(t)
 	_test_serving_money(t)
 	_test_carry_plates(t)
+	_test_extra_payment(t)
 
 
 static func _new_run(seed_value: int = 7):
@@ -42,7 +43,7 @@ static func _fish(base: int, slices: int = 8, mod: Resource = null):
 static func _test_start(t) -> void:
 	var rs = _new_run()
 	t.eq(rs.day, 1, "run starts on day 1")
-	t.eq(rs.debt, 1200, "run starts with $1200 debt")
+	t.eq(rs.debt, 2000, "run starts with $2000 debt")
 	t.eq(rs.cash, 0, "run starts with no cash")
 	t.eq(rs.phase, 0, "run starts in MORNING")
 	t.eq(rs.weather, 0, "day 1 is always CLEAR")
@@ -50,23 +51,39 @@ static func _test_start(t) -> void:
 	rs.free()
 
 
-static func _test_minimum(t) -> void:
+static func _test_installment(t) -> void:
+	# Empty wallet: the auto-charge fails and the run ends.
+	var broke = _new_run()
+	broke.advance_phase()
+	broke.advance_phase()
+	broke.advance_phase()
+	t.eq(broke.phase, 3, "three advances reach NIGHT")
+	t.eq(broke.installment_today(), 100, "day 1 installment is $100")
+	t.eq(broke.end_day(), false, "cannot pay with $0")
+	t.eq(broke.missed_installment, true, "missed installment is recorded")
+	t.eq(broke.run_over, true, "missing an installment ends the run")
+	broke.free()
+
+	# Funded: sleeping charges the installment and advances the day.
 	var rs = _new_run()
 	rs.advance_phase()
 	rs.advance_phase()
 	rs.advance_phase()
-	t.eq(rs.phase, 3, "three advances reach NIGHT")
-	t.eq(rs.pay_minimum(), false, "cannot pay with $0")
-	rs.earn(100)
-	t.eq(rs.pay_minimum(), true, "can pay the $40 minimum")
-	t.eq(rs.cash, 60, "cash after paying minimum")
-	t.eq(rs.debt, 1160, "debt after paying minimum")
-	t.eq(rs.paid_total, 40, "paid total tracks the minimum")
-	t.eq(rs.minimum_paid_today, true, "marked paid")
-	t.eq(rs.end_day(), true, "day ends when minimum is paid")
+	rs.earn(250)
+	t.eq(rs.end_day(), true, "installment charged on sleep")
+	t.eq(rs.cash, 150, "cash after the $100 installment")
+	t.eq(rs.debt, 1900, "debt after the installment")
+	t.eq(rs.paid_total, 100, "paid total tracks the installment")
 	t.eq(rs.day, 2, "advanced to day 2")
 	t.eq(rs.phase, 0, "next day starts in MORNING")
+	t.eq(rs.installment_today(), 150, "day 2 installment is $150")
 	rs.free()
+
+	# The last day is the balloon.
+	var last = _new_run()
+	last.day = 7
+	t.eq(last.installment_today(), 700, "day 7 balloon is $700")
+	last.free()
 
 
 static func _test_value(t) -> void:
@@ -106,6 +123,16 @@ static func _test_serving_money(t) -> void:
 	rs.free()
 
 
+static func _test_extra_payment(t) -> void:
+	var rs = _new_run()
+	rs.earn(500)
+	t.eq(rs.pay_extra(300), true, "extra payment accepted")
+	t.eq(rs.cash, 200, "cash reduced by the extra payment")
+	t.eq(rs.debt, 1700, "debt reduced by the extra payment")
+	t.eq(rs.paid_total, 300, "extra payment counts toward the score")
+	rs.free()
+
+
 static func _test_carry_plates(t) -> void:
 	var rs = _new_run()
 	var f = _fish(50, 4)
@@ -123,8 +150,7 @@ static func _test_hot_weather(t) -> void:
 	rs.advance_phase()
 	rs.advance_phase()
 	rs.advance_phase()
-	rs.earn(100)
-	rs.pay_minimum()
+	rs.earn(100)   # end_day() charges the $100 installment
 
 	var m = ModifierDefScript.new()
 	m.never_spoils = true

@@ -89,7 +89,7 @@ offset_right = 300.0
 offset_bottom = 664.0
 focus_mode = 0
 theme_override_font_sizes/font_size = 20
-text = "Pay minimum"
+text = "Pay extra $100"
 
 [node name="SleepButton" type="Button" parent="."]
 offset_left = 960.0

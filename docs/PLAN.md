@@ -52,7 +52,7 @@ presets, audio, and all real art. Everything below still describes the target.
 
 ## Balance pass (2026-11-15, from balance.txt)
 
-- [x] Debt $2,000 -> $1,200; minimums 60-180 -> 40-95 (still ~40% of debt)
+- [x] Debt is installments: 100/150/200/250/300/300/700 = $2,000, auto-charged; day 7 is a balloon
 - [x] Single player: Player2 and `p2_*` input removed
 - [x] Stations moved to the top wall; tables pulled within ~500 px of the board
 - [x] Player speed 215 -> 300; stock list scrolls so a full inventory can't cover the room
@@ -176,9 +176,9 @@ not started (replay rules are unimplemented).
 4. `scenes/main.tscn` → route by `RunState.phase`: MORNING→morning scene,
    FISHING→fishing, EVENING→evening, NIGHT→shop. Replace `scripts/game.gd`
    (the dev harness) — delete it when the routing works.
-5. Night: "Pay minimum" calls `RunState.pay_minimum()`, "Sleep" calls
-   `RunState.end_day()`; if it returns false, show the missed-minimum screen,
-   and `run_ended` shows the score.
+5. Night: "Pay extra" calls `RunState.pay_extra()`, "Sleep" calls
+   `RunState.end_day()`, which charges the installment; if it returns false the
+   run ends and `run_ended` shows the score.
 
 **Done when:** Enter is no longer needed to play; a full week runs from the
 morning screen to the score screen.

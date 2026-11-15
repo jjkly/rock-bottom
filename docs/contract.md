@@ -50,8 +50,8 @@ NIGHT    pay minimum -> shop -> end_day() -> next morning  (7 days, then settle)
 Phases live in `RunState` only. A scene changing phase calls
 `RunState.advance_phase()`; it never writes `phase`.
 
-Every night the minimum from `RunState.minimum_today()` must be paid or the run
-ends. Cash left over at the end of day 7 is applied to the debt automatically;
+Every night `end_day()` charges that day's installment from `installment_today()`;
+if cash is short the run ends. Overpay with `pay_extra()` (score only). Cash left over at the end of day 7 is applied to the debt automatically;
 the score is `paid_total / debt_start`.
 
 ## RunState API (autoload)
@@ -61,8 +61,8 @@ the score is `paid_total / debt_start`.
 | `start_run(seed)` | once, from the boot scene |
 | `advance_phase()` | MORNING → FISHING → EVENING → NIGHT |
 | `end_day()` | NIGHT only; returns false on a missed minimum |
-| `minimum_today()` | the `$` due tonight |
-| `pay_minimum()` | false if wrong phase / already paid / short |
+| `installment_today()` | the `$` charged on sleep |
+| `pay_extra(amount)` | voluntary overpayment, capped at the debt |
 | `earn(n)` / `spend(n)` | money in/out (service pays through `serve_plate`) |
 | `add_to_stock(fish)` | fishing scene, after the crate resolve |
 | `serve_plate(fish, pref)` | returns cash; handles the +20% match |

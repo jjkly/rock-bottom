@@ -20,7 +20,7 @@ func _ready() -> void:
 
 	_title.text = "Day %d of 7" % RunState.day
 	_debt.text = "Debt remaining: $%d" % RunState.debt
-	_minimum.text = "Tonight's minimum: $%d" % RunState.minimum_today()
+	_minimum.text = "Tonight's installment: $%d  (%d/7)" % [RunState.installment_today(), RunState.installment_number()]
 	_weather.text = "Weather: %s" % RunState.weather_name(RunState.weather)
 	_tomorrow.text = "Tomorrow: %s" % RunState.weather_name(RunState.weather_tomorrow)
 

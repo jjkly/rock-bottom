@@ -15,7 +15,7 @@ extends Node
 ##   state on a scene.
 ##
 ## WHAT TO CHANGE FIRST (design knobs, all near the top)
-##   START_DEBT / MIN_PAYMENTS  -> the difficulty curve of the week
+##   START_DEBT / INSTALLMENTS  -> the difficulty curve of the week
 ##   START_FREEZER_SLOTS        -> freezer pressure
 ##   WEATHER_WEIGHTS            -> how often hot/rain happen
 ##
@@ -32,12 +32,14 @@ enum Phase { MORNING, FISHING, EVENING, NIGHT }
 # RAIN: the catch table swaps in rain-only species.
 enum Weather { CLEAR, HOT, RAIN }
 
-# --- The week's economy. Sum(MIN_PAYMENTS) = 480 = ~40% of START_DEBT. ------
-# That ratio is deliberate: surviving the week is the floor, and the final
-# score (debt repaid) has room above it. Change one, re-check the other.
+# --- The week's economy. ---------------------------------------------------
+# The $2,000 debt is split into seven installments that are charged
+# automatically when you sleep. Days 1-6 are survival; day 7 is a $700 balloon
+# that forces you to save instead of spending everything on gear.
+# Sum = 2000. Anything you pay above an installment is score.
 const DAYS_PER_RUN := 7
-const START_DEBT := 1200
-const MIN_PAYMENTS: Array[int] = [40, 50, 60, 70, 80, 85, 95]
+const START_DEBT := 2000
+const INSTALLMENTS: Array[int] = [100, 150, 200, 250, 300, 300, 700]
 
 const START_FREEZER_SLOTS := 3
 
@@ -69,7 +71,8 @@ var cash := 0
 var debt := 0              # remaining debt (start - everything paid so far)
 var debt_start := 0
 var paid_total := 0        # what the score is computed from
-var minimum_paid_today := false
+var installment_paid_today := false
+var missed_installment := false
 var run_over := false
 
 var weather: Weather = Weather.CLEAR
@@ -108,7 +111,8 @@ func start_run(seed_value: int = 0) -> void:
 	debt_start = START_DEBT
 	debt = START_DEBT
 	paid_total = 0
-	minimum_paid_today = false
+	installment_paid_today = false
+	missed_installment = false
 	run_over = false
 
 	stock.clear()
@@ -146,9 +150,9 @@ func advance_phase() -> void:
 			push_warning("advance_phase() at NIGHT — call end_day() instead.")
 
 
-## Close the night: check the minimum was paid, spoil/age the freezer,
+## Close the night: charge tonight's installment, spoil/age the freezer,
 ## move leftovers, roll weather, start the next day (or end the run).
-## Returns false if the minimum was missed (run over).
+## Returns false if the installment could not be paid (run over).
 func end_day() -> bool:
 	if run_over:
 		return false
@@ -156,11 +160,21 @@ func end_day() -> bool:
 		push_warning("end_day() called outside NIGHT — ignored.")
 		return false
 
-	if not minimum_paid_today:
+	var due := installment_today()
+	if cash < due:
+		missed_installment = true
 		run_over = true
 		quota_missed.emit(day)
 		_settle_and_end()
 		return false
+
+	cash -= due
+	debt -= due
+	paid_total += due
+	installment_paid_today = true
+	cash_changed.emit(cash)
+	debt_changed.emit(debt)
+	quota_paid.emit(day, due)
 
 	# Order matters: existing freezer contents feel tonight's heat and age
 	# one day; fish caught today are stored afterwards, so they start at 0.
@@ -174,7 +188,8 @@ func end_day() -> bool:
 
 	day += 1
 	phase = Phase.MORNING
-	minimum_paid_today = false
+	installment_paid_today = false
+	missed_installment = false
 	weather = weather_tomorrow
 	weather_tomorrow = _roll_weather()
 
@@ -186,27 +201,28 @@ func end_day() -> bool:
 	return true
 
 
-## Pay tonight's minimum. Fails if it's the wrong phase, already paid, or
-## there isn't enough cash. The HUD should show the due amount from
-## minimum_today() so this never fails silently.
-func pay_minimum() -> bool:
-	if run_over or phase != Phase.NIGHT or minimum_paid_today:
+## Tonight's installment. Charged automatically by end_day().
+func installment_today() -> int:
+	return INSTALLMENTS[clampi(day - 1, 0, INSTALLMENTS.size() - 1)]
+
+
+## 1-based "3/7" for the UI.
+func installment_number() -> int:
+	return clampi(day, 1, DAYS_PER_RUN)
+
+
+## Voluntary overpayment: pays down the debt and raises the final score.
+## Capped at the remaining debt.
+func pay_extra(amount: int) -> bool:
+	if amount <= 0 or cash < amount or debt <= 0:
 		return false
-	var due := minimum_today()
-	if cash < due:
-		return false
-	cash -= due
-	debt -= due
-	paid_total += due
-	minimum_paid_today = true
+	var applied := mini(amount, debt)
+	cash -= applied
+	debt -= applied
+	paid_total += applied
 	cash_changed.emit(cash)
 	debt_changed.emit(debt)
-	quota_paid.emit(day, due)
 	return true
-
-
-func minimum_today() -> int:
-	return MIN_PAYMENTS[clampi(day - 1, 0, MIN_PAYMENTS.size() - 1)]
 
 
 func spend(amount: int) -> bool:
