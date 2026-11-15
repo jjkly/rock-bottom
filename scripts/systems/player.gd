@@ -14,7 +14,7 @@ extends CharacterBody2D
 
 signal interact_requested
 
-const SPEED := 215.0
+const SPEED := 300.0
 
 @export var player_prefix := "p1"
 @export var body_tint := Color.WHITE

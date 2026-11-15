@@ -69,7 +69,7 @@ Press **F5** (or the ▶ button, top right).
 
 You should land on a dark screen that says **"Day 1 of 7"**.
 
-Controls: **P1** `WASD` + `E`, **P2** arrow keys + `Enter`. Fishing/shop use the mouse and `Space`.
+Controls: `WASD` + `E`; fishing/shop use the mouse and `Space`.
 
 If you see a red "Errors" toast at the bottom, copy the text and paste it in the
 group chat. Do not click things randomly to fix it.

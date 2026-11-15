@@ -32,12 +32,12 @@ enum Phase { MORNING, FISHING, EVENING, NIGHT }
 # RAIN: the catch table swaps in rain-only species.
 enum Weather { CLEAR, HOT, RAIN }
 
-# --- The week's economy. Sum(MIN_PAYMENTS) = 795 = ~40% of START_DEBT. ------
+# --- The week's economy. Sum(MIN_PAYMENTS) = 480 = ~40% of START_DEBT. ------
 # That ratio is deliberate: surviving the week is the floor, and the final
 # score (debt repaid) has room above it. Change one, re-check the other.
 const DAYS_PER_RUN := 7
-const START_DEBT := 2000
-const MIN_PAYMENTS: Array[int] = [60, 75, 90, 110, 130, 150, 180]
+const START_DEBT := 1200
+const MIN_PAYMENTS: Array[int] = [40, 50, 60, 70, 80, 85, 95]
 
 const START_FREEZER_SLOTS := 3
 

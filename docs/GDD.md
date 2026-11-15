@@ -14,7 +14,7 @@ one week; the score is the share of the debt you cleared.
 |---|---|
 | Genre and camera | Restaurant management roguelite, top-down 2D pixel art |
 | Audience | Core players who like run-based pressure; 16+ (gambling theme) |
-| Platforms and input | PC, keyboard, local 2-player (P1 WASD/E, P2 arrows/Enter); gamepad later |
+| Platforms and input | PC, keyboard, single player (WASD + E); gamepad later |
 | Session | One week ≈ 20–30 min; no mid-run save yet (open question) |
 | Engine | Godot 4.7.2, GDScript, `addons/framework` owns state |
 | Scope | Small release: 3-person team, 1 vertical slice first |
@@ -112,7 +112,7 @@ agents, so tile A* or pre-baked seat paths, not a navmesh.
 
 ## Economy
 
-- Start debt $2,000. Minimums: 60 / 75 / 90 / 110 / 130 / 150 / 180 = $795
+- Start debt $1,200. Minimums: 40 / 50 / 60 / 70 / 80 / 85 / 95 = $480
   (≈40% of the debt). Missing one ends the run.
 - Daily income ≈ 1.4× that day's minimum; gear costs ≈ 0.5–1.5× daily income.
 - Minimums are fixed; overpaying never lowers them. Paying early is a trap —
@@ -145,11 +145,10 @@ presentation one.
 | Phase flow and HUD | implemented | MVP | Router, morning, shop, results, debug HUD | `scripts/main.gd` |
 | Freezer and aging | implemented | MVP | 3 slots (+2/tier), edomae aging peak, hot spoilage | `scripts/data/fish_instance.gd` |
 | Tables and patience | implemented | MVP | 45 s, 3 hearts, preference bonus, angry flow penalty | `scripts/systems/table.gd` |
-| Local two-player | implemented | MVP | Two chefs, shared tables, per-player carried plates | `scenes/evening.tscn` |
-| Fishing reel | implemented | MVP | Stardew bar sets fish size (3/4/6/8 slices) | `scenes/fishing.tscn` |
-| Crate and rares | implemented | MVP | Species + one rare slot; odds hidden until caught | `scripts/phases/fishing.gd` |
+| Fishing reel | implemented | MVP | Four zones; centre = 8 slices and better loot | `scenes/fishing.tscn` |
+| Crate and rares | implemented | MVP | CS:GO-style scrolling nigiri reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |
 | Weather and news | implemented | MVP | Clear / hot / rain, announced each morning | `scripts/phases/morning.gd` |
-| Evening service | implemented | MVP | Overcooked movement over 4–6 tables | `scenes/evening.tscn` |
+| Evening service | implemented | MVP | Single chef, 4–6 tables, plates carried from the top-row board | `scenes/evening.tscn` |
 | Stations and minigames | in progress | MVP | Cut works (instant); cook and wash are stubs | `scripts/systems/station.gd` |
 | Shop and draft | implemented | MVP | Equipment rows + 3 unique training offers | `scripts/phases/shop.gd` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
@@ -224,6 +223,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.3 (2026-11-15):** balance pass — debt $1,200; single player; stations moved to the top wall; tiered bar; scrolling crate reel.
 
 **0.2 (2026-11-14):** playable week — router, morning, fishing, evening, shop,
 results scenes; cut/serve/preferences wired; feature statuses moved to

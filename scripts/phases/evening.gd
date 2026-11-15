@@ -1,31 +1,33 @@
 extends Node2D
 ## ============================================================================
-## EVENING — two-player, Overcooked-style service.
+## EVENING — single-player, Overcooked-style service.
 ##
-## P1: WASD + E      P2: arrows + Enter
-## Workflow per player: stand at the cutting board -> press interact to take a
-## plate (the fish is prepared automatically for now) -> stand at a table ->
-## press interact to serve it. `hold idle` / `hold walk` animations play while
-## a plate is carried.
+## Workflow: stand at the cutting board -> E takes a plate (the fish is prepared
+## automatically for now) -> stand at a table -> E serves it. `hold idle` /
+## `hold walk` play while a plate is carried.
 ##
-## Node tree lives in scenes/evening.tscn. The stock panel picks which fish the
-## next plate comes from; plates are per-player (`Player.carrying`).
+## Layout is tuned for money-making, not walking: the three stations sit along
+## the top wall and tables are within ~500 px of the board. Player speed is
+## 300 px/s.
+##
+## Node tree lives in scenes/evening.tscn. The stock panel (scrollable) picks
+## which fish the next plate comes from.
 ## ============================================================================
 
 const TABLE_SCENE := preload("res://scenes/table.tscn")
 const TABLE_SLOTS: Array[Vector2] = [
-	Vector2(430, 300), Vector2(830, 300),
-	Vector2(430, 560), Vector2(830, 560),
-	Vector2(1080, 430), Vector2(300, 300),
+	Vector2(400, 330), Vector2(880, 330),
+	Vector2(400, 540), Vector2(880, 540),
+	Vector2(1080, 440), Vector2(270, 440),
 ]
 const SPAWN_MARKS: Array[float] = [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
 const SERVICE_WINDOW := 55.0
-const BOARD_RANGE := 110.0
+const BOARD_RANGE := 120.0
 const TABLE_RANGE := 120.0
 
-@onready var _players: Array[Player] = [$Players/Player1, $Players/Player2]
+@onready var _player: Player = $Players/Player1
 @onready var _tables_node: Node2D = $Tables
-@onready var _stock_box: VBoxContainer = $UI/StockPanel/StockList
+@onready var _stock_box: VBoxContainer = $UI/StockPanel/Scroll/StockList
 @onready var _msg: Label = $UI/Message
 @onready var _timer_label: Label = $UI/TimerLabel
 @onready var _continue: Button = $UI/ContinueButton
@@ -46,8 +48,7 @@ func _ready() -> void:
 	_table_total = clampi(4 + int((RunState.day - 1) / 2.0), 4, 6)
 	_continue.visible = false
 	_continue.pressed.connect(func(): RunState.advance_phase())
-	for player in _players:
-		player.interact_requested.connect(_on_interact.bind(player))
+	_player.interact_requested.connect(_on_interact)
 	RunState.stock_changed.connect(_rebuild_stock)
 	_rebuild_stock()
 	set_process(true)
@@ -93,18 +94,18 @@ func _spawn_table(index: int) -> void:
 	t.seat()
 
 
-func _on_interact(player: Player) -> void:
+func _on_interact() -> void:
 	if _ended:
 		return
-	if player.position.distance_to(_board_pos) < BOARD_RANGE:
-		_take_plate(player)
+	if _player.position.distance_to(_board_pos) < BOARD_RANGE:
+		_take_plate()
 	else:
-		_serve(player)
+		_serve()
 
 
-func _take_plate(player: Player) -> void:
-	if player.carrying != null:
-		_msg.text = "%s is already carrying a plate — serve it first." % player.player_prefix.to_upper()
+func _take_plate() -> void:
+	if _player.carrying != null:
+		_msg.text = "Already carrying a plate — serve it first."
 		return
 	var fish := _pick_fish()
 	if fish == null:
@@ -115,11 +116,9 @@ func _take_plate(player: Player) -> void:
 	if not RunState.take_plate(fish):
 		_msg.text = "That fish has no plates left."
 		return
-	player.set_carrying(fish)
+	_player.set_carrying(fish)
 	_next_fish = null
-	_msg.text = "%s takes %s — $%d per plate" % [
-		player.player_prefix.to_upper(), fish.species.display_name, fish.value()
-	]
+	_msg.text = "Took %s — $%d per plate" % [fish.species.display_name, fish.value()]
 	_rebuild_stock()
 
 
@@ -132,32 +131,30 @@ func _pick_fish() -> FishInstance:
 	return null
 
 
-func _serve(player: Player) -> void:
-	if player.carrying == null:
-		_msg.text = "%s has empty hands — take a plate at the board." % player.player_prefix.to_upper()
+func _serve() -> void:
+	if _player.carrying == null:
+		_msg.text = "Empty hands — take a plate at the board."
 		return
-	var t := _nearest_table(player)
+	var t := _nearest_table()
 	if t == null:
 		_msg.text = "No table in reach."
 		return
-	var fish := player.carrying
+	var fish := _player.carrying
 	var matched := fish.matches(t.definition.preference)
 	var value := RunState.pay_plate(fish, t.definition.preference)
 	t.serve_plate(value, matched)
-	player.set_carrying(null)
-	_msg.text = "%s served +$%d%s" % [
-		player.player_prefix.to_upper(), value, "  (preference match)" if matched else ""
-	]
+	_player.set_carrying(null)
+	_msg.text = "Served +$%d%s" % [value, "  (preference match)" if matched else ""]
 	_rebuild_stock()
 
 
-func _nearest_table(player: Player) -> Table:
+func _nearest_table() -> Table:
 	var best: Table = null
 	var best_d := TABLE_RANGE
 	for t in _tables:
 		if not t.seated or t.closed:
 			continue
-		var d := player.position.distance_to(t.position)
+		var d := _player.position.distance_to(t.position)
 		if d < best_d:
 			best_d = d
 			best = t

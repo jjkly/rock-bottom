@@ -101,9 +101,9 @@ Duplicate an existing `.tres` and edit it; the game loads by `id`.
   (labels, panels, sprites, player instance); scripts only fill text and
   connect signals. Do not build UI with `add_child()` in a phase script —
   it hides the scene from the editor and from whoever does art.
-- Two `Player` instances under `Players` (`player_prefix` = `p1` / `p2`);
-  input actions are `p1_*` / `p2_*` in `project.godot`. Interaction is a
-  signal (`interact_requested`), never a direct call into the evening scene.
+- One `Player` under `Players/Player1`, `player_prefix = "p1"`; input actions
+  are `p1_*` in `project.godot` (single player). Interaction is a signal
+  (`interact_requested`), never a direct call into the evening scene.
 - One `Table` node per table, `setup(def)` then `seat()`; call `tick(delta)`
   via `_process` (the node does it itself once seated).
   `Table.serve_plate(value, matched)` only records satisfaction — money and the

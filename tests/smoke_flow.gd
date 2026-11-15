@@ -27,7 +27,7 @@ func _ready() -> void:
 	fishing._on_cast()
 	fishing._reel_t = 0.0          # marker at centre -> 8 slices
 	fishing._stop_reel()
-	fishing._settle_catch()
+	await get_tree().create_timer(2.2).timeout   # reel scroll + settle
 	if RunState.stock.size() != 1:
 		_fail("cast did not add a fish to stock")
 	elif RunState.stock[0].size_slices != 8:
@@ -43,13 +43,11 @@ func _ready() -> void:
 	var evening: Node = _phase()
 	if evening._tables.is_empty():
 		_fail("no table spawned during service")
-	elif evening._players.size() != 2:
-		_fail("evening should have two players")
 	else:
-		var p1: Player = evening._players[0]
+		var p1: Player = evening._player
 		var fish: FishInstance = RunState.stock[0]
 		p1.position = evening._board_pos
-		evening._on_interact(p1)
+		evening._on_interact()
 		if p1.carrying == null:
 			_fail("taking a plate did not fill the player's hands")
 		elif not fish.prepared:
@@ -57,7 +55,7 @@ func _ready() -> void:
 		var table = evening._tables[0]
 		p1.position = table.position
 		var before := RunState.cash
-		evening._on_interact(p1)
+		evening._on_interact()
 		if RunState.cash <= before:
 			_fail("serving did not pay")
 		elif table.plates_served < 1:
