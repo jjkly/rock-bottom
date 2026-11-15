@@ -3,16 +3,21 @@ extends Control
 ## RESULTS — the week's number. Nodes live in scenes/results.tscn.
 ## ============================================================================
 
+signal main_menu_requested
+
 @onready var _big: Label = $Big
 @onready var _paid: Label = $PaidLabel
 @onready var _owed: Label = $OwedLabel
 @onready var _missed: Label = $MissedLabel
 @onready var _again: Button = $AgainButton
+@onready var _menu: Button = $MenuButton
 
 
 func _ready() -> void:
 	UI.style_button(_again)
+	UI.style_button(_menu)
 	_again.pressed.connect(func(): RunState.start_run())
+	_menu.pressed.connect(func(): main_menu_requested.emit())
 
 	var repaid_ratio := float(RunState.paid_total) / float(maxi(RunState.debt_start, 1))
 	_big.text = "%d%% repaid" % int(round(repaid_ratio * 100.0))

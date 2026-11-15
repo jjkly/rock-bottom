@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/pause.gd" id="1_pause"]
+
+[node name="Pause" type="CanvasLayer"]
+layer = 40
+script = ExtResource("1_pause")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="ColorRect" parent="Root"]
+offset_left = 440.0
+offset_top = 180.0
+offset_right = 840.0
+offset_bottom = 540.0
+color = Color(0.08, 0.09, 0.12, 0.98)
+
+[node name="Title" type="Label" parent="Root/Panel"]
+offset_left = 40.0
+offset_top = 24.0
+offset_right = 360.0
+offset_bottom = 64.0
+theme_override_font_sizes/font_size = 30
+text = "Paused"
+
+[node name="ResumeButton" type="Button" parent="Root/Panel"]
+offset_left = 40.0
+offset_top = 100.0
+offset_right = 360.0
+offset_bottom = 148.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Resume"
+
+[node name="SettingsButton" type="Button" parent="Root/Panel"]
+offset_left = 40.0
+offset_top = 166.0
+offset_right = 360.0
+offset_bottom = 214.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Settings"
+
+[node name="MenuButton" type="Button" parent="Root/Panel"]
+offset_left = 40.0
+offset_top = 232.0
+offset_right = 360.0
+offset_bottom = 280.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Main menu"

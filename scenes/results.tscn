@@ -69,6 +69,15 @@ theme_override_colors/font_color = Color(0.9, 0.5, 0.5, 1)
 theme_override_font_sizes/font_size = 18
 text = "You missed a minimum. The week ended early."
 
+[node name="MenuButton" type="Button" parent="."]
+offset_left = 420.0
+offset_top = 560.0
+offset_right = 680.0
+offset_bottom = 604.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Main menu"
+
 [node name="AgainButton" type="Button" parent="."]
 offset_left = 120.0
 offset_top = 560.0

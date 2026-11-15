@@ -1,4 +1,6 @@
-# Godot 4 + Team Create rules
+# Rock Bottom
+
+One week. One debt. One shot. Godot 4 + Team Create rules follow.
 
 ## Run it
 

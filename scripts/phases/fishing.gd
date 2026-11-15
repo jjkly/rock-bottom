@@ -137,13 +137,22 @@ func _stop_reel() -> void:
 
 	_pending_species = _roll_species(quality)
 	_pending_mod = null
-	if RunState.rng.randf() < 0.04 + 0.11 * quality + 0.02 * RunState.stats.get("luck", 0) and not _mods.is_empty():
+	var rare_chance: float = (0.04 + 0.11 * quality) * RunState.rare_multiplier() \
+		+ 0.02 * float(RunState.stats.get("luck", 0))
+	if RunState.rng.randf() < rare_chance and not _mods.is_empty():
 		_pending_mod = _mods[RunState.rng.randi_range(0, _mods.size() - 1)]
 
 	_state = State.REVEAL
 	_settled = false
 	_fisher.play("fishing bite")
-	_run_reel()
+	if Settings.skip_animations:
+		# "E automatic": jump straight to the result.
+		_build_strip(_pending_species)
+		_reel_target = VIEW_W * 0.5 - (WIN_INDEX * PITCH + TILE_W * 0.5)
+		_strip.position.x = _reel_target
+		_settle_catch()
+	else:
+		_run_reel()
 
 
 ## Bias the species roll toward expensive fish as quality rises.

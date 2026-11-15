@@ -20,9 +20,13 @@ extends Node
 @onready var _help_btn: Button = $HUD/HelpButton
 
 const TUTORIAL_SCENE := preload("res://scenes/tutorial.tscn")
+const MENU_SCENE := preload("res://scenes/menu.tscn")
+const PAUSE_SCENE := preload("res://scenes/pause.tscn")
 
 var _current: Node
 var _tutorial: CanvasLayer
+var _menu: Control
+var _pause: CanvasLayer
 var _current_phase := -1
 var _seen := {}
 var _headless := false
@@ -30,10 +34,21 @@ var _shown := -1  # -2 = results, -1 = nothing yet, else RunState.Phase
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_headless = DisplayServer.get_name() == "headless"
 	_tutorial = TUTORIAL_SCENE.instantiate()
 	add_child(_tutorial)
 	_help_btn.pressed.connect(func(): _tutorial.open(clampi(RunState.phase, 0, 3)))
+
+	_menu = MENU_SCENE.instantiate()
+	add_child(_menu)
+	_menu.start_requested.connect(_start_game)
+
+	_pause = PAUSE_SCENE.instantiate()
+	add_child(_pause)
+	_pause.main_menu_requested.connect(_return_to_menu)
+
+	_hud.visible = false
 
 	RunState.day_started.connect(func(d): if d == 1: _seen.clear())
 	RunState.phase_changed.connect(func(_a, to): _show_phase.call_deferred(to))
@@ -43,8 +58,38 @@ func _ready() -> void:
 	RunState.debt_changed.connect(func(_v): _refresh_hud())
 	RunState.weather_changed.connect(func(_w): _refresh_hud())
 
-	RunState.start_run()  # emits day_started; the deferred call shows MORNING
 	_refresh_hud()
+
+
+func _start_game(difficulty: int) -> void:
+	_menu.visible = false
+	_hud.visible = true
+	RunState.set_difficulty(difficulty)
+	RunState.start_run()
+
+
+func _return_to_menu() -> void:
+	get_tree().paused = false
+	_pause.visible = false
+	_shown = -1
+	_current_phase = -1
+	_clear_current()
+	_hud.visible = false
+	_menu.visible = true
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	if _menu.visible:
+		return
+	if _tutorial != null and _tutorial._root.visible:
+		return
+	if _pause.visible:
+		_pause._close()
+	else:
+		_pause.open()
+	get_viewport().set_input_as_handled()
 
 
 func _refresh_hud() -> void:
@@ -70,6 +115,7 @@ func _show_phase(phase: int) -> void:
 		3: packed = preload("res://scenes/shop.tscn")
 		_:
 			return
+	_menu.visible = false
 	_current = packed.instantiate()
 	_holder.add_child(_current)
 	_current_phase = phase
@@ -89,6 +135,7 @@ func _show_results() -> void:
 	_clear_current()
 	_current = preload("res://scenes/results.tscn").instantiate()
 	_holder.add_child(_current)
+	_current.main_menu_requested.connect(_return_to_menu)
 
 
 func _clear_current() -> void:

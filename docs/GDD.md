@@ -1,4 +1,4 @@
-# Sashimi Debt — Game Design Document
+# Rock Bottom — Game Design Document
 
 **Version:** 0.1 · **Updated:** 2026-11-14 · [Features](#feature-index) · [Decisions](#decisions) · [Change log](#change-log)
 
@@ -124,9 +124,11 @@ agents, so tile A* or pre-baked seat paths, not a navmesh.
 - Repaying every installment finishes the week at 100% of the 2,000; the
   remaining cash is added to the balance at the end, so the last night can
   still overshoot.
-- Difficulty: Easy = unlimited free replays, −20% installments, ~100% clear.
-  Medium = one replay costing the day's earnings, baseline, ~85%. Hard = no
-  replay, +15% installments, ~70%.
+- Difficulty presets share four levers: debt (which sets the installment
+  total), rare-fish odds, and replays. Easy $1,600 / ×0.8 / +20% / unlimited;
+  Medium $2,000 / ×1.0 / baseline / one; Hard $2,400 / ×1.2 / −20% / none.
+  Missing an installment rewinds to the morning of that day while a replay
+  remains; otherwise the run ends.
 - Night shop: Equipment (rod, knife, fish tank; durable,
   3 tiers each) and Training (one 3-of-N offer of Luck / Fishing / Speed,
   Luck may discount one). Both run-scoped.
@@ -148,7 +150,10 @@ presentation one.
 | Feature | Status | Scope | Summary | Docs |
 |---|---|---|---|---|
 | Run and debt | implemented | MVP | One week, seven auto-charged installments, score = repaid / 2000 | `addons/framework/run_state.gd` |
-| Phase flow and HUD | implemented | MVP | Router, morning, shop, results, debug HUD | `scripts/main.gd` |
+| Phase flow and HUD | implemented | MVP | Router, morning, shop, results, HUD | `scripts/main.gd` |
+| Menu and difficulty | implemented | MVP | Rock Bottom menu, three difficulty cards, settings | `scenes/menu.tscn` |
+| Pause menu | implemented | MVP | ESC pause with settings and main menu | `scenes/pause.tscn` |
+| Settings | implemented | MVP | Persisted skip/volume/fullscreen | `addons/framework/settings.gd` |
 | Fish tank and storage | implemented | MVP | 21 slots (+7/tier), one day safe then spoils, hot spoilage | `scripts/data/fish_instance.gd` |
 | Tables and patience | implemented | MVP | 45 s, 3 hearts, preference bonus, angry flow penalty | `scripts/systems/table.gd` |
 | Fishing reel | implemented | MVP | Four zones; centre = 8 slices and better loot; E skips the animation | `scenes/fishing.tscn` |
@@ -235,6 +240,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.9 (2026-11-15):** Rock Bottom menu with difficulty cards, persisted settings (skip animations, music/SFX, fullscreen), ESC pause, results -> main menu, difficulty presets with replay rewind.
 
 **0.8 (2026-11-15):** post-service tank storage; table/CUT text backing; tray upgrade removed; compound stat costs (fishing 1.8x vs 1.5x); unagi art; placeholder cleanup.
 

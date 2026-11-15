@@ -17,6 +17,8 @@ func _ready() -> void:
 	var main := preload("res://scenes/main.tscn").instantiate()
 	add_child(main)
 	await _frames(3)
+	main._start_game(1)  # medium
+	await _frames(3)
 	_expect("Morning")
 
 	# --- fishing: one perfect cast -----------------------------------------

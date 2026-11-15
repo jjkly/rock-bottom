@@ -38,8 +38,13 @@ enum Weather { CLEAR, HOT, RAIN }
 # that forces you to save instead of spending everything on gear.
 # Sum = 2000. Anything you pay above an installment is score.
 const DAYS_PER_RUN := 7
-const START_DEBT := 2000
-const INSTALLMENTS: Array[int] = [100, 150, 200, 250, 300, 300, 700]
+const BASE_INSTALLMENTS: Array[int] = [100, 150, 200, 250, 300, 300, 700]
+
+enum Difficulty { EASY, MEDIUM, HARD }
+const DIFFICULTY_DEBT := {Difficulty.EASY: 1600, Difficulty.MEDIUM: 2000, Difficulty.HARD: 2400}
+const DIFFICULTY_MULT := {Difficulty.EASY: 0.8, Difficulty.MEDIUM: 1.0, Difficulty.HARD: 1.2}
+const DIFFICULTY_RARE := {Difficulty.EASY: 1.2, Difficulty.MEDIUM: 1.0, Difficulty.HARD: 0.8}
+const DIFFICULTY_REPLAYS := {Difficulty.EASY: -1, Difficulty.MEDIUM: 1, Difficulty.HARD: 0}
 
 const START_TANK_SLOTS := 21
 
@@ -65,6 +70,11 @@ signal weather_changed(weather: int)
 signal run_ended(repaid_ratio: float, remaining_debt: int)
 
 # --- State. Read it, don't write it. ----------------------------------------
+var difficulty: int = Difficulty.MEDIUM
+var installments: Array[int] = [100, 150, 200, 250, 300, 300, 700]
+var replays_left := 1
+var _day_snapshot := {}
+
 var day := 1
 var phase: Phase = Phase.MORNING
 var cash := 0
@@ -104,12 +114,25 @@ func _ready() -> void:
 # ============================================================================
 
 ## Wipe state and begin a new week. Call once when the run starts.
+func set_difficulty(value: int) -> void:
+	difficulty = clampi(value, 0, 2)
+	installments.clear()
+	for base in BASE_INSTALLMENTS:
+		installments.append(int(round(base * float(DIFFICULTY_MULT[difficulty]))))
+	replays_left = int(DIFFICULTY_REPLAYS[difficulty])
+
+
+func rare_multiplier() -> float:
+	return float(DIFFICULTY_RARE[difficulty])
+
+
 func start_run(seed_value: int = 0) -> void:
+	set_difficulty(difficulty)
 	day = 1
 	phase = Phase.MORNING
 	cash = 0
-	debt_start = START_DEBT
-	debt = START_DEBT
+	debt_start = DIFFICULTY_DEBT[difficulty]
+	debt = debt_start
 	paid_total = 0
 	installment_paid_today = false
 	missed_installment = false
@@ -129,6 +152,7 @@ func start_run(seed_value: int = 0) -> void:
 		rng.seed = seed_value
 	weather_tomorrow = _roll_weather()
 
+	_snapshot_day()
 	day_started.emit(day)
 	cash_changed.emit(cash)
 	debt_changed.emit(debt)
@@ -162,6 +186,13 @@ func end_day() -> bool:
 
 	var due := installment_today()
 	if cash < due:
+		# Replays rewind the day instead of ending the run.
+		if replays_left != 0:
+			if replays_left > 0:
+				replays_left -= 1
+			quota_missed.emit(day)
+			_restore_day()
+			return false
 		missed_installment = true
 		run_over = true
 		quota_missed.emit(day)
@@ -193,6 +224,7 @@ func end_day() -> bool:
 	weather = weather_tomorrow
 	weather_tomorrow = _roll_weather()
 
+	_snapshot_day()
 	day_started.emit(day)
 	weather_changed.emit(weather)
 	phase_changed.emit(Phase.NIGHT, Phase.MORNING)
@@ -203,7 +235,7 @@ func end_day() -> bool:
 
 ## Tonight's installment. Charged automatically by end_day().
 func installment_today() -> int:
-	return INSTALLMENTS[clampi(day - 1, 0, INSTALLMENTS.size() - 1)]
+	return installments[clampi(day - 1, 0, installments.size() - 1)]
 
 
 ## 1-based "3/7" for the UI.
@@ -396,6 +428,56 @@ func _settle_and_end() -> void:
 	cash_changed.emit(cash)
 	debt_changed.emit(debt)
 	run_ended.emit(ratio, debt)
+
+
+# --- Replay support --------------------------------------------------------
+
+func _copy_fish(src: Array[FishInstance]) -> Array[FishInstance]:
+	var out: Array[FishInstance] = []
+	for f in src:
+		var c := FishInstance.new(f.species, f.size_slices, f.modifier)
+		c.age_days = f.age_days
+		c.plates_left = f.plates_left
+		c.prepared = f.prepared
+		c.spoiled = f.spoiled
+		out.append(c)
+	return out
+
+
+func _snapshot_day() -> void:
+	_day_snapshot = {
+		"cash": cash, "debt": debt, "paid": paid_total, "day": day,
+		"weather": weather, "weather_tomorrow": weather_tomorrow,
+		"gear": gear.duplicate(), "stats": stats.duplicate(),
+		"stock": _copy_fish(stock), "tank": _copy_fish(tank),
+		"tank_capacity": tank_capacity,
+	}
+
+
+func _restore_day() -> void:
+	if _day_snapshot.is_empty():
+		return
+	cash = int(_day_snapshot["cash"])
+	debt = int(_day_snapshot["debt"])
+	paid_total = int(_day_snapshot["paid"])
+	day = int(_day_snapshot["day"])
+	weather = int(_day_snapshot["weather"])
+	weather_tomorrow = int(_day_snapshot["weather_tomorrow"])
+	gear = (_day_snapshot["gear"] as Dictionary).duplicate()
+	stats = (_day_snapshot["stats"] as Dictionary).duplicate()
+	stock = _copy_fish(_day_snapshot["stock"])
+	tank = _copy_fish(_day_snapshot["tank"])
+	tank_capacity = int(_day_snapshot["tank_capacity"])
+	phase = Phase.MORNING
+	installment_paid_today = false
+	missed_installment = false
+	run_over = false
+	day_started.emit(day)
+	phase_changed.emit(Phase.NIGHT, Phase.MORNING)
+	cash_changed.emit(cash)
+	debt_changed.emit(debt)
+	stock_changed.emit()
+	tank_changed.emit()
 
 
 # ============================================================================

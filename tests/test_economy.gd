@@ -20,6 +20,8 @@ static func run(t) -> void:
 	_test_carry_plates(t)
 	_test_extra_payment(t)
 	_test_tank_move(t)
+	_test_difficulty(t)
+	_test_replays(t)
 
 
 static func _new_run(seed_value: int = 7):
@@ -55,11 +57,13 @@ static func _test_start(t) -> void:
 static func _test_installment(t) -> void:
 	# Empty wallet: the auto-charge fails and the run ends.
 	var broke = _new_run()
+	broke.set_difficulty(2)  # hard: no replay
+	broke.start_run()
 	broke.advance_phase()
 	broke.advance_phase()
 	broke.advance_phase()
 	t.eq(broke.phase, 3, "three advances reach NIGHT")
-	t.eq(broke.installment_today(), 100, "day 1 installment is $100")
+	t.eq(broke.installment_today(), 120, "hard day 1 installment is $120")
 	t.eq(broke.end_day(), false, "cannot pay with $0")
 	t.eq(broke.missed_installment, true, "missed installment is recorded")
 	t.eq(broke.run_over, true, "missing an installment ends the run")
@@ -161,6 +165,47 @@ static func _test_tank_move(t) -> void:
 	t.eq(rs.stock.size(), 1, "taken fish returns to stock")
 	t.eq(rs.tank.size(), 0, "tank is empty again")
 	rs.free()
+
+
+static func _test_difficulty(t) -> void:
+	var easy = _new_run()
+	easy.set_difficulty(0)
+	easy.start_run()
+	t.eq(easy.debt, 1600, "easy debt is $1600")
+	t.eq(easy.installment_today(), 80, "easy day 1 installment is $80")
+	t.eq(easy.rare_multiplier(), 1.2, "easy rare odds +20%")
+	easy.free()
+
+	var hard = _new_run()
+	hard.set_difficulty(2)
+	hard.start_run()
+	t.eq(hard.debt, 2400, "hard debt is $2400")
+	t.eq(hard.installment_today(), 120, "hard day 1 installment is $120")
+	t.eq(hard.rare_multiplier(), 0.8, "hard rare odds -20%")
+	hard.free()
+
+
+static func _test_replays(t) -> void:
+	var rs = _new_run()
+	rs.set_difficulty(1)  # medium: one replay
+	rs.start_run()
+	rs.advance_phase(); rs.advance_phase(); rs.advance_phase()
+	t.eq(rs.replays_left, 1, "medium starts with one replay")
+	# Empty wallet at night: rewind to the morning of the same day.
+	t.eq(rs.end_day(), false, "missing the installment stops the night")
+	t.eq(rs.replays_left, 0, "replay consumed")
+	t.eq(rs.day, 1, "day rewound")
+	t.eq(rs.phase, 0, "back to morning")
+	t.eq(rs.run_over, false, "run continues after a replay")
+	rs.free()
+
+	var hard = _new_run()
+	hard.set_difficulty(2)
+	hard.start_run()
+	hard.advance_phase(); hard.advance_phase(); hard.advance_phase()
+	t.eq(hard.end_day(), false, "hard cannot pay")
+	t.eq(hard.run_over, true, "hard run ends")
+	hard.free()
 
 
 static func _test_hot_weather(t) -> void:

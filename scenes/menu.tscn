@@ -1,0 +1,116 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/makebead-99x66-2.png" id="2_dock"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")
+
+[node name="DockBg" type="TextureRect" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1280.0
+offset_bottom = 720.0
+texture_filter = 3
+texture = ExtResource("2_dock")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.02, 0.03, 0.05, 0.55)
+
+[node name="TitleRoot" type="Node2D" parent="."]
+position = Vector2(640, 170)
+
+[node name="TitleLabel" type="Label" parent="."]
+offset_left = 240.0
+offset_top = 90.0
+offset_right = 1040.0
+offset_bottom = 200.0
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 76
+text = "Rock Bottom"
+horizontal_alignment = 1
+
+[node name="Tagline" type="Label" parent="."]
+offset_left = 240.0
+offset_top = 210.0
+offset_right = 1040.0
+offset_bottom = 250.0
+theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 1)
+theme_override_font_sizes/font_size = 20
+text = "One week. One debt. One shot."
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="."]
+offset_left = 440.0
+offset_top = 360.0
+offset_right = 840.0
+offset_bottom = 428.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "Play"
+
+[node name="SettingsButton" type="Button" parent="."]
+offset_left = 440.0
+offset_top = 452.0
+offset_right = 840.0
+offset_bottom = 512.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Settings"
+
+[node name="Version" type="Label" parent="."]
+offset_left = 1080.0
+offset_top = 676.0
+offset_right = 1256.0
+offset_bottom = 704.0
+theme_override_colors/font_color = Color(0.55, 0.6, 0.65, 1)
+theme_override_font_sizes/font_size = 14
+text = "v0.9"
+
+[node name="DifficultyPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="DifficultyPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.75)
+
+[node name="Heading" type="Label" parent="DifficultyPanel"]
+offset_left = 70.0
+offset_top = 80.0
+offset_right = 1210.0
+offset_bottom = 130.0
+theme_override_font_sizes/font_size = 34
+text = "Choose a difficulty"
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="DifficultyPanel"]
+offset_left = 40.0
+offset_top = 660.0
+offset_right = 260.0
+offset_bottom = 704.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[node name="Cards" type="Control" parent="DifficultyPanel"]
+offset_left = 0.0
+offset_top = 150.0
+offset_right = 1280.0
+offset_bottom = 620.0
