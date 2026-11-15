@@ -8,6 +8,7 @@
 script = ExtResource("1_0eaye")
 id = "sea_bream"
 display_name = "Flounder"
+preference = "lean"
 base_price = 26
 sprite = ExtResource("2_pl7e6")
 raw_sprite = ExtResource("1_pl7e6")

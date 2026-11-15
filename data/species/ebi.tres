@@ -8,6 +8,7 @@
 script = ExtResource("1_eijju")
 id = "ebi"
 display_name = "Sweet Shrimp"
+preference = "lean"
 base_price = 24
 sprite = ExtResource("2_ngjgv")
 raw_sprite = ExtResource("1_ngjgv")

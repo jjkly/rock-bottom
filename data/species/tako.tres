@@ -8,5 +8,7 @@
 script = ExtResource("1_oijyc")
 id = "tako"
 display_name = "Octopus"
+preference = "lean"
+base_price = 20
 sprite = ExtResource("2_kisyy")
 raw_sprite = ExtResource("1_kisyy")

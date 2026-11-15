@@ -8,6 +8,7 @@
 script = ExtResource("1_78v83")
 id = "lean_tuna"
 display_name = "Lean Tuna"
+preference = "lean"
 base_price = 28
 sprite = ExtResource("2_440dd")
 raw_sprite = ExtResource("1_440dd")

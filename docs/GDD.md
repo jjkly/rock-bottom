@@ -193,6 +193,7 @@ pause, tutorial, music and SFX.
 | `docs/GDD.md` | Design, numbers, feature status, decisions |
 | `docs/ARCHITECTURE.md` | Runtime map, RunState API, signals, data, asset and audio pipelines |
 | `docs/CREDITS.md` | Third-party art, music and SFX licences |
+| `docs/ITCH_PAGE.md` | Store page copy, metadata and media checklist |
 | `addons/framework/` | Autoloads: `RunState`, `Settings`, `Audio` |
 | `scripts/data/` | Resource schemas (species, modifier, gear, table, fish) |
 | `data/` | Content `.tres` files — edit these, not code, to tune |

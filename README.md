@@ -48,6 +48,7 @@ is single-threaded, so it needs no COOP/COEP headers.
 - [`docs/GDD.md`](docs/GDD.md) — design, numbers, feature status, decisions.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime map, RunState API, signals, data, asset and audio pipelines.
 - [`docs/CREDITS.md`](docs/CREDITS.md) — third-party art, music and SFX licences.
+- [`docs/ITCH_PAGE.md`](docs/ITCH_PAGE.md) — every itch.io page field with the value to paste.
 - Folder-level `README.md` files next to generated art explain that folder's sources and sizes.
 
 ## Working rules
