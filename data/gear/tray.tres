@@ -10,4 +10,4 @@ slot = "tray"
 effect = "carry_slots"
 costs = Array[int]([120, 240])
 values = Array[float]([0.0, 1.0, 2.0])
-description = "Carry two plates at once; halves the trips during service."
+description = "Extra plate slot (not wired yet)."

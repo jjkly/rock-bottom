@@ -7,4 +7,4 @@ script = ExtResource("1_efyrl")
 id = "rod"
 costs = Array[int]([60, 140, 260])
 values = Array[float]([0.0, 0.15, 0.3, 0.45])
-description = "Longer reel bar: easier perfect catches, which means bigger fish."
+description = "Wider scoring zones: +15% perfect window per tier."

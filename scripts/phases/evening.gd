@@ -17,7 +17,7 @@ extends Node2D
 const TABLE_SCENE := preload("res://scenes/table.tscn")
 const TABLE_SLOTS: Array[Vector2] = [
 	Vector2(400, 330), Vector2(880, 330),
-	Vector2(400, 540), Vector2(880, 540),
+	Vector2(400, 540), Vector2(760, 540),
 	Vector2(1080, 440), Vector2(340, 610),
 ]
 const SPAWN_MARKS: Array[float] = [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
@@ -131,8 +131,9 @@ func _store_selected() -> void:
 	if _next_fish == null or not RunState.stock.has(_next_fish):
 		_msg.text = "Select a fish in stock first, then E at the tank."
 		return
+	var stored_name := _next_fish.species.display_name
 	if RunState.freeze(_next_fish):
-		_msg.text = "Stored %s in the fish tank." % _next_fish.species.display_name
+		_msg.text = "Stored %s in the fish tank." % stored_name
 		_next_fish = null
 		_show_preview(null)
 		_rebuild_stock()

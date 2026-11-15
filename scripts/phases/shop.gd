@@ -14,6 +14,7 @@ extends Control
 @onready var _sleep_btn: Button = $SleepButton
 @onready var _gear_box: VBoxContainer = $GearBox
 @onready var _train_box: VBoxContainer = $TrainBox
+@onready var _stats: Label = $StatsLabel
 
 var _gear: Array[GearDef] = []
 var _rows: Array[Dictionary] = []
@@ -58,6 +59,7 @@ func _build_gear_rows() -> void:
 		row.add_child(l)
 		var b := UI.button("", 160, 16)
 		b.pressed.connect(func(): _buy_gear(g))
+		b.tooltip_text = g.description
 		row.add_child(b)
 		_gear_box.add_child(row)
 		_rows.append({"gear": g, "label": l, "button": b})
@@ -101,6 +103,7 @@ func _roll_offers() -> void:
 			cost = int(round(cost * 0.75))
 		var offer := {"stat": stat, "cost": cost, "bought": false, "discount": discount}
 		var b := UI.button("", 320, 17)
+		b.tooltip_text = _stat_help(offer["stat"])
 		b.pressed.connect(func(): _buy_training(offer, b))
 		_train_box.add_child(b)
 		offer["button"] = b
@@ -145,6 +148,14 @@ func _refresh_offers() -> void:
 		b.disabled = RunState.cash < int(offer["cost"])
 
 
+func _stat_help(stat: String) -> String:
+	match stat:
+		"luck": return "Luck: +2% rare fish odds and better shop deals."
+		"fishing": return "Fishing: +1 cast every 2 points (cap 10)."
+		"speed": return "Speed: +10 movement speed per point."
+	return ""
+
+
 func _stat_name(stat: String) -> String:
 	match stat:
 		"luck": return "Luck"
@@ -157,6 +168,11 @@ func _refresh() -> void:
 	if _cash_label == null:
 		return
 	_cash_label.text = "Cash $%d   ·   debt $%d" % [RunState.cash, RunState.debt]
+	if _stats != null:
+		_stats.text = "Luck %d  ·  Fishing %d  ·  Speed %d" % [
+			RunState.stats.get("luck", 0), RunState.stats.get("fishing", 0), RunState.stats.get("speed", 0)
+		]
+		_stats.tooltip_text = "Luck: +2% rare odds and shop deals\nFishing: +1 cast every 2 points\nSpeed: +10 move speed per point"
 	_due_label.text = "Installment %d/7 tonight: $%d (charged when you sleep)" % [
 		RunState.installment_number(), RunState.installment_today()
 	]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/phases/evening.gd" id="1_evening"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/cutting_board.png" id="2_board"]
+[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/cutting board.png" id="2_board"]
 [ext_resource type="Texture2D" path="res://assets/sprites/restaurant/tank.png" id="5_tank"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="6_player"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fish/plate.png" id="7_plate"]
@@ -68,9 +68,11 @@ stretch_mode = 0
 [node name="CuttingBoard" type="Sprite2D" parent="Props"]
 position = Vector2(520, 160)
 texture = ExtResource("2_board")
+scale = Vector2(1.5, 1.5)
 
 [node name="Tank" type="Sprite2D" parent="Props"]
-position = Vector2(1180, 640)
+position = Vector2(1020, 600)
+scale = Vector2(4, 4)
 texture = ExtResource("5_tank")
 
 [node name="BoardLabel" type="Label" parent="."]
@@ -121,6 +123,13 @@ custom_minimum_size = Vector2(236, 0)
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
+[node name="TimerBg" type="ColorRect" parent="UI"]
+offset_left = 675.0
+offset_top = 82.0
+offset_right = 900.0
+offset_bottom = 126.0
+color = Color(0, 0, 0, 0.55)
+
 [node name="TimerLabel" type="Label" parent="UI"]
 offset_left = 690.0
 offset_top = 90.0
@@ -129,6 +138,13 @@ offset_bottom = 120.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.6, 1)
 theme_override_font_sizes/font_size = 18
 text = "Service  55s"
+
+[node name="BottomBg" type="ColorRect" parent="UI"]
+offset_left = 330.0
+offset_top = 638.0
+offset_right = 1050.0
+offset_bottom = 712.0
+color = Color(0, 0, 0, 0.45)
 
 [node name="Help" type="Label" parent="UI"]
 offset_left = 360.0

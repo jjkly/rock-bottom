@@ -14,7 +14,7 @@ extends CharacterBody2D
 
 signal interact_requested
 
-const SPEED := 300.0
+const BASE_SPEED := 300.0
 
 @export var player_prefix := "p1"
 @export var body_tint := Color.WHITE
@@ -40,7 +40,7 @@ func _physics_process(_delta: float) -> void:
 		player_prefix + "_left", player_prefix + "_right",
 		player_prefix + "_up", player_prefix + "_down"
 	)
-	velocity = dir * SPEED
+	velocity = dir * (BASE_SPEED + 10.0 * RunState.stats.get("speed", 0))
 	move_and_slide()
 
 	var moving := dir.length() > 0.01

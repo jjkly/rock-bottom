@@ -59,7 +59,7 @@ var _settled := true
 func _ready() -> void:
 	_filler = load(FILLER)
 	_load_content()
-	_casts_left = clampi(3 + RunState.day, 5, 8)
+	_casts_left = clampi(3 + RunState.day + int(RunState.stats.get("fishing", 0) / 2), 5, 10)
 	_title.text = "Fishing — %s" % RunState.weather_name(RunState.weather)
 	_bar_marker.position.x = BAR_X + (BAR_W - MARKER_W) * 0.5
 
@@ -119,14 +119,16 @@ func _on_cast() -> void:
 func _stop_reel() -> void:
 	var p := 0.5 + 0.5 * sin(_reel_t)
 	var dist := absf(p - 0.5) * BAR_W
+	# Rod tiers widen every scoring zone by 15%.
+	var zone := 1.0 + 0.15 * int(RunState.gear.get("rod", 0))
 	var quality := 0.0
-	if dist <= 35.0:
+	if dist <= 35.0 * zone:
 		_pending_size = 8
 		quality = 1.0
-	elif dist <= 110.0:
+	elif dist <= 110.0 * zone:
 		_pending_size = 6
 		quality = 0.7
-	elif dist <= 210.0:
+	elif dist <= 210.0 * zone:
 		_pending_size = 4
 		quality = 0.4
 	else:
@@ -135,7 +137,7 @@ func _stop_reel() -> void:
 
 	_pending_species = _roll_species(quality)
 	_pending_mod = null
-	if RunState.rng.randf() < 0.04 + 0.11 * quality and not _mods.is_empty():
+	if RunState.rng.randf() < 0.04 + 0.11 * quality + 0.02 * RunState.stats.get("luck", 0) and not _mods.is_empty():
 		_pending_mod = _mods[RunState.rng.randi_range(0, _mods.size() - 1)]
 
 	_state = State.REVEAL

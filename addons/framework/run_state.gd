@@ -41,7 +41,7 @@ const DAYS_PER_RUN := 7
 const START_DEBT := 2000
 const INSTALLMENTS: Array[int] = [100, 150, 200, 250, 300, 300, 700]
 
-const START_TANK_SLOTS := 3
+const START_TANK_SLOTS := 21
 
 # Weights are relative, not percentages: 50/25/25 = 50% clear, 25% hot, 25% rain.
 const WEATHER_WEIGHTS := {
@@ -272,6 +272,8 @@ func pay_plate(fish: FishInstance, table_preference: String) -> int:
 	var value := fish.value()
 	if fish.matches(table_preference):
 		value = int(round(value * 1.2))
+	# Knife tiers are finer cuts: +5% plate value each.
+	value = int(round(value * (1.0 + 0.05 * int(gear.get("knife", 0)))))
 	cash += value
 	cash_changed.emit(cash)
 	return value
@@ -324,7 +326,7 @@ func upgrade_gear(slot: String, cost: int) -> bool:
 		return false
 	gear[slot] += 1
 	if slot == "tank":
-		tank_capacity = START_TANK_SLOTS + int(gear["tank"])
+		tank_capacity = START_TANK_SLOTS + 7 * int(gear["tank"])
 	gear_changed.emit(slot, gear[slot])
 	return true
 
@@ -408,9 +410,9 @@ func debug_state() -> String:
 	]
 
 
-static func phase_name(p: int) -> String:
+func phase_name(p: int) -> String:
 	return ["MORNING", "FISHING", "EVENING", "NIGHT"][p]
 
 
-static func weather_name(w: int) -> String:
+func weather_name(w: int) -> String:
 	return ["CLEAR", "HOT", "RAIN"][w]

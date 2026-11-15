@@ -10,4 +10,4 @@ slot = "knife"
 effect = "cut_speed"
 costs = Array[int]([50, 120, 220])
 values = Array[float]([0.0, 0.2, 0.4, 0.6])
-description = "Faster cutting at the board."
+description = "Finer cuts: +5% plate value per tier."

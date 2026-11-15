@@ -150,7 +150,7 @@ presentation one.
 |---|---|---|---|---|
 | Run and debt | implemented | MVP | One week, seven auto-charged installments, score = repaid / 2000 | `addons/framework/run_state.gd` |
 | Phase flow and HUD | implemented | MVP | Router, morning, shop, results, debug HUD | `scripts/main.gd` |
-| Fish tank and storage | implemented | MVP | 3 slots (+2/tier), one day safe then spoils, hot spoilage | `scripts/data/fish_instance.gd` |
+| Fish tank and storage | implemented | MVP | 21 slots (+7/tier), one day safe then spoils, hot spoilage | `scripts/data/fish_instance.gd` |
 | Tables and patience | implemented | MVP | 45 s, 3 hearts, preference bonus, angry flow penalty | `scripts/systems/table.gd` |
 | Fishing reel | implemented | MVP | Four zones; centre = 8 slices and better loot; E skips the animation | `scenes/fishing.tscn` |
 | Crate and rares | implemented | MVP | CS:GO-style scrolling raw-fish reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |

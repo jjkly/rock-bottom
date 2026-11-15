@@ -9,5 +9,5 @@ display_name = "Fish Tank"
 slot = "tank"
 effect = "tank_slots"
 costs = Array[int]([90, 180])
-values = Array[float]([0.0, 1.0, 2.0])
-description = "Two more slots for holding fish. Pairs with Ice Cold and hot days."
+values = Array[float]([0.0, 7.0, 14.0])
+description = "Seven more tank slots per tier; tank keeps fish one day."
