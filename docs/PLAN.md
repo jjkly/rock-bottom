@@ -58,7 +58,13 @@ presets, audio, and all real art. Everything below still describes the target.
 - [x] Player speed 215 -> 300; stock list scrolls so a full inventory can't cover the room
 - [x] Bar has four zones; centre = 8 slices and biases the loot roll
 - [x] Crate is a CS:GO-style scrolling reel with rarity frames, name below
-- [ ] Missing art: see [SPRITES.md](SPRITES.md)
+- [x] Missing art: see [SPRITES.md](SPRITES.md)
+- [x] Fish tank replaces the freezer (one day safe, heat still spoils, click to take)
+- [x] Preference tags + colours; tables shuffle position and preference per service
+- [x] Day-1 tutorial popups (pause, More, HUD "?")
+- [x] Store/dock backgrounds at 8x with dim; "Go to dock"
+- [x] 5x fisherman, E skips the crate, 2.16s reel, catch "!"
+- [x] Shop confirm when a purchase would break the installment; confirm before a short sleep
 - [ ] Cooking and wash minigames (stations still decorative)
 - [ ] Customer walk-in / seated sprites
 - [ ] Angry tables actually reduce tomorrow's flow

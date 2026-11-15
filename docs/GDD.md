@@ -42,8 +42,8 @@ one counter, no excuses. Mornings are the newspaper, the weather and the
 delivery crates. Afternoons are the boat: a Stardew reel bar decides how big
 the fish is, then a crate decides what it is. Evenings are the restaurant:
 four tables, shared plates, omakase — the chef chooses what each table gets.
-Nights are the ledger: pay the minimum, spend the rest on a better rod, a
-sharper knife, another freezer slot, or a little more luck. On day eight the
+Nights are the ledger: pay the installment, spend the rest on a better rod, a
+sharper knife, another fish tank slot, or a little more luck. On day eight the
 remaining cash is taken and the week is scored. The story is told by the
 numbers, not cutscenes.
 
@@ -75,11 +75,11 @@ day 7:   all cash settles the debt -> score = paid_total / 2000
 | State | Effect | Announced |
 |---|---|---|
 | Clear | baseline catch table | morning |
-| Hot | every freezer fish spoils at end of day | morning (before casting) |
+| Hot | every fish tank fish spoils at end of day | morning (before casting) |
 | Rain | swaps two species for rain-only ones (eel) | morning |
 
 Weights 50/25/25; day 1 is always clear. No forecast system: hot resolves at
-end of day, so the morning warning is enough to drain the freezer into service.
+end of day, so the morning warning is enough to drain the fish tank into service.
 
 ## Fish, plates and the crate
 
@@ -127,11 +127,11 @@ agents, so tile A* or pre-baked seat paths, not a navmesh.
 - Difficulty: Easy = unlimited free replays, −20% installments, ~100% clear.
   Medium = one replay costing the day's earnings, baseline, ~85%. Hard = no
   replay, +15% installments, ~70%.
-- Night shop: Equipment (rod, knife, dishwasher, freezer, tray; durable,
+- Night shop: Equipment (rod, knife, dishwasher, fish tank, tray; durable,
   3 tiers each) and Training (one 3-of-N offer of Luck / Fishing / Speed,
   Luck may discount one). Both run-scoped.
 - Meta unlocks at 50/70/90% repaid: species, prep methods, bait, starting
-  freezer slot. Pool-widening only — never power.
+  fish tank slot. Pool-widening only — never power.
 
 ## Screens and flow
 
@@ -147,16 +147,18 @@ presentation one.
 
 | Feature | Status | Scope | Summary | Docs |
 |---|---|---|---|---|
-| Run and debt | implemented | MVP | One week, fixed minimums, automatic settlement, score | `addons/framework/run_state.gd` |
+| Run and debt | implemented | MVP | One week, seven auto-charged installments, score = repaid / 2000 | `addons/framework/run_state.gd` |
 | Phase flow and HUD | implemented | MVP | Router, morning, shop, results, debug HUD | `scripts/main.gd` |
-| Freezer and aging | implemented | MVP | 3 slots (+2/tier), edomae aging peak, hot spoilage | `scripts/data/fish_instance.gd` |
+| Fish tank and storage | implemented | MVP | 3 slots (+2/tier), one day safe then spoils, hot spoilage | `scripts/data/fish_instance.gd` |
 | Tables and patience | implemented | MVP | 45 s, 3 hearts, preference bonus, angry flow penalty | `scripts/systems/table.gd` |
-| Fishing reel | implemented | MVP | Four zones; centre = 8 slices and better loot | `scenes/fishing.tscn` |
-| Crate and rares | implemented | MVP | CS:GO-style scrolling nigiri reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |
+| Fishing reel | implemented | MVP | Four zones; centre = 8 slices and better loot; E skips the animation | `scenes/fishing.tscn` |
+| Crate and rares | implemented | MVP | CS:GO-style scrolling raw-fish reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |
 | Weather and news | implemented | MVP | Clear / hot / rain, announced each morning | `scripts/phases/morning.gd` |
 | Evening service | implemented | MVP | Single chef, 4–6 tables, plates carried from the top-row board | `scenes/evening.tscn` |
 | Stations and minigames | in progress | MVP | Cut works (instant); cook and wash are stubs | `scripts/systems/station.gd` |
 | Shop and draft | implemented | MVP | Equipment rows + 3 unique training offers | `scripts/phases/shop.gd` |
+| Tutorial | implemented | MVP | Day-1 popup per phase, pauses, More section, HUD "?" | `scenes/tutorial.tscn` |
+| Backgrounds | implemented | MVP | Store on morning, dock on fishing, 8× with dim overlay | `scenes/morning.tscn` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
 | Audio pass | idea | later | Service diegetics, crate reveal, debt sting | — |
@@ -179,7 +181,7 @@ screen with placeholder art and `tests/` is green. Tasks: PLAN.md phases 1–3.
 | Everyone | A test per new rule; run `run_tests.gd` before pushing | Exit 0 |
 
 **M2 — the week has teeth.** Shop and training, weather in the catch table,
-freezer/hot-day loop, bestiary, 3 species + 1 rain-only, gear effects wired.
+fish tank/hot-day loop, bestiary, 3 species + 1 rain-only, gear effects wired.
 
 **M3 — presentation.** Art pass, audio, crate juice, score screen, meta
 milestones. Only after M2 is fun.
@@ -212,7 +214,7 @@ milestones. Only after M2 is fun.
 | D-005 | 2026-11-14 | Crate EV negative, but necessary for premium plates | crate as a valid strategy | mechanics must argue against the addiction, not for it | economy, theme |
 | D-006 | 2026-11-14 | Hot resolves at end of day, announced in the morning | resolve at start; forecast system | warning makes it a plan, not a mugging; no extra UI | weather |
 | D-007 | 2026-11-14 | Evening = movement; fishing = screen; shop = menu | all screens; all movement | one expensive scene, two cheap ones, on a 3-person team | scope |
-| D-008 | 2026-11-14 | Freezer capacity 3 + aging curve | storage only | makes holding a decision, Ice Cold a job | freezer |
+| D-008 | 2026-11-14 | Fish tank: capacity 3, one day safe, then spoils | storage only; aging curve | storage is a decision, hot days matter, Ice Cold is the exception | tank |
 | D-009 | 2026-11-14 | Run-scoped gear/stats; meta unlocks pool only | meta power progression | keeps the week honest across runs | shop, meta |
 | D-010 | 2026-11-14 | Difficulty changes replays and minimums | difficulty changes odds | odds must stay a read, not a setting | run |
 | D-011 | 2026-11-15 | Debt is 7 installments (100/150/200/250/300/300/700), auto-charged | flat minimum; remaining divided by days | daily pressure tracks income growth; the balloon forces saving | economy |
@@ -230,6 +232,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.5 (2026-11-15):** tank replaces freezer (one day safe, heat still spoils); preference tags with colours; tables randomize per service; 5× fisherman, dock/store backgrounds, E skip, 2.16s reel; day-1 tutorial popups; shop confirmations.
 
 **0.4 (2026-11-15):** debt is now seven auto-charged installments with a $700 day-7 balloon; optional extra payments feed the score.
 

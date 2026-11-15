@@ -31,10 +31,15 @@ const TABLE_RANGE := 120.0
 @onready var _msg: Label = $UI/Message
 @onready var _timer_label: Label = $UI/TimerLabel
 @onready var _continue: Button = $UI/ContinueButton
+@onready var _tank_panel: ColorRect = $UI/TankPanel
+@onready var _tank_items: VBoxContainer = $UI/TankPanel/TankList/TankItems
 @onready var _board_pos: Vector2 = $Props/CuttingBoard.position
+@onready var _tank_pos: Vector2 = $Props/Tank.position
 
 var _tables: Array[Table] = []
 var _table_defs: Array[TableDef] = []
+var _slots: Array[Vector2] = []
+const PREFERENCES := ["lean", "fatty", "cheap", "rare"]
 var _next_fish: FishInstance = null
 var _service_time := 0.0
 var _spawned := 0
@@ -49,8 +54,13 @@ func _ready() -> void:
 	_continue.visible = false
 	_continue.pressed.connect(func(): RunState.advance_phase())
 	_player.interact_requested.connect(_on_interact)
+	# Fresh table layout every service: unique slots, random preferences.
+	_slots = TABLE_SLOTS.duplicate()
+	_slots.shuffle()
 	RunState.stock_changed.connect(_rebuild_stock)
+	RunState.tank_changed.connect(_rebuild_tank)
 	_rebuild_stock()
+	_rebuild_tank()
 	set_process(true)
 
 
@@ -69,6 +79,7 @@ func _process(delta: float) -> void:
 		return
 	_service_time += delta
 	_timer_label.text = "Service  %ds" % int(SERVICE_WINDOW - _service_time)
+	_tank_panel.visible = not _ended and _player.position.distance_to(_tank_pos) < 160.0
 
 	while _spawned < _table_total and _service_time >= SPAWN_MARKS[_spawned]:
 		_spawn_table(_spawned)
@@ -85,9 +96,11 @@ func _process(delta: float) -> void:
 
 
 func _spawn_table(index: int) -> void:
-	var definition := _table_defs[index % _table_defs.size()]
+	# Duplicate the def so the shared resource's preference is never mutated.
+	var definition: TableDef = _table_defs[index % _table_defs.size()].duplicate()
+	definition.preference = PREFERENCES[RunState.rng.randi_range(0, PREFERENCES.size() - 1)]
 	var t: Table = TABLE_SCENE.instantiate()
-	t.position = TABLE_SLOTS[index % TABLE_SLOTS.size()]
+	t.position = _slots[index % _slots.size()]
 	t.setup(definition)
 	_tables_node.add_child(t)
 	_tables.append(t)
@@ -168,7 +181,9 @@ func _rebuild_stock() -> void:
 		_stock_box.add_child(UI.label("(empty)", 15, Color(0.6, 0.6, 0.65)))
 		return
 	for fish in RunState.stock:
-		var b := UI.button("%s  $%d  ×%d" % [_short_name(fish), fish.value(), fish.plates_left], 230, 15)
+		var tag := fish.species.preference
+		var b := UI.button("%s (%s)  $%d  ×%d" % [_short_name(fish), tag, fish.value(), fish.plates_left], 230, 15)
+		b.add_theme_color_override("font_color", UI.tag_color(tag))
 		b.custom_minimum_size.y = 34
 		var icon_tex: Texture2D = fish.species.sprite if fish.prepared else fish.species.raw_sprite
 		if icon_tex == null:
@@ -185,8 +200,30 @@ func _rebuild_stock() -> void:
 
 
 func _short_name(fish: FishInstance) -> String:
-	var tag := " (raw)" if not fish.prepared else ""
-	return "%s%s" % [fish.species.display_name, tag]
+	return fish.species.display_name + ("" if fish.prepared else " raw")
+
+
+func _rebuild_tank() -> void:
+	for child in _tank_items.get_children():
+		child.queue_free()
+	if RunState.tank.is_empty():
+		_tank_items.add_child(UI.label("(empty)", 14, Color(0.6, 0.65, 0.7)))
+		return
+	for fish in RunState.tank:
+		var tag := fish.species.preference
+		var state := "spoiled" if fish.spoiled else ("today" if fish.age_days == 0 else "day %d" % fish.age_days)
+		var b := UI.button("%s (%s)  $%d  %s" % [
+			fish.species.display_name, tag, fish.value(), state
+		], 280, 14)
+		b.custom_minimum_size.y = 34
+		b.add_theme_color_override("font_color", UI.tag_color(tag))
+		b.pressed.connect(func():
+			if RunState.take_from_tank(fish):
+				_msg.text = "Took %s out of the tank." % fish.species.display_name
+			_rebuild_tank()
+			_rebuild_stock()
+		)
+		_tank_items.add_child(b)
 
 
 func _close_remaining() -> void:

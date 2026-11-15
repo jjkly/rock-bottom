@@ -14,6 +14,7 @@ const SCENES := [
 	"res://scenes/results.tscn",
 	"res://scenes/player.tscn",
 	"res://scenes/table.tscn",
+	"res://scenes/tutorial.tscn",
 ]
 
 

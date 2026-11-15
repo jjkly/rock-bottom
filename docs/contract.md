@@ -66,18 +66,19 @@ the score is `paid_total / debt_start`.
 | `earn(n)` / `spend(n)` | money in/out (service pays through `serve_plate`) |
 | `add_to_stock(fish)` | fishing scene, after the crate resolve |
 | `serve_plate(fish, pref)` | returns cash; handles the +20% match |
-| `freeze(fish)` / `sell(fish, from_freezer)` | freezer capacity / raw sale (60%) |
-| `upgrade_gear(slot, cost)` | shop; recomputes freezer slots |
+| `freeze(fish)` / `sell(fish, from_tank)` | tank capacity / raw sale (60%) |
+| `take_from_tank(fish)` | move a stored fish back into today's stock |
+| `upgrade_gear(slot, cost)` | shop; recomputes tank slots |
 | `add_stat(name, n)` | nightly draft (luck / fishing / speed) |
 | `debug_state()` | one-line readout; every test prints it on failure |
 
-Slots: `rod`, `knife`, `dishwasher`, `freezer`, `tray`.
+Slots: `rod`, `knife`, `dishwasher`, `tank`, `tray`.
 Stats: `luck`, `fishing`, `speed`.
 
 ## Signals (connect, don't poll)
 
 `phase_changed(from, to)` · `day_started(day)` · `cash_changed(cash)` ·
-`debt_changed(remaining)` · `stock_changed` · `freezer_changed` ·
+`debt_changed(remaining)` · `stock_changed` · `tank_changed` ·
 `gear_changed(slot, tier)` · `quota_paid(day, amount)` · `quota_missed(day)` ·
 `weather_changed(weather)` · `run_ended(ratio, remaining)`
 

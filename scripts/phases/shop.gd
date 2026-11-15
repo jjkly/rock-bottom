@@ -18,6 +18,8 @@ extends Control
 var _gear: Array[GearDef] = []
 var _rows: Array[Dictionary] = []
 var _offers: Array[Dictionary] = []
+var _confirm: ConfirmationDialog
+var _pending := Callable()
 
 
 func _ready() -> void:
@@ -25,6 +27,12 @@ func _ready() -> void:
 	UI.style_button(_sleep_btn)
 	_pay_btn.pressed.connect(_pay_extra)
 	_sleep_btn.pressed.connect(_sleep)
+
+	_confirm = ConfirmationDialog.new()
+	_confirm.title = "Are you sure?"
+	_confirm.ok_button_text = "Yes"
+	add_child(_confirm)
+	_confirm.confirmed.connect(_run_pending)
 
 	_load_gear()
 	_build_gear_rows()
@@ -61,7 +69,21 @@ func _buy_gear(g: GearDef) -> void:
 	if cost < 0:
 		_msg.text = "Already maxed."
 		return
-	if not RunState.upgrade_gear(g.slot, cost):
+	if RunState.cash < cost:
+		_msg.text = "Not enough cash."
+		return
+	if RunState.cash - cost < RunState.installment_today():
+		_ask("Buying %s leaves you $%d. Tonight's installment is $%d.\nBuy anyway?" % [
+			g.display_name, RunState.cash - cost, RunState.installment_today()
+		], "Buy", func(): _do_gear(g))
+		return
+	_do_gear(g)
+
+
+func _do_gear(g: GearDef) -> void:
+	var tier: int = RunState.gear.get(g.slot, 0)
+	var cost := g.next_cost(tier)
+	if cost < 0 or not RunState.upgrade_gear(g.slot, cost):
 		_msg.text = "Not enough cash."
 		return
 	_msg.text = "Bought %s tier %d." % [g.display_name, RunState.gear[g.slot]]
@@ -89,7 +111,19 @@ func _roll_offers() -> void:
 func _buy_training(offer: Dictionary, button: Button) -> void:
 	if offer["bought"]:
 		return
-	if not RunState.spend(offer["cost"]):
+	if RunState.cash < int(offer["cost"]):
+		_msg.text = "Not enough cash."
+		return
+	if RunState.cash - int(offer["cost"]) < RunState.installment_today():
+		_ask("Training leaves you $%d. Tonight's installment is $%d.\nBuy anyway?" % [
+			RunState.cash - int(offer["cost"]), RunState.installment_today()
+		], "Buy", func(): _do_training(offer, button))
+		return
+	_do_training(offer, button)
+
+
+func _do_training(offer: Dictionary, button: Button) -> void:
+	if offer["bought"] or not RunState.spend(offer["cost"]):
 		_msg.text = "Not enough cash."
 		return
 	RunState.add_stat(offer["stat"])
@@ -156,6 +190,28 @@ func _pay_extra() -> void:
 
 
 func _sleep() -> void:
+	if RunState.cash < RunState.installment_today():
+		_ask("You are $%d short of tonight's $%d installment.\nSleep anyway?" % [
+			RunState.installment_today() - RunState.cash, RunState.installment_today()
+		], "Sleep", _do_sleep)
+		return
+	_do_sleep()
+
+
+func _do_sleep() -> void:
 	# The installment is charged inside end_day(); if it cannot be paid the
 	# run ends and the router swaps to results.
 	RunState.end_day()
+
+
+func _ask(text: String, ok_text: String, action: Callable) -> void:
+	_pending = action
+	_confirm.dialog_text = text
+	_confirm.ok_button_text = ok_text
+	_confirm.popup_centered(Vector2i(460, 170))
+
+
+func _run_pending() -> void:
+	if _pending.is_valid():
+		_pending.call()
+	_pending = Callable()

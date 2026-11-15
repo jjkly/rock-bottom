@@ -7,7 +7,7 @@ extends RefCounted
 ##   species.base_price  (content, data/species/*.tres)
 ##   x size multiplier   (skill: the reel bar decides 3/4/6/8 slices)
 ##   x modifier mult     (gacha: golden, chroma, ... data/modifiers/*.tres)
-##   x aging multiplier  (freezer timing — peaks at 2 days, then rots)
+##   x aging multiplier  (tank timing — peaks at 2 days, then rots)
 ##
 ## Also owns plate count: one fish yields 1-2 plates, a "double serving"
 ## modifier adds one. Each plate is a separate serving to a table.
@@ -23,9 +23,9 @@ const SIZE_MULTIPLIERS := {3: 0.75, 4: 1.0, 6: 1.25, 8: 1.5}
 # Slices -> how many plates the fish can serve.
 const SIZE_PLATES := {3: 1, 4: 1, 6: 2, 8: 2}
 
-# Aging curve indexed by days held: peak at 2 days, rot after 3.
-# Edomae-style: curing improves the fish, then it turns. Ice cold skips this.
-const AGING_MULTIPLIERS: Array[float] = [1.0, 1.25, 1.4, 1.15, 0.8, 0.5]
+# The tank only keeps a fish safe for one day. Day 2 in storage spoils it.
+# Ice cold ignores the clock.
+const SAFE_DAYS := 1
 
 var species: SpeciesDef
 var size_slices := 3
@@ -61,8 +61,7 @@ func value() -> int:
 func aging_multiplier() -> float:
 	if modifier != null and modifier.never_spoils:
 		return 1.0
-	var idx := clampi(age_days, 0, AGING_MULTIPLIERS.size() - 1)
-	return AGING_MULTIPLIERS[idx]
+	return 1.0 if age_days <= SAFE_DAYS and not spoiled else 0.0
 
 
 ## True when this fish fits what a table asked for. One definition, used by

@@ -41,6 +41,15 @@ theme_override_font_sizes/font_size = 18
 text = "$0  ·  debt $2000"
 metadata/_tc_uuid = "1726118730228925143"
 
+[node name="HelpButton" type="Button" parent="HUD"]
+offset_left = 1216.0
+offset_top = 12.0
+offset_right = 1264.0
+offset_bottom = 52.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "?"
+
 [node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=1501119444]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)

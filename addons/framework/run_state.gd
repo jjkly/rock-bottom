@@ -4,7 +4,7 @@ extends Node
 ##
 ## WHY THIS EXISTS
 ##   Every phase (fishing, evening, shop) needs the same numbers: cash, debt,
-##   day, stock, freezer, gear. If each scene keeps its own copy they drift,
+##   day, stock, tank, gear. If each scene keeps its own copy they drift,
 ##   and "why did the shop show $80 when the HUD showed $120" eats a day.
 ##   So: one autoload, one authority, everything else listens to signals.
 ##
@@ -16,7 +16,7 @@ extends Node
 ##
 ## WHAT TO CHANGE FIRST (design knobs, all near the top)
 ##   START_DEBT / INSTALLMENTS  -> the difficulty curve of the week
-##   START_FREEZER_SLOTS        -> freezer pressure
+##   START_TANK_SLOTS        -> tank pressure
 ##   WEATHER_WEIGHTS            -> how often hot/rain happen
 ##
 ## TESTED BY res://tests/test_economy.gd (run: see docs/contract.md).
@@ -28,7 +28,7 @@ extends Node
 enum Phase { MORNING, FISHING, EVENING, NIGHT }
 
 # --- Weather is one enum, three states, no forecasts. -----------------------
-# CLEAR: baseline.  HOT: every freezer fish spoils at end of day.
+# CLEAR: baseline.  HOT: every tank fish spoils at end of day.
 # RAIN: the catch table swaps in rain-only species.
 enum Weather { CLEAR, HOT, RAIN }
 
@@ -41,7 +41,7 @@ const DAYS_PER_RUN := 7
 const START_DEBT := 2000
 const INSTALLMENTS: Array[int] = [100, 150, 200, 250, 300, 300, 700]
 
-const START_FREEZER_SLOTS := 3
+const START_TANK_SLOTS := 3
 
 # Weights are relative, not percentages: 50/25/25 = 50% clear, 25% hot, 25% rain.
 const WEATHER_WEIGHTS := {
@@ -57,7 +57,7 @@ signal day_started(day: int)
 signal cash_changed(cash: int)
 signal debt_changed(remaining_debt: int)
 signal stock_changed
-signal freezer_changed
+signal tank_changed
 signal gear_changed(slot: String, tier: int)
 signal quota_paid(day: int, amount: int)
 signal quota_missed(day: int)
@@ -81,11 +81,11 @@ var weather_tomorrow: Weather = Weather.CLEAR
 # Fish caught but not yet served. Cleared/moved at end of day.
 var stock: Array[FishInstance] = []
 # Fish held across days. Aging raises value up to a peak, then it rots.
-var freezer: Array[FishInstance] = []
-var freezer_capacity := START_FREEZER_SLOTS
+var tank: Array[FishInstance] = []
+var tank_capacity := START_TANK_SLOTS
 
 # Gear tiers, 0 = stock starter item. Keys are fixed; the shop reads them.
-var gear := {"rod": 0, "knife": 0, "dishwasher": 0, "freezer": 0, "tray": 0}
+var gear := {"rod": 0, "knife": 0, "dishwasher": 0, "tank": 0, "tray": 0}
 # Per-run training stats (bought in the nightly 3-of-N draft).
 var stats := {"luck": 0, "fishing": 0, "speed": 0}
 
@@ -116,10 +116,10 @@ func start_run(seed_value: int = 0) -> void:
 	run_over = false
 
 	stock.clear()
-	freezer.clear()
-	gear = {"rod": 0, "knife": 0, "dishwasher": 0, "freezer": 0, "tray": 0}
+	tank.clear()
+	gear = {"rod": 0, "knife": 0, "dishwasher": 0, "tank": 0, "tray": 0}
 	stats = {"luck": 0, "fishing": 0, "speed": 0}
-	freezer_capacity = START_FREEZER_SLOTS
+	tank_capacity = START_TANK_SLOTS
 
 	# Day 1 is always clear: the player should learn the loop before weather.
 	weather = Weather.CLEAR
@@ -134,7 +134,7 @@ func start_run(seed_value: int = 0) -> void:
 	debt_changed.emit(debt)
 	weather_changed.emit(weather)
 	stock_changed.emit()
-	freezer_changed.emit()
+	tank_changed.emit()
 
 
 ## MORNING -> FISHING -> EVENING -> NIGHT. Night ends via end_day().
@@ -150,7 +150,7 @@ func advance_phase() -> void:
 			push_warning("advance_phase() at NIGHT — call end_day() instead.")
 
 
-## Close the night: charge tonight's installment, spoil/age the freezer,
+## Close the night: charge tonight's installment, spoil/age the tank,
 ## move leftovers, roll weather, start the next day (or end the run).
 ## Returns false if the installment could not be paid (run over).
 func end_day() -> bool:
@@ -176,10 +176,10 @@ func end_day() -> bool:
 	debt_changed.emit(debt)
 	quota_paid.emit(day, due)
 
-	# Order matters: existing freezer contents feel tonight's heat and age
+	# Order matters: existing tank contents feel tonight's heat and age
 	# one day; fish caught today are stored afterwards, so they start at 0.
 	_apply_end_of_day_weather()
-	_age_freezer()
+	_age_tank()
 	_store_leftover_stock()
 
 	if day >= DAYS_PER_RUN:
@@ -197,7 +197,7 @@ func end_day() -> bool:
 	weather_changed.emit(weather)
 	phase_changed.emit(Phase.NIGHT, Phase.MORNING)
 	stock_changed.emit()
-	freezer_changed.emit()
+	tank_changed.emit()
 	return true
 
 
@@ -277,22 +277,33 @@ func pay_plate(fish: FishInstance, table_preference: String) -> int:
 	return value
 
 
-## Put a fish in the freezer. False if full.
+## Move a portion out of the tank and back into today's stock.
+func take_from_tank(fish: FishInstance) -> bool:
+	if not tank.has(fish):
+		return false
+	tank.erase(fish)
+	stock.append(fish)
+	tank_changed.emit()
+	stock_changed.emit()
+	return true
+
+
+## Put a fish in the tank. False if full.
 func freeze(fish: FishInstance) -> bool:
-	if freezer.size() >= freezer_capacity:
+	if tank.size() >= tank_capacity:
 		return false
 	if stock.has(fish):
 		stock.erase(fish)
-	freezer.append(fish)
+	tank.append(fish)
 	stock_changed.emit()
-	freezer_changed.emit()
+	tank_changed.emit()
 	return true
 
 
 ## Sell a raw fish instead of serving it. Raw always pays less than a plate
 ## (that gap is what makes cooking and serving the real business).
-func sell(fish: FishInstance, from_freezer: bool = false) -> int:
-	var pool := freezer if from_freezer else stock
+func sell(fish: FishInstance, from_tank: bool = false) -> int:
+	var pool := tank if from_tank else stock
 	if not pool.has(fish):
 		return 0
 	var value := int(round(fish.value() * 0.6))
@@ -300,7 +311,7 @@ func sell(fish: FishInstance, from_freezer: bool = false) -> int:
 	cash += value
 	cash_changed.emit(cash)
 	stock_changed.emit()
-	freezer_changed.emit()
+	tank_changed.emit()
 	return value
 
 
@@ -312,8 +323,8 @@ func upgrade_gear(slot: String, cost: int) -> bool:
 	if not spend(cost):
 		return false
 	gear[slot] += 1
-	if slot == "freezer":
-		freezer_capacity = START_FREEZER_SLOTS + int(gear["freezer"])
+	if slot == "tank":
+		tank_capacity = START_TANK_SLOTS + int(gear["tank"])
 	gear_changed.emit(slot, gear[slot])
 	return true
 
@@ -343,29 +354,32 @@ func _roll_weather() -> Weather:
 	return Weather.CLEAR
 
 
-## HOT spoils existing freezer fish. Ice cold ignores it (that's its job).
+## HOT spoils existing tank fish. Ice cold ignores it (that's its job).
 func _apply_end_of_day_weather() -> void:
 	if weather != Weather.HOT:
 		return
-	for fish in freezer:
+	for fish in tank:
 		if fish.modifier != null and fish.modifier.never_spoils:
 			continue
 		fish.spoiled = true
 
 
-func _age_freezer() -> void:
-	for fish in freezer:
+func _age_tank() -> void:
+	for fish in tank:
 		if fish.modifier != null and fish.modifier.never_spoils:
 			continue
 		fish.age_days += 1
+		# One day of storage is safe; the second night spoils it.
+		if fish.age_days > FishInstance.SAFE_DAYS:
+			fish.spoiled = true
 
 
-## Unserved stock goes in the freezer if there's room, otherwise it is lost.
+## Unserved stock goes in the tank if there's room, otherwise it is lost.
 ## Tune later: this is a design decision, not an implementation detail.
 func _store_leftover_stock() -> void:
 	for fish in stock:
-		if freezer.size() < freezer_capacity:
-			freezer.append(fish)
+		if tank.size() < tank_capacity:
+			tank.append(fish)
 	stock.clear()
 
 
@@ -387,9 +401,9 @@ func _settle_and_end() -> void:
 # ============================================================================
 
 func debug_state() -> String:
-	return "day=%d/%d phase=%s cash=%d debt=%d paid=%d stock=%d freezer=%d/%d gear=%s stats=%s weather=%s" % [
+	return "day=%d/%d phase=%s cash=%d debt=%d paid=%d stock=%d tank=%d/%d gear=%s stats=%s weather=%s" % [
 		day, DAYS_PER_RUN, phase_name(phase), cash, debt, paid_total,
-		stock.size(), freezer.size(), freezer_capacity, str(gear), str(stats),
+		stock.size(), tank.size(), tank_capacity, str(gear), str(stats),
 		weather_name(weather),
 	]
 

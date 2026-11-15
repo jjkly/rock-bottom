@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hy381ajjm4we"
-path="res://.godot/imported/Screenshot 2026-11-14 at 5.11.10 PM.png-c32d0fc3889a8879b00f21fe821700e7.ctex"
+uid="uid://dlanwu0ra008q"
+path="res://.godot/imported/makebead-99x66-3.png-ed3710437f6549ab44806a711bbf55da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/restaurant/Screenshot 2026-11-14 at 5.11.10 PM.png"
-dest_files=["res://.godot/imported/Screenshot 2026-11-14 at 5.11.10 PM.png-c32d0fc3889a8879b00f21fe821700e7.ctex"]
+source_file="res://assets/sprites/backgrounds/makebead-99x66-3.png"
+dest_files=["res://.godot/imported/makebead-99x66-3.png-ed3710437f6549ab44806a711bbf55da.ctex"]
 
 [params]
 

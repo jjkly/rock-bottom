@@ -17,12 +17,25 @@ extends Node
 @onready var _hud_day: Label = $HUD/Row/DayLabel
 @onready var _hud_money: Label = $HUD/Row/MoneyLabel
 @onready var _hud_weather: Label = $HUD/Row/WeatherLabel
+@onready var _help_btn: Button = $HUD/HelpButton
+
+const TUTORIAL_SCENE := preload("res://scenes/tutorial.tscn")
 
 var _current: Node
+var _tutorial: CanvasLayer
+var _current_phase := -1
+var _seen := {}
+var _headless := false
 var _shown := -1  # -2 = results, -1 = nothing yet, else RunState.Phase
 
 
 func _ready() -> void:
+	_headless = DisplayServer.get_name() == "headless"
+	_tutorial = TUTORIAL_SCENE.instantiate()
+	add_child(_tutorial)
+	_help_btn.pressed.connect(func(): _tutorial.open(clampi(RunState.phase, 0, 3)))
+
+	RunState.day_started.connect(func(d): if d == 1: _seen.clear())
 	RunState.phase_changed.connect(func(_a, to): _show_phase.call_deferred(to))
 	RunState.day_started.connect(func(_d): _show_phase.call_deferred(RunState.phase))
 	RunState.run_ended.connect(func(_r, _d): _show_results.call_deferred())
@@ -59,12 +72,19 @@ func _show_phase(phase: int) -> void:
 			return
 	_current = packed.instantiate()
 	_holder.add_child(_current)
+	_current_phase = phase
+	# Day 1: explain each phase once. Headless tests/smoke would stall on the
+	# pause, so they skip it.
+	if not _headless and RunState.day == 1 and not _seen.has(phase):
+		_seen[phase] = true
+		_tutorial.open(phase)
 
 
 func _show_results() -> void:
 	if _shown == -2:
 		return
 	_shown = -2
+	_current_phase = -1
 	_hud.visible = false
 	_clear_current()
 	_current = preload("res://scenes/results.tscn").instantiate()

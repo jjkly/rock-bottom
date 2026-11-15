@@ -123,7 +123,7 @@ func _refresh_visual() -> void:
 	var hearts_text := ""
 	for i in HEARTS:
 		hearts_text += "♥" if i < hearts else "·"
-	_info.add_theme_color_override("font_color", Color(0.95, 0.95, 0.9))
+	_info.add_theme_color_override("font_color", UI.tag_color(definition.preference))
 	_info.text = "%s  %s\n%d/%d plates" % [
 		definition.preference, hearts_text, plates_served, definition.plates_wanted
 	]

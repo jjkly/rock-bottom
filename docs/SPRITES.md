@@ -14,8 +14,15 @@ not block play.
 | Cutting board | `assets/sprites/restaurant/cutting_board.png` | 64×64 | evening `Props/CuttingBoard` | Interaction point is its centre. |
 | Stove | `assets/sprites/restaurant/stove.png` | 64×64 | evening `Props/Stove` | Not interactive yet. |
 | Sink | `assets/sprites/restaurant/sink.png` | 64×64 | evening `Props/Sink` | Not interactive yet. |
-| Tank | `assets/sprites/restaurant/tank.png` | 64×64 | evening `Props/Tank` | Should read as a fish tank. |
+| Tank | `assets/sprites/restaurant/tank.png` | 64×36 | evening `Props/Tank`, tank panel | **Added** from `makebead-64x36 13.png`. |
 | Floor tiles | `assets/sprites/restaurant/tiles_floor.png` | 32×32 tiles in a sheet | evening `Floor` (currently a flat color) | Needs a TileMapLayer in the scene. |
+
+## Backgrounds
+
+Present: store (`backgrounds/makebead-99x66.png`) on the morning screen, dock
+(`-2`) on fishing, and a "To Dock" sign (`-3`, unused). All are 99×66, drawn at
+8× (792×528) with mipmaps and a dim overlay. Restaurant interior art is still
+missing.
 
 ## Raw fish (pre-cut)
 

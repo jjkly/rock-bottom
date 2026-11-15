@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_cnw3l")
-id = "freezer"
-display_name = "Freezer"
-slot = "freezer"
-effect = "freezer_slots"
+id = "tank"
+display_name = "Fish Tank"
+slot = "tank"
+effect = "tank_slots"
 costs = Array[int]([90, 180])
 values = Array[float]([0.0, 1.0, 2.0])
 description = "Two more slots for holding fish. Pairs with Ice Cold and hot days."
