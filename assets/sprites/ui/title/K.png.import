@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx5fwoabsk3ja"
-path="res://.godot/imported/T.png-b1806aca50249c0f2c04712a531f0ee2.ctex"
+uid="uid://dnt826u3exdms"
+path="res://.godot/imported/K.png-2027439fb3bf9af0caedbd90bba6e2a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fish/10 KAWAII SHUSHI COLLECTION/10 KAWAII SHUSHI COLLECTION/Title/T.png"
-dest_files=["res://.godot/imported/T.png-b1806aca50249c0f2c04712a531f0ee2.ctex"]
+source_file="res://assets/sprites/ui/title/K.png"
+dest_files=["res://.godot/imported/K.png-2027439fb3bf9af0caedbd90bba6e2a3.ctex"]
 
 [params]
 

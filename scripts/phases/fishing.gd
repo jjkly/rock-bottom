@@ -54,6 +54,7 @@ var _filler: Texture2D
 var _reel_tween: Tween
 var _reel_target := 0.0
 var _settled := true
+var _spin_t := 0.0
 
 
 func _ready() -> void:
@@ -144,6 +145,7 @@ func _stop_reel() -> void:
 
 	_state = State.REVEAL
 	_settled = false
+	_spin_t = 0.0
 	_fisher.play("fishing bite")
 	if Settings.skip_animations:
 		# "E automatic": jump straight to the result.
@@ -249,6 +251,10 @@ func _process(delta: float) -> void:
 			_bar_marker.position.x = BAR_X + p * (BAR_W - MARKER_W)
 		State.REVEAL:
 			_update_reel_name()
+			_spin_t += delta
+			if _spin_t >= 0.1:
+				_spin_t = 0.0
+				UI.sfx("spin")
 			if _reel_tween == null or not _reel_tween.is_running():
 				_settle_catch()
 

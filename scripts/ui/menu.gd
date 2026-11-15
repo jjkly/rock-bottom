@@ -14,7 +14,8 @@ signal start_requested(difficulty: int)
 
 const SETTINGS_SCENE := preload("res://scenes/settings.tscn")
 const TITLE_DIR := "res://assets/sprites/ui/title/"
-const TITLE_COUNT := 7
+const TITLE_WORD := "ROCK BOTTOM"
+const TITLE_LETTERS := "ROCKBTM"
 
 @onready var _title_label: Label = $TitleLabel
 @onready var _title_root: Node2D = $TitleRoot
@@ -56,28 +57,33 @@ func _process(delta: float) -> void:
 
 
 func _build_title() -> void:
-	var textures: Array[Texture2D] = []
-	for i in range(1, TITLE_COUNT + 1):
-		var path := TITLE_DIR + "%d.png" % i
-		if ResourceLoader.exists(path):
-			textures.append(load(path))
-	if textures.size() != TITLE_COUNT:
-		return
+	var letters: Dictionary = {}
+	for c in TITLE_LETTERS:
+		var path := TITLE_DIR + c + ".png"
+		if not ResourceLoader.exists(path):
+			return
+		letters[c] = load(path)
 	_title_label.visible = false
+
+	# Lay out ROCK BOTTOM from the seven unique letters; R and B are larger.
+	var items: Array[Dictionary] = []
 	var total := 0.0
-	var heights: Array[float] = []
-	for i in textures.size():
-		var h := 96.0 if i != 0 and i != 4 else 120.0
-		heights.append(h)
-		total += h * textures[i].get_width() / textures[i].get_height()
+	for c in TITLE_WORD:
+		if c == " ":
+			total += 34.0
+			continue
+		var tex: Texture2D = letters[c]
+		var h := 122.0 if c == "R" or c == "B" else 94.0
+		var w := h * tex.get_width() / tex.get_height()
+		items.append({"tex": tex, "w": w, "h": h})
+		total += w
 	var x := -total * 0.5
-	for i in textures.size():
+	for item in items:
 		var s := Sprite2D.new()
-		s.texture = textures[i]
-		var h := heights[i]
-		s.scale = Vector2.ONE * (h / textures[i].get_height())
-		s.position = Vector2(x + h * textures[i].get_width() / textures[i].get_height() * 0.5, 0)
-		x += h * textures[i].get_width() / textures[i].get_height()
+		s.texture = item["tex"]
+		s.scale = Vector2.ONE * (item["h"] / item["tex"].get_height())
+		s.position = Vector2(x + item["w"] * 0.5, 0)
+		x += item["w"]
 		_title_root.add_child(s)
 		_sprites.append(s)
 

@@ -35,6 +35,8 @@ static func style_button(b: Button) -> void:
 	hover.bg_color = Color(0.20, 0.22, 0.28)
 	b.add_theme_stylebox_override("hover", hover)
 	b.add_theme_stylebox_override("pressed", hover)
+	# One click sound for every styled button (menu, shop, pause, ...).
+	b.pressed.connect(func(): sfx("click"))
 
 
 static func panel(bg := Color(0.07, 0.07, 0.10, 0.92)) -> PanelContainer:
@@ -51,6 +53,26 @@ static func panel(bg := Color(0.07, 0.07, 0.10, 0.92)) -> PanelContainer:
 	sb.content_margin_bottom = 10
 	p.add_theme_stylebox_override("panel", sb)
 	return p
+
+
+## Resolve the Audio autoload at runtime. Avoids a compile-time dependency,
+## which -s test runs do not have (autoload globals are missing there).
+static func sfx(sfx_name: String) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var a := tree.root.get_node_or_null("Audio")
+	if a != null:
+		a.play(sfx_name)
+
+
+static func music(key: String) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var a := tree.root.get_node_or_null("Audio")
+	if a != null:
+		a.play_music(key)
 
 
 ## Colour per table preference/tag. One place so tables and inventory agree.

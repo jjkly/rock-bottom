@@ -135,6 +135,7 @@ func _store_selected() -> void:
 		return
 	var stored_name := _next_fish.species.display_name
 	if RunState.freeze(_next_fish):
+		UI.sfx("inventory")
 		_msg.text = "Stored %s in the fish tank." % stored_name
 		_next_fish = null
 		_show_preview(null)
@@ -158,6 +159,7 @@ func _take_plate() -> void:
 		_msg.text = "That fish has no plates left."
 		return
 	_player.set_carrying(fish)
+	UI.sfx("plate")
 	_next_fish = null
 	_show_preview(null)
 	_msg.text = "Took %s — $%d per plate" % [fish.species.display_name, fish.value()]
@@ -227,6 +229,7 @@ func _rebuild_stock() -> void:
 		b.pressed.connect(func():
 			_next_fish = fish
 			_show_preview(fish)
+			UI.sfx("inventory")
 			_msg.text = "Next plate: %s" % fish.display_name()
 		)
 		_stock_box.add_child(b)
@@ -265,6 +268,7 @@ func _rebuild_tank() -> void:
 		b.add_theme_color_override("font_color", UI.tag_color(tag))
 		b.pressed.connect(func():
 			if RunState.take_from_tank(fish):
+				UI.sfx("inventory")
 				_msg.text = "Took %s out of the tank." % fish.species.display_name
 			_rebuild_tank()
 			_rebuild_stock()

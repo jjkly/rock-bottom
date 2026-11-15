@@ -49,6 +49,7 @@ func _ready() -> void:
 	_pause.main_menu_requested.connect(_return_to_menu)
 
 	_hud.visible = false
+	UI.music("main")
 
 	RunState.day_started.connect(func(d): if d == 1: _seen.clear())
 	RunState.phase_changed.connect(func(_a, to): _show_phase.call_deferred(to))
@@ -76,6 +77,7 @@ func _return_to_menu() -> void:
 	_clear_current()
 	_hud.visible = false
 	_menu.visible = true
+	UI.music("main")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -116,6 +118,7 @@ func _show_phase(phase: int) -> void:
 		_:
 			return
 	_menu.visible = false
+	UI.music("restaurant" if phase == 2 else "main")
 	_current = packed.instantiate()
 	_holder.add_child(_current)
 	_current_phase = phase
@@ -135,6 +138,7 @@ func _show_results() -> void:
 	_clear_current()
 	_current = preload("res://scenes/results.tscn").instantiate()
 	_holder.add_child(_current)
+	UI.music("main")
 	_current.main_menu_requested.connect(_return_to_menu)
 
 

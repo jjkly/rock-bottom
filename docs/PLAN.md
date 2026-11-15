@@ -73,7 +73,7 @@ Still stubbed: bestiary, meta unlocks, difficulty presets, audio, and all real a
 - [x] Placeholder art and duplicate pack removed
 - [ ] Customer walk-in animation (seated variants done)
 - [ ] Angry tables actually reduce tomorrow's flow
-- [ ] Audio
+- [x] Music + key SFX (click, spin, plate, bell, knock)
 
 ## Phase 0 — the place to put art (done, use it)
 

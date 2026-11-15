@@ -169,7 +169,7 @@ presentation one.
 | Backgrounds | implemented | MVP | Store on morning, dock on fishing, cover-fill with dim overlay | `scenes/morning.tscn` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
-| Audio pass | idea | later | Service diegetics, crate reveal, debt sting | — |
+| Audio | in progress | MVP | Menu/day/restaurant music; click, spin, plate, bell, knock SFX | `addons/framework/audio.gd` |
 
 ## Milestones and work checklist
 
@@ -240,6 +240,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**1.0 (2026-11-15):** letter title, menu/day/restaurant music, key SFX wired to the signal set.
 
 **0.9 (2026-11-15):** Rock Bottom menu with difficulty cards, persisted settings (skip animations, music/SFX, fullscreen), ESC pause, results -> main menu, difficulty presets with replay rewind.
 

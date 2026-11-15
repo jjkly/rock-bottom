@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 RunState="*res://addons/framework/run_state.gd"
 Settings="*res://addons/framework/settings.gd"
+Audio="*res://addons/framework/audio.gd"
 
 [display]
 
