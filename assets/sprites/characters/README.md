@@ -43,8 +43,8 @@ fishing/
 ```
 
 Player frames share a 12×18 canvas so the feet stay planted when the animation
-changes. `scenes/player.tscn` shows it at **2×** (32px tall), which matches the
-32px tile grid.
+changes. `scenes/player.tscn` shows it at **3×** (36×54 on screen), matching the
+32px tile spacing.
 
 ## Rebuild after editing a sheet
 

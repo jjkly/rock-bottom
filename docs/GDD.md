@@ -1,6 +1,6 @@
 # Rock Bottom — Game Design Document
 
-**Version:** 0.1 · **Updated:** 2026-11-14 · [Features](#feature-index) · [Decisions](#decisions) · [Change log](#change-log)
+**Version:** 1.1 · **Updated:** 2026-11-15 · [Features](#feature-index) · [Decisions](#decisions) · [Change log](#change-log)
 
 ## Summary
 
@@ -169,47 +169,39 @@ presentation one.
 | Backgrounds | implemented | MVP | Store on morning, dock on fishing, cover-fill with dim overlay | `scenes/morning.tscn` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
-| Audio | in progress | MVP | Menu/day/restaurant music; click, spin, plate, chime, knock SFX | `addons/framework/audio.gd` |
+| Audio | implemented | MVP | Menu/day/restaurant music; click, spin, plate, chime, knock, rare SFX | `addons/framework/audio.gd` |
 
-## Milestones and work checklist
+## Status and next work
 
-Step-by-step order, exact file names and per-owner tasks are in
-[PLAN.md](PLAN.md) — phases 1 to 5. Milestones only, here:
+**Playable end to end:** menu → one week → score. Three difficulties with
+replay rewind, seven auto-charged installments, morning weather, reel + crate,
+evening service with 4–6 tables, tank storage, shop + training, settings,
+pause, tutorial, music and SFX.
 
-**M1 — one playable day (greybox).** Fishing returns a fish, evening serves
-four tables, night pays and advances. Done when a 7-day run reaches the score
-screen with placeholder art and `tests/` is green. Tasks: PLAN.md phases 1–3.
+**Next, in order:**
 
-| Owner | Task | Done when |
-|---|---|---|
-| Evening | Player CharacterBody2D, carry (0.3/0.55 m band), seat assignment, Table spawn/serve, cut station | One table seated, served, satisfied; one table starves and fires `left_angry` |
-| Fishing | Reel bar minigame → `size_slices`, crate reveal → species + rare, stock handoff | A cast produces a `FishInstance` in `RunState.stock` |
-| Run/UI | Morning news, night shop + draft, phase scene flow, HUD (cash, debt, day, weather), difficulty presets | Seven days advance without touching a debug key |
-| Art | Species silhouettes, player 4-dir walk, table + ticket bubble, stations | Placeholders replaced in the evening scene |
-| Everyone | A test per new rule; run `run_tests.gd` before pushing | Exit 0 |
-
-**M2 — the week has teeth.** Shop and training, weather in the catch table,
-fish tank/hot-day loop, bestiary, 3 species + 1 rain-only, gear effects wired.
-
-**M3 — presentation.** Art pass, audio, crate juice, score screen, meta
-milestones. Only after M2 is fun.
+1. Bestiary: log species and observed odds on first catch.
+2. Meta unlocks at 50/70/90% repaid; widen the species pool only.
+3. Customer walk-in animation and directional player art.
+4. Angry-table flow penalty (currently recorded, not applied tomorrow).
+5. Measure a day-7 service; decide the mid-run save from that timing.
 
 ## Where things live
 
 | Path | What it is |
 |---|---|
-| `docs/PLAN.md` | **Start here.** Phase-by-phase tasks: what to do, where, done-when |
-| `docs/contract.md` | Ownership, RunState API, signals, scene contract, Team Create rules |
-| `docs/art.md` | 32 px grid, import settings, y-sort, sprite folders |
-| `addons/framework/run_state.gd` | The only state authority; live tuning constants |
+| `docs/GDD.md` | Design, numbers, feature status, decisions |
+| `docs/ARCHITECTURE.md` | Runtime map, RunState API, signals, data, asset and audio pipelines |
+| `docs/CREDITS.md` | Third-party art, music and SFX licences |
+| `addons/framework/` | Autoloads: `RunState`, `Settings`, `Audio` |
 | `scripts/data/` | Resource schemas (species, modifier, gear, table, fish) |
 | `data/` | Content `.tres` files — edit these, not code, to tune |
-| `scripts/systems/` | `Table` and `Station` contracts for the evening scene |
-| `tests/run_tests.gd` | Headless suite; the line to run before every push |
-| `tools/make_starter_data.gd` | One-shot generator (already run; don't re-run over tuning) |
-| `scenes/main.tscn` + `scripts/game.gd` | Temporary dev harness; replace with real scenes |
-| `assets/sprites/{fish,characters,restaurant,ui}/` | Art drop folders with correctly-sized placeholders; see PLAN.md phase 0 |
-| `assets/audio/{sfx,music}/` | Sound drop folders |
+| `scripts/phases/` / `scripts/systems/` / `scripts/ui/` | Phase logic, `Player`/`Table`, UI |
+| `scenes/` | One scene per phase + menu, pause, settings, tutorial, results |
+| `tests/run_tests.gd` | Headless logic suite; run before every push |
+| `tools/` | Art/data generators (see `docs/ARCHITECTURE.md`) |
+| `assets/` | Sprites, audio, interior; source art is `.gdignore`d |
+| `export_presets.cfg` | Windows and Web export targets |
 
 ## Decisions
 
@@ -236,10 +228,12 @@ milestones. Only after M2 is fun.
   opinion. Measure a day-7 service; cut to 5 tables if it exceeds 2 minutes.
 - **Angry penalty:** "−1 table per 2 angry" may cascade. Watch a run that
   loses two tables on day 3.
-- **Team Create:** concurrent `.tscn` edits remain the top production risk;
-  the contract says one owner per scene, and that has to be enforced socially.
+- **Concurrent scene edits:** one owner per `.tscn`; Team Create does not make
+  two editors in one file safe.
 
 ## Change log
+
+**1.1 (2026-11-15):** docs consolidated to README, GDD, ARCHITECTURE, CREDITS; installment chime replaces the removed bell.
 
 **1.0 (2026-11-15):** letter title, menu/day/restaurant music, key SFX wired to the signal set.
 

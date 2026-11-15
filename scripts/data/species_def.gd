@@ -7,7 +7,7 @@ extends Resource
 ##   1. In the FileSystem dock, right-click data/species/ -> New Resource...
 ##      -> SpeciesDef.
 ##   2. Fill the fields below, set sprite (32x32 PNG recommended, see
-##      docs/art.md), save as data/species/<id>.tres.
+##      docs/ARCHITECTURE.md), save as data/species/<id>.tres.
 ##   3. Drop it into the crate's species pool (the fishing scene's export).
 ##
 ## Keep ids snake_case and unique; save files are matched by id, not path.

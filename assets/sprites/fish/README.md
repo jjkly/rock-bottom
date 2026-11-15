@@ -17,7 +17,7 @@ already points at it.
 | tako.png | Octopus | lean | 20 |
 | cured_saba.png | Cured Saba | cheap | 18 |
 | tamago.png | Tamago | cheap | 12 |
-| eel.png | Eel | fatty | 32 **(placeholder — no eel in the pack)** |
+| eel.png | Eel | fatty | 32 (unagi art added) |
 
 Origin: bottom-centre when placed in a scene. Neutral colours only — modifiers
 tint them (`data/modifiers/*.tres`) so Golden and Chroma work without extra art.

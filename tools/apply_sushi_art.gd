@@ -7,7 +7,7 @@ extends SceneTree
 ##
 ## Existing species keep their rules and only gain `sprite`. The six extra
 ## nigiri become new species so all ten sprites are actually used. Eel stays
-## without art (no eel in the pack) — see docs/PLAN.md.
+## without art (no eel in the pack) — see docs/GDD.md.
 ## ============================================================================
 
 const SpeciesDefScript := preload("res://scripts/data/species_def.gd")

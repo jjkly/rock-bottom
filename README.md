@@ -1,37 +1,60 @@
 # Rock Bottom
 
-One week. One debt. One shot. Godot 4 + Team Create rules follow.
+A quota-driven sashimi restaurant roguelite. One week, seven installments,
+one loan shark. Fish, gamble, cook, serve, survive the debt.
 
-## Run it
+Godot **4.7.2**, GDScript, 2D pixel art, single player.
+
+## Run
 
 ```bash
-godot --headless --path . -s res://tests/run_tests.gd   # before every push; must be 0 failures
-godot --headless --path . res://tests/smoke_flow.tscn   # drives a day through every phase
-godot --path .
+godot --path .                                          # play
+godot --headless --path . -s res://tests/run_tests.gd   # logic suite, must be 0 failures
+godot --headless --path . res://tests/smoke_flow.tscn   # drives a full week through every phase
 ```
 
-Full task order and file ownership: [docs/PLAN.md](docs/PLAN.md).
+First open after a clone: `godot --headless --path . --import` (or just open the editor once).
 
-## Read in this order
+## Build
 
-1. [docs/SETUP.md](docs/SETUP.md) — **new teammate?** install, clone, play, push (no terminal)
-2. [docs/PLAN.md](docs/PLAN.md) — what to do next, where, done-when
-3. [docs/GDD.md](docs/GDD.md) — the design and every design number
-4. [docs/contract.md](docs/contract.md) — names, RunState API, signals, scene contract
-5. [docs/art.md](docs/art.md) — pixel grid, import, folder map
-6. [docs/CREDITS.md](docs/CREDITS.md) — third-party art (Bitglow interior kit)
+Export templates for 4.7.2, then:
 
-## Working together
+```bash
+godot --headless --path . --export-release "Windows Desktop" build/windows/RockBottom.exe
+godot --headless --path . --export-release "Web"           build/web/index.html
+```
 
-- **One owner per `.tscn`.** Asked by name in `docs/PLAN.md` § Who does what.
-  If you need a change in someone else's scene, ask — don't open it.
-- **`project.godot` changes land alone**, after a heads-up in the group chat.
+`build/` is ignored. Both presets live in `export_presets.cfg`; the Web preset
+is single-threaded, so it needs no COOP/COEP headers.
+
+## Repository map
+
+| Path | Contents |
+|---|---|
+| `scenes/main.tscn` | Router, HUD, menu/pause/tutorial overlays |
+| `scenes/{morning,fishing,evening,shop,results}.tscn` | One scene per phase |
+| `scripts/phases/` | Phase logic; scenes own their node trees |
+| `scripts/systems/` | `Player`, `Table` components |
+| `scripts/ui/` | Menu, pause, settings, tutorial, shared style helpers |
+| `addons/framework/` | Autoloads: `RunState`, `Settings`, `Audio` |
+| `data/` | Content `.tres`: species, modifiers, gear, tables |
+| `scenes/settings.tscn` | Settings + credits panel |
+| `assets/` | Sprites, audio, composed interior; `art_source/` is `.gdignore`d |
+| `tools/` | Art/data generators (run only when regenerating) |
+| `tests/` | Headless logic and scene tests |
+
+## Docs
+
+- [`docs/GDD.md`](docs/GDD.md) — design, numbers, feature status, decisions.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — runtime map, RunState API, signals, data, asset and audio pipelines.
+- [`docs/CREDITS.md`](docs/CREDITS.md) — third-party art, music and SFX licences.
+- Folder-level `README.md` files next to generated art explain that folder's sources and sizes.
+
+## Working rules
+
+- **State lives in `RunState`.** Scenes call its public functions and connect to its signals; they never write its fields.
 - **Balance lives in `data/*.tres`**, not in scripts. Tuning is a data commit.
-- **A new rule gets a test** in the same commit (`tests/`).
-- Never rename a file another scene references — Godot `.uid` files break
-  other people's work silently.
-
-## Branches
-
-`main` stays runnable. Work on `feat/<thing>`, open a PR, run the tests in the
-PR description, merge once green.
+- **One owner per `.tscn`.** Do not open a scene someone else owns; ask for the change.
+- **Writes go to `user://`**, never `res://` (the exported pack is read-only).
+- **A new rule gets a test** in `tests/`; run the suite before pushing.
+- **Audio goes through `Audio.play("key")` / `Audio.play_music("key")`**; add the key to `addons/framework/audio.gd`.

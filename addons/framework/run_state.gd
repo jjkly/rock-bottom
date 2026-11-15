@@ -19,7 +19,7 @@ extends Node
 ##   START_TANK_SLOTS        -> tank pressure
 ##   WEATHER_WEIGHTS            -> how often hot/rain happen
 ##
-## TESTED BY res://tests/test_economy.gd (run: see docs/contract.md).
+## TESTED BY res://tests/test_economy.gd (run: see docs/ARCHITECTURE.md).
 ## ============================================================================
 
 # --- The four phase types of a single day, in order. ------------------------

@@ -24,8 +24,8 @@ was downloaded or replace it with a verified CC0 track.
 
 ## SFX
 
-The numeric filename prefix is the Freesound sound ID; `freesound.org/s/<id>/`
-states the licence. Only the CC BY files need credit.
+The numeric prefix is the Freesound sound ID (`freesound.org/s/<id>/`); Pixabay
+files use the Pixabay page ID instead. Only the CC BY files need credit.
 
 | File | Work / author | Licence | Credit |
 |---|---|---|---|

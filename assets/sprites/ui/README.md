@@ -1,3 +1,5 @@
-# ui
+# UI sprites
 
-16x16 icons: hearts, weather, crate frame, coin. See `docs/art.md`.
+16×16 icons. `crate_frame.png` is used as the crate-reel filler; the heart,
+weather and coin icons are placeholder slots not yet wired into scenes.
+See `docs/ARCHITECTURE.md` (art pipeline).
