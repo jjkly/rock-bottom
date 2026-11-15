@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="SpeciesDef" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/octopus.png" id="1_kisyy"]
 [ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_oijyc"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fish/tako.png" id="2_kisyy"]
 
@@ -8,3 +9,4 @@ script = ExtResource("1_oijyc")
 id = "tako"
 display_name = "Octopus"
 sprite = ExtResource("2_kisyy")
+raw_sprite = ExtResource("1_kisyy")

@@ -13,10 +13,13 @@ const RAW := {
 	"lean_tuna": "tuna.png",
 	"toro": "tuna.png",          # same fish; toro is the belly cut
 	"salmon": "Salmon2.png",
-	"sea_bream": "Sea bream.png",
+	"sea_bream": "flounder.png",
 	"mackerel": "Mackeral.png",
 	"cured_saba": "Mackeral.png", # cured mackerel
 	"eel": "eel2.png",
+	"hokkigai": "surfclam.png",
+	"ebi": "Shrimp.png",
+	"tako": "octopus.png",
 }
 
 

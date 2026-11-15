@@ -30,10 +30,13 @@ Wired through `SpeciesDef.raw_sprite` and shown in the crate reel and raw stock 
 |---|---|---|
 | Lean Tuna / Fatty Tuna | `fish/tuna.png` | yes |
 | Salmon | `fish/Salmon2.png` | yes |
-| Sea Bream | `fish/Sea bream.png` | yes |
+| Flounder | `fish/flounder.png` | yes |
 | Mackerel / Cured Saba | `fish/Mackeral.png` | yes |
 | Eel | `fish/eel2.png` | yes |
-| Surf Clam, Shrimp, Octopus, Tamago | — | **missing** (falls back to nigiri) |
+| Surf Clam | `fish/surfclam.png` | yes |
+| Shrimp | `fish/Shrimp.png` | yes |
+| Octopus | `fish/octopus.png` | yes |
+| Tamago | — | falls back to nigiri (egg) |
 
 ## Characters
 

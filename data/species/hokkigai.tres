@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="SpeciesDef" format=3]
 
 [ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_fr6l5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/surfclam.png" id="1_r3c6d"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fish/hokkigai.png" id="2_r3c6d"]
 
 [resource]
@@ -10,3 +11,4 @@ display_name = "Surf Clam"
 base_price = 30
 preference = "fatty"
 sprite = ExtResource("2_r3c6d")
+raw_sprite = ExtResource("1_r3c6d")

@@ -29,10 +29,12 @@ tint them (`data/modifiers/*.tres`) so Golden and Chroma work without extra art.
 |---|---|
 | tuna.png | Lean Tuna, Fatty Tuna |
 | Salmon2.png | Salmon |
-| Sea bream.png | Sea Bream |
+| flounder.png | Flounder |
 | Mackeral.png | Mackerel, Cured Saba |
 | eel2.png | Eel |
+| surfclam.png | Surf Clam |
+| Shrimp.png | Sweet Shrimp |
+| octopus.png | Octopus |
 
-Shellfish/egg (hokkigai, ebi, tako, tamago) have no raw art yet and fall back
-to their nigiri. Add a species by duplicating a `.tres`, setting `sprite`,
+Tamago (egg) has no raw art and falls back to its nigiri. Add a species by duplicating a `.tres`, setting `sprite`,
 and dropping a same-named PNG here.

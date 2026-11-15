@@ -70,8 +70,9 @@ func _species(id: String, display: String, price: int, preference: String, rain_
 		s.sprite = load(art_path)
 	var raw_map := {
 		"lean_tuna": "tuna.png", "toro": "tuna.png", "salmon": "Salmon2.png",
-		"sea_bream": "Sea bream.png", "mackerel": "Mackeral.png",
+		"sea_bream": "flounder.png", "mackerel": "Mackeral.png",
 		"cured_saba": "Mackeral.png", "eel": "eel2.png",
+		"hokkigai": "surfclam.png", "ebi": "Shrimp.png", "tako": "octopus.png",
 	}
 	if raw_map.has(id):
 		var raw_path: String = "res://assets/sprites/fish/" + String(raw_map[id])
