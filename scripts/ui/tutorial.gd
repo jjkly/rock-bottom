@@ -19,7 +19,7 @@ const CONTENT := {
 	},
 	2: {
 		"title": "Evening",
-		"body": "WASD moves. E takes a plate at the cutting board, and E serves it at a table.\n\nEach table wants a preference: lean, fatty, cheap or expensive. Match it for +20%.",
+		"body": "WASD moves. E takes a plate at the cutting board, and E serves it at a table.\n\nEach table wants a preference: lean, fatty, cheap or expensive. Match it for +20%. Tables leave after about 45 seconds if nobody serves them.",
 		"more": "Walk to the fish tank on the right: select a stock fish and press E to store it, or click a stored fish to move it back to stock. Fish keep for one day in the tank, then spoil.\n\nStock rows show the preference tag and its colour. Tables shuffle position and preference every service.",
 	},
 	3: {

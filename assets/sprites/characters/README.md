@@ -5,7 +5,7 @@ between frames; `tools/build_character.py` slices them into individual PNGs and
 regenerates the `SpriteFrames` resources. **Do not hand-edit the generated
 frames** — edit the sheet and re-run the script.
 
-## Source sheets (edit these)
+## Source sheets (edit these — in `assets/art_source/characters/`)
 
 | File | Frames | Frame size | Used for |
 |---|---|---|---|
@@ -19,6 +19,12 @@ frames** — edit the sheet and re-run the script.
 | `fishing1.png` | 1 | 16×16 | fishing initiate |
 
 The character is front-facing; there are no up/down/side variants.
+
+## Customers
+
+`customer_1..6.png` are generated from `player/idle_0.png` by
+`tools/build_customers.py` (hair, eyes, shirt recoloured). Static seated
+sprites; tables pick one at random.
 
 ## Generated (do not edit)
 

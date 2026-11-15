@@ -97,7 +97,10 @@ func _roll_offers() -> void:
 	stats.shuffle()  # unique offers: the heading promises "one offer each"
 	for i in 3:
 		var stat: String = stats[i]
-		var cost := 60 + 25 * int(RunState.stats.get(stat, 0))
+		var level := int(RunState.stats.get(stat, 0))
+		# Costs compound: fishing scales harder than the other two.
+		var growth := 1.8 if stat == "fishing" else 1.5
+		var cost := int(ceil(60.0 * pow(growth, level) / 5.0)) * 5
 		var discount: bool = int(RunState.stats.get("luck", 0)) > 0 and RunState.rng.randf() < 0.25
 		if discount:
 			cost = int(round(cost * 0.75))

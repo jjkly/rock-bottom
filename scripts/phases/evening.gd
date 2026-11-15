@@ -83,7 +83,7 @@ func _process(delta: float) -> void:
 		return
 	_service_time += delta
 	_timer_label.text = "Service  %ds" % int(SERVICE_WINDOW - _service_time)
-	_tank_panel.visible = not _ended and _player.position.distance_to(_tank_pos) < 160.0
+	_tank_panel.visible = _player.position.distance_to(_tank_pos) < 160.0
 
 	while _spawned < _table_total and _service_time >= SPAWN_MARKS[_spawned]:
 		_spawn_table(_spawned)
@@ -115,10 +115,12 @@ func _spawn_table(index: int) -> void:
 
 
 func _on_interact() -> void:
-	if _ended:
-		return
+	# After service you can still walk to the tank and store fish.
 	if _player.position.distance_to(_tank_pos) < 160.0:
 		_store_selected()
+		return
+	if _ended:
+		_msg.text = "Service is over - store fish at the tank, then close the doors."
 		return
 	if _player.position.distance_to(_board_pos) < BOARD_RANGE:
 		_take_plate()

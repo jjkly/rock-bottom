@@ -106,7 +106,6 @@ Overcooked with one player: walk, carry, plate, serve.
 | Patience | 45 s, 3 hearts (15 s each), telegraphed by ring + audio |
 | Angry tables | every 2 → −1 table tomorrow (floor 3) |
 | Stations | cut (per fish). Cooking and washing were cut from the design. |
-| Upgrade effect | tray carries 2 plates |
 
 Customers are a 4-state FSM (arriving → seated → eating → leaving); six
 agents, so tile A* or pre-baked seat paths, not a navmesh.
@@ -128,7 +127,7 @@ agents, so tile A* or pre-baked seat paths, not a navmesh.
 - Difficulty: Easy = unlimited free replays, −20% installments, ~100% clear.
   Medium = one replay costing the day's earnings, baseline, ~85%. Hard = no
   replay, +15% installments, ~70%.
-- Night shop: Equipment (rod, knife, fish tank, tray; durable,
+- Night shop: Equipment (rod, knife, fish tank; durable,
   3 tiers each) and Training (one 3-of-N offer of Luck / Fishing / Speed,
   Luck may discount one). Both run-scoped.
 - Meta unlocks at 50/70/90% repaid: species, prep methods, bait, starting
@@ -236,6 +235,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.8 (2026-11-15):** post-service tank storage; table/CUT text backing; tray upgrade removed; compound stat costs (fishing 1.8x vs 1.5x); unagi art; placeholder cleanup.
 
 **0.7 (2026-11-15):** 6 seated customer variants (hair/eyes/shirt); composed restaurant interior with bounds; selected fish shown on a plate; RARE label becomes BONUS.
 

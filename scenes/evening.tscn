@@ -75,6 +75,13 @@ position = Vector2(1020, 600)
 scale = Vector2(4, 4)
 texture = ExtResource("5_tank")
 
+[node name="CutBg" type="ColorRect" parent="."]
+offset_left = 492.0
+offset_top = 92.0
+offset_right = 568.0
+offset_bottom = 126.0
+color = Color(0, 0, 0, 0.55)
+
 [node name="BoardLabel" type="Label" parent="."]
 offset_left = 500.0
 offset_top = 98.0

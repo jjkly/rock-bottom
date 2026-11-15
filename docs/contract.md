@@ -72,7 +72,7 @@ the score is `paid_total / debt_start`.
 | `add_stat(name, n)` | nightly draft (luck / fishing / speed) |
 | `debug_state()` | one-line readout; every test prints it on failure |
 
-Slots: `rod`, `knife`, `dishwasher`, `tank`, `tray`.
+Slots: `rod`, `knife`, `tank`.
 Stats: `luck`, `fishing`, `speed`.
 
 ## Signals (connect, don't poll)

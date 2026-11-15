@@ -110,8 +110,6 @@ func _make_gear() -> void:
 		"Faster cutting at the board.")
 	_gear("tank", "Fish Tank", "tank", "tank_slots", [90, 180], [0.0, 1.0, 2.0],
 		"Two more slots for holding fish. Pairs with Ice Cold and hot days.")
-	_gear("tray", "Tray", "tray", "carry_slots", [120, 240], [0.0, 1.0, 2.0],
-		"Carry two plates at once; halves the trips during service.")
 
 
 func _gear(id: String, display: String, slot: String, effect: String,

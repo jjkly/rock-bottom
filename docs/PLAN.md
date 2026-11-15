@@ -67,6 +67,10 @@ Still stubbed: bestiary, meta unlocks, difficulty presets, audio, and all real a
 - [x] 6 seated customer variants (hair, eyes, shirt)
 - [x] Composed interior + wall colliders (can't leave the stage)
 - [x] Selected fish drawn on a plate preview
+- [x] Store fish in the tank after service ends
+- [x] Dark backing behind table text and the CUT label
+- [x] Tray upgrade removed; stat costs compound (fishing scales harder)
+- [x] Placeholder art and duplicate pack removed
 - [ ] Customer walk-in animation (seated variants done)
 - [ ] Angry tables actually reduce tomorrow's flow
 - [ ] Audio

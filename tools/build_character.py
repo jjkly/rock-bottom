@@ -6,7 +6,7 @@ Run from the project root:
 from PIL import Image
 import os
 
-SRC = "assets/sprites/characters"
+SRC = "assets/art_source/characters"
 OUT_P = os.path.join(SRC, "player")
 OUT_F = os.path.join(SRC, "fishing")
 os.makedirs(OUT_P, exist_ok=True)

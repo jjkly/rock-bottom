@@ -12,7 +12,6 @@ extends Resource
 #    "bar_width"     fishing reel bar size (0.0 stock -> 0.45 at tier 3)
 #    "cut_speed"     cut minigame speed multiplier
 #    "tank_slots" extra tank slots (RunState already applies this)
-#    "carry_slots"   plates the player can carry at once (1 stock -> 2)
 ##
 ## HOW TO ADD GEAR: right-click data/gear/ -> New Resource... -> GearDef.
 ## Set slot to one of RunState.gear's keys, or add the key there first.

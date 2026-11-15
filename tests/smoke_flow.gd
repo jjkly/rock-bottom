@@ -67,6 +67,19 @@ func _ready() -> void:
 				RunState.cash - before, table.plates_served, table.definition.plates_wanted
 			])
 
+		# After service ends, fish can still be stored in the tank.
+		evening._ended = true
+		var extra := FishInstance.new(load("res://data/species/salmon.tres"), 6)
+		RunState.add_to_stock(extra)
+		await get_tree().process_frame
+		evening._next_fish = extra
+		evening._player.position = evening._tank_pos
+		evening._on_interact()
+		if RunState.tank.size() < 1:
+			_fail("post-service tank store did not work")
+		else:
+			print("  ok   stored a fish after service")
+
 	# --- shop: sleep, auto-charging the installment -------------------------
 	RunState.advance_phase()
 	await _frames(3)
