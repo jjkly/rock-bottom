@@ -194,7 +194,8 @@ func _make_tile(sp: SpeciesDef) -> PanelContainer:
 	var icon := TextureRect.new()
 	icon.custom_minimum_size = Vector2(56, 56)
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	icon.texture = sp.sprite if sp.sprite != null else _filler
+	# Whole fish until it is cut; nigiri is the fallback, filler tile last.
+	icon.texture = sp.raw_sprite if sp.raw_sprite != null else (sp.sprite if sp.sprite != null else _filler)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	col.add_child(icon)

@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="SpeciesDef" format=3]
 
 [ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_daham"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/Mackeral.png" id="1_ss4ek"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fish/cured_saba.png" id="2_ss4ek"]
 
 [resource]
@@ -10,3 +11,4 @@ display_name = "Cured Saba"
 base_price = 18
 preference = "cheap"
 sprite = ExtResource("2_ss4ek")
+raw_sprite = ExtResource("1_ss4ek")

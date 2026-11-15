@@ -31,9 +31,12 @@ extends Resource
 ## them the first time they are caught, which is the point of rain.
 @export var rain_only := false
 
-## Optional. Leave null until the art exists; the fishing scene falls back
-## to a debug rectangle.
+## Nigiri art: what the fish looks like once cut and served.
 @export var sprite: Texture2D
+
+## Whole-fish art: shown before cutting (crate reel, raw stock rows).
+## Falls back to the nigiri, then the filler tile, when null.
+@export var raw_sprite: Texture2D
 
 ## Free text for the team (tuning notes, where the art came from).
 @export_multiline var notes := ""

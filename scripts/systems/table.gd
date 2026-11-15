@@ -104,7 +104,11 @@ func _apply_texture() -> void:
 	if definition == null or _sprite == null:
 		return
 	var seats := 4 if definition.seats >= 4 else 2
-	var path := "res://assets/sprites/restaurant/table_%d.png" % seats
+	# New table art uses "2 table.png" / "4 table.png"; keep the old
+	# table_N.png as a fallback so a rename can't break the scene.
+	var path := "res://assets/sprites/restaurant/%d table.png" % seats
+	if not ResourceLoader.exists(path):
+		path = "res://assets/sprites/restaurant/table_%d.png" % seats
 	if ResourceLoader.exists(path):
 		_sprite.texture = load(path)
 

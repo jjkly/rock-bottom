@@ -22,6 +22,17 @@ already points at it.
 Origin: bottom-centre when placed in a scene. Neutral colours only — modifiers
 tint them (`data/modifiers/*.tres`) so Golden and Chroma work without extra art.
 
-The crate icon and the stock-panel icons read `SpeciesDef.sprite`; there is no
-separate icon file. Add a species by duplicating a `.tres`, setting `sprite`,
+`SpeciesDef.sprite` is the **nigiri** (after cutting). `SpeciesDef.raw_sprite` is the
+**whole fish** shown before cutting in the crate and raw stock rows.
+
+| Raw art | Species |
+|---|---|
+| tuna.png | Lean Tuna, Fatty Tuna |
+| Salmon2.png | Salmon |
+| Sea bream.png | Sea Bream |
+| Mackeral.png | Mackerel, Cured Saba |
+| eel2.png | Eel |
+
+Shellfish/egg (hokkigai, ebi, tako, tamago) have no raw art yet and fall back
+to their nigiri. Add a species by duplicating a `.tres`, setting `sprite`,
 and dropping a same-named PNG here.

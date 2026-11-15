@@ -8,14 +8,27 @@ not block play.
 
 | Asset | Path | Size | Used by | Notes |
 |---|---|---|---|---|
-| Eel | `assets/sprites/fish/eel.png` | 16×16 | fishing pool, stock, crate | Only species with no nigiri in the pack. Rain-only, $32. |
-| Table (2 seat) | `assets/sprites/restaurant/table_2.png` | 64×64 | `scenes/table.tscn` | Origin: floor contact, bottom-centre. |
-| Table (4 seat) | `assets/sprites/restaurant/table_4.png` | 96×64 | `scenes/table.tscn` | Swapped automatically by `TableDef.seats`. |
+| Eel nigiri | `assets/sprites/fish/eel.png` | 16×16 | stock once cut, served plate | Raw eel art now exists (`eel2.png`); the nigiri is still the placeholder. Rain-only, $32. |
+| Table (2 seat) | `assets/sprites/restaurant/2 table.png` | 49×50 | `scenes/table.tscn` | **Added.** Origin: floor contact, bottom-centre. |
+| Table (4 seat) | `assets/sprites/restaurant/4 table.png` | 49×50 | `scenes/table.tscn` | **Added.** Swapped by `TableDef.seats`. |
 | Cutting board | `assets/sprites/restaurant/cutting_board.png` | 64×64 | evening `Props/CuttingBoard` | Interaction point is its centre. |
 | Stove | `assets/sprites/restaurant/stove.png` | 64×64 | evening `Props/Stove` | Not interactive yet. |
 | Sink | `assets/sprites/restaurant/sink.png` | 64×64 | evening `Props/Sink` | Not interactive yet. |
 | Tank | `assets/sprites/restaurant/tank.png` | 64×64 | evening `Props/Tank` | Should read as a fish tank. |
 | Floor tiles | `assets/sprites/restaurant/tiles_floor.png` | 32×32 tiles in a sheet | evening `Floor` (currently a flat color) | Needs a TileMapLayer in the scene. |
+
+## Raw fish (pre-cut)
+
+Wired through `SpeciesDef.raw_sprite` and shown in the crate reel and raw stock rows.
+
+| Species | Art | Present |
+|---|---|---|
+| Lean Tuna / Fatty Tuna | `fish/tuna.png` | yes |
+| Salmon | `fish/Salmon2.png` | yes |
+| Sea Bream | `fish/Sea bream.png` | yes |
+| Mackerel / Cured Saba | `fish/Mackeral.png` | yes |
+| Eel | `fish/eel2.png` | yes |
+| Surf Clam, Shrimp, Octopus, Tamago | — | **missing** (falls back to nigiri) |
 
 ## Characters
 

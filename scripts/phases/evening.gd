@@ -170,8 +170,11 @@ func _rebuild_stock() -> void:
 	for fish in RunState.stock:
 		var b := UI.button("%s  $%d  ×%d" % [_short_name(fish), fish.value(), fish.plates_left], 230, 15)
 		b.custom_minimum_size.y = 34
-		if fish.species.sprite != null:
-			b.icon = fish.species.sprite
+		var icon_tex: Texture2D = fish.species.sprite if fish.prepared else fish.species.raw_sprite
+		if icon_tex == null:
+			icon_tex = fish.species.sprite
+		if icon_tex != null:
+			b.icon = icon_tex
 			b.expand_icon = true
 			b.add_theme_constant_override("icon_max_width", 24)
 		b.pressed.connect(func():

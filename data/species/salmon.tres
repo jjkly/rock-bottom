@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="SpeciesDef" format=3]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/Salmon2.png" id="1_iyef7"]
 [ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_uk8wn"]
 [ext_resource type="Texture2D" path="res://assets/sprites/fish/salmon.png" id="2_iyef7"]
 
@@ -10,3 +11,4 @@ display_name = "Salmon"
 base_price = 22
 preference = "fatty"
 sprite = ExtResource("2_iyef7")
+raw_sprite = ExtResource("1_iyef7")

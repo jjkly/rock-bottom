@@ -13,6 +13,7 @@ extends Node
 ## ============================================================================
 
 @onready var _holder: Node = $PhaseHolder
+@onready var _hud: CanvasLayer = $HUD
 @onready var _hud_day: Label = $HUD/Row/DayLabel
 @onready var _hud_money: Label = $HUD/Row/MoneyLabel
 @onready var _hud_weather: Label = $HUD/Row/WeatherLabel
@@ -36,7 +37,7 @@ func _ready() -> void:
 func _refresh_hud() -> void:
 	if _hud_day == null:
 		return
-	_hud_day.text = "Day %d/7  ·  due $%d" % [RunState.day, RunState.minimum_today()]
+	_hud_day.text = "Day %d/7  ·  due $%d" % [RunState.day, RunState.installment_today()]
 	_hud_money.text = "$%d  ·  debt $%d" % [RunState.cash, RunState.debt]
 	_hud_weather.text = RunState.weather_name(RunState.weather)
 
@@ -45,6 +46,7 @@ func _show_phase(phase: int) -> void:
 	if phase == _shown:
 		return
 	_shown = phase
+	_hud.visible = true
 	_clear_current()
 
 	var packed: PackedScene
@@ -63,6 +65,7 @@ func _show_results() -> void:
 	if _shown == -2:
 		return
 	_shown = -2
+	_hud.visible = false
 	_clear_current()
 	_current = preload("res://scenes/results.tscn").instantiate()
 	_holder.add_child(_current)

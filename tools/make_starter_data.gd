@@ -68,6 +68,15 @@ func _species(id: String, display: String, price: int, preference: String, rain_
 	var art_path := "res://assets/sprites/fish/%s.png" % id
 	if ResourceLoader.exists(art_path):
 		s.sprite = load(art_path)
+	var raw_map := {
+		"lean_tuna": "tuna.png", "toro": "tuna.png", "salmon": "Salmon2.png",
+		"sea_bream": "Sea bream.png", "mackerel": "Mackeral.png",
+		"cured_saba": "Mackeral.png", "eel": "eel2.png",
+	}
+	if raw_map.has(id):
+		var raw_path: String = "res://assets/sprites/fish/" + String(raw_map[id])
+		if ResourceLoader.exists(raw_path):
+			s.raw_sprite = load(raw_path)
 	_save(s, "res://data/species/%s.tres" % id)
 
 
