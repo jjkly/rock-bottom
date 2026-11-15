@@ -1,11 +1,11 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene format=3 uid="uid://d3tl7w40nw61n"]
 
-[ext_resource type="Script" path="res://scripts/phases/evening.gd" id="1_evening"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/cutting board.png" id="2_board"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/tank.png" id="5_tank"]
+[ext_resource type="Script" uid="uid://gr26lo7pe08f" path="res://scripts/phases/evening.gd" id="1_evening"]
+[ext_resource type="Texture2D" uid="uid://b6xycbn4l8ban" path="res://assets/sprites/restaurant/cutting board.png" id="2_board"]
+[ext_resource type="Texture2D" uid="uid://c1nlbc2nfq3u0" path="res://assets/sprites/restaurant/tank.png" id="5_tank"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="6_player"]
-[ext_resource type="Texture2D" path="res://assets/sprites/fish/plate.png" id="7_plate"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/interior.png" id="8_room"]
+[ext_resource type="Texture2D" uid="uid://dj6cxnlkld7il" path="res://assets/sprites/fish/plate.png" id="7_plate"]
+[ext_resource type="Texture2D" uid="uid://b7uwgfshqjcw2" path="res://assets/sprites/restaurant/interior.png" id="8_room"]
 
 [sub_resource type="RectangleShape2D" id="Rect_h"]
 size = Vector2(1160, 16)
@@ -13,76 +13,83 @@ size = Vector2(1160, 16)
 [sub_resource type="RectangleShape2D" id="Rect_v"]
 size = Vector2(16, 640)
 
-[node name="Evening" type="Node2D"]
+[node name="Evening" type="Node2D" unique_id=1748196401]
 script = ExtResource("1_evening")
+metadata/_tc_uuid = "8374471080780064755"
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=19236059]
 z_index = -10
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.1, 0.09, 0.08, 1)
+metadata/_tc_uuid = "553867664414784220"
 
-[node name="Bounds" type="StaticBody2D" parent="."]
-collision_layer = 1
+[node name="Bounds" type="StaticBody2D" parent="." unique_id=1573084854]
 collision_mask = 0
+metadata/_tc_uuid = "7221415134637490506"
 
-[node name="Top" type="CollisionShape2D" parent="Bounds"]
+[node name="Top" type="CollisionShape2D" parent="Bounds" unique_id=1836457902]
 position = Vector2(640, 94)
 shape = SubResource("Rect_h")
+metadata/_tc_uuid = "4249283425977222788"
 
-[node name="Bottom" type="CollisionShape2D" parent="Bounds"]
+[node name="Bottom" type="CollisionShape2D" parent="Bounds" unique_id=932322232]
 position = Vector2(640, 706)
 shape = SubResource("Rect_h")
+metadata/_tc_uuid = "7278205465418808125"
 
-[node name="Left" type="CollisionShape2D" parent="Bounds"]
+[node name="Left" type="CollisionShape2D" parent="Bounds" unique_id=1201030211]
 position = Vector2(56, 400)
 shape = SubResource("Rect_v")
+metadata/_tc_uuid = "8999679325583111775"
 
-[node name="Right" type="CollisionShape2D" parent="Bounds"]
+[node name="Right" type="CollisionShape2D" parent="Bounds" unique_id=1399575898]
 position = Vector2(1224, 400)
 shape = SubResource("Rect_v")
+metadata/_tc_uuid = "3517736115956453797"
 
-[node name="Floor" type="ColorRect" parent="."]
+[node name="Floor" type="ColorRect" parent="." unique_id=1253696542]
 z_index = -9
 offset_left = 60.0
 offset_top = 100.0
 offset_right = 1220.0
 offset_bottom = 700.0
 color = Color(0.16, 0.14, 0.12, 1)
+metadata/_tc_uuid = "1436757431252769698"
 
-[node name="RoomBg" type="TextureRect" parent="."]
+[node name="RoomBg" type="TextureRect" parent="." unique_id=450286833]
 z_index = -8
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 1280.0
 offset_bottom = 720.0
 mouse_filter = 2
 texture = ExtResource("8_room")
 expand_mode = 1
-stretch_mode = 0
+metadata/_tc_uuid = "1203089099239340933"
 
-[node name="Props" type="Node2D" parent="."]
+[node name="Props" type="Node2D" parent="." unique_id=1957218122]
+metadata/_tc_uuid = "115090108336132884"
 
-[node name="CuttingBoard" type="Sprite2D" parent="Props"]
+[node name="CuttingBoard" type="Sprite2D" parent="Props" unique_id=1518989214]
 position = Vector2(520, 160)
-texture = ExtResource("2_board")
 scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_board")
+metadata/_tc_uuid = "8297837082330118221"
 
-[node name="Tank" type="Sprite2D" parent="Props"]
+[node name="Tank" type="Sprite2D" parent="Props" unique_id=1075783652]
 position = Vector2(1020, 600)
 scale = Vector2(4, 4)
 texture = ExtResource("5_tank")
+metadata/_tc_uuid = "5716013984255955844"
 
-[node name="CutBg" type="ColorRect" parent="."]
+[node name="CutBg" type="ColorRect" parent="." unique_id=561619483]
 offset_left = 492.0
 offset_top = 92.0
 offset_right = 568.0
 offset_bottom = 126.0
 color = Color(0, 0, 0, 0.55)
+metadata/_tc_uuid = "9058846355793769693"
 
-[node name="BoardLabel" type="Label" parent="."]
+[node name="BoardLabel" type="Label" parent="." unique_id=1515223884]
 offset_left = 500.0
 offset_top = 98.0
 offset_right = 560.0
@@ -90,26 +97,32 @@ offset_bottom = 122.0
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 14
 text = "CUT"
+metadata/_tc_uuid = "7898045102009584102"
 
-[node name="Tables" type="Node2D" parent="."]
+[node name="Tables" type="Node2D" parent="." unique_id=1353845606]
+metadata/_tc_uuid = "5644994002590075522"
 
-[node name="Players" type="Node2D" parent="."]
+[node name="Players" type="Node2D" parent="." unique_id=901450796]
+metadata/_tc_uuid = "3141340143691496213"
 
-[node name="Player1" parent="Players" instance=ExtResource("6_player")]
+[node name="Player1" parent="Players" unique_id=304323002 instance=ExtResource("6_player")]
 position = Vector2(640, 420)
-player_prefix = "p1"
+metadata/_tc_uuid = "2519115143205196245"
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1876954463]
 layer = 5
+metadata/_tc_uuid = "1462647209081423511"
 
-[node name="StockPanel" type="ColorRect" parent="UI"]
+[node name="StockPanel" type="ColorRect" parent="UI" unique_id=999954090]
 offset_left = 20.0
 offset_top = 90.0
 offset_right = 290.0
 offset_bottom = 460.0
 color = Color(0.07, 0.07, 0.1, 0.92)
+metadata/_tc_uuid = "8447514392739804672"
 
-[node name="StockTitle" type="Label" parent="UI/StockPanel"]
+[node name="StockTitle" type="Label" parent="UI/StockPanel" unique_id=1820700289]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 8.0
 offset_right = 250.0
@@ -117,27 +130,33 @@ offset_bottom = 32.0
 theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
 theme_override_font_sizes/font_size = 16
 text = "STOCK"
+metadata/_tc_uuid = "198221953781766636"
 
-[node name="Scroll" type="ScrollContainer" parent="UI/StockPanel"]
+[node name="Scroll" type="ScrollContainer" parent="UI/StockPanel" unique_id=1859152270]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 40.0
 offset_right = 260.0
 offset_bottom = 410.0
 horizontal_scroll_mode = 0
+metadata/_tc_uuid = "272340294665958875"
 
-[node name="StockList" type="VBoxContainer" parent="UI/StockPanel/Scroll"]
+[node name="StockList" type="VBoxContainer" parent="UI/StockPanel/Scroll" unique_id=1940251842]
 custom_minimum_size = Vector2(236, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+metadata/_tc_uuid = "6948463298235086855"
 
-[node name="TimerBg" type="ColorRect" parent="UI"]
+[node name="TimerBg" type="ColorRect" parent="UI" unique_id=34558977]
 offset_left = 675.0
 offset_top = 82.0
 offset_right = 900.0
 offset_bottom = 126.0
 color = Color(0, 0, 0, 0.55)
+metadata/_tc_uuid = "6313854586924825260"
 
-[node name="TimerLabel" type="Label" parent="UI"]
+[node name="TimerLabel" type="Label" parent="UI" unique_id=2128766255]
 offset_left = 690.0
 offset_top = 90.0
 offset_right = 890.0
@@ -145,15 +164,17 @@ offset_bottom = 120.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.6, 1)
 theme_override_font_sizes/font_size = 18
 text = "Service  55s"
+metadata/_tc_uuid = "2614509565910060135"
 
-[node name="BottomBg" type="ColorRect" parent="UI"]
+[node name="BottomBg" type="ColorRect" parent="UI" unique_id=1353347519]
 offset_left = 330.0
 offset_top = 638.0
 offset_right = 1050.0
 offset_bottom = 712.0
 color = Color(0, 0, 0, 0.45)
+metadata/_tc_uuid = "8258811953623222894"
 
-[node name="Help" type="Label" parent="UI"]
+[node name="Help" type="Label" parent="UI" unique_id=388018200]
 offset_left = 360.0
 offset_top = 652.0
 offset_right = 1000.0
@@ -161,24 +182,28 @@ offset_bottom = 676.0
 theme_override_colors/font_color = Color(0.55, 0.6, 0.65, 1)
 theme_override_font_sizes/font_size = 15
 text = "WASD + E   ·   board = take a plate   ·   table = serve it"
+metadata/_tc_uuid = "5802522638803134752"
 
-[node name="Message" type="Label" parent="UI"]
+[node name="Message" type="Label" parent="UI" unique_id=1678125006]
 offset_left = 360.0
 offset_top = 678.0
 offset_right = 1000.0
 offset_bottom = 708.0
 theme_override_font_sizes/font_size = 18
 text = "Take a plate at the board, serve it at a table."
+metadata/_tc_uuid = "2650431291990108261"
 
-[node name="TankPanel" type="ColorRect" parent="UI"]
+[node name="TankPanel" type="ColorRect" parent="UI" unique_id=2053254024]
 visible = false
 offset_left = 930.0
 offset_top = 90.0
 offset_right = 1260.0
 offset_bottom = 500.0
 color = Color(0.07, 0.09, 0.12, 0.94)
+metadata/_tc_uuid = "1529192275904529682"
 
-[node name="TankTitle" type="Label" parent="UI/TankPanel"]
+[node name="TankTitle" type="Label" parent="UI/TankPanel" unique_id=2077274132]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 8.0
 offset_right = 300.0
@@ -186,8 +211,10 @@ offset_bottom = 34.0
 theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "FISH TANK"
+metadata/_tc_uuid = "5418084588780579503"
 
-[node name="TankHint" type="Label" parent="UI/TankPanel"]
+[node name="TankHint" type="Label" parent="UI/TankPanel" unique_id=1803256604]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 32.0
 offset_right = 310.0
@@ -195,44 +222,54 @@ offset_bottom = 54.0
 theme_override_colors/font_color = Color(0.6, 0.65, 0.7, 1)
 theme_override_font_sizes/font_size = 13
 text = "select + E to store - click to take"
+metadata/_tc_uuid = "1835684626579633887"
 
-[node name="TankList" type="ScrollContainer" parent="UI/TankPanel"]
+[node name="TankList" type="ScrollContainer" parent="UI/TankPanel" unique_id=1834263496]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 60.0
 offset_right = 308.0
 offset_bottom = 398.0
 horizontal_scroll_mode = 0
+metadata/_tc_uuid = "8907511623554584488"
 
-[node name="TankItems" type="VBoxContainer" parent="UI/TankPanel/TankList"]
+[node name="TankItems" type="VBoxContainer" parent="UI/TankPanel/TankList" unique_id=48694487]
 custom_minimum_size = Vector2(284, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+metadata/_tc_uuid = "688533968197217406"
 
-[node name="PlatePreview" type="Control" parent="UI"]
+[node name="PlatePreview" type="Control" parent="UI" unique_id=112400377]
 visible = false
+layout_mode = 3
+anchors_preset = 0
 offset_left = 20.0
 offset_top = 470.0
 offset_right = 150.0
 offset_bottom = 600.0
+metadata/_tc_uuid = "7307195818818680417"
 
-[node name="Plate" type="TextureRect" parent="UI/PlatePreview"]
-offset_left = 0.0
-offset_top = 0.0
+[node name="Plate" type="TextureRect" parent="UI/PlatePreview" unique_id=229253834]
+layout_mode = 0
 offset_right = 130.0
 offset_bottom = 130.0
 texture = ExtResource("7_plate")
 expand_mode = 1
 stretch_mode = 5
+metadata/_tc_uuid = "6755424945606022229"
 
-[node name="FishIcon" type="TextureRect" parent="UI/PlatePreview"]
+[node name="FishIcon" type="TextureRect" parent="UI/PlatePreview" unique_id=1653254390]
+layout_mode = 0
 offset_left = 30.0
 offset_top = 30.0
 offset_right = 100.0
 offset_bottom = 100.0
 expand_mode = 1
 stretch_mode = 5
+metadata/_tc_uuid = "5530529591646745711"
 
-[node name="ContinueButton" type="Button" parent="UI"]
+[node name="ContinueButton" type="Button" parent="UI" unique_id=130725730]
 visible = false
 offset_left = 960.0
 offset_top = 600.0
@@ -241,3 +278,4 @@ offset_bottom = 644.0
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
 text = "Close the doors"
+metadata/_tc_uuid = "6294152162264952764"
