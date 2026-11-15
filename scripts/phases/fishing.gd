@@ -38,6 +38,7 @@ const FILLER := "res://assets/sprites/ui/crate_frame.png"
 @onready var _cast_btn: Button = $CastButton
 @onready var _next_btn: Button = $NextButton
 @onready var _fisher: AnimatedSprite2D = $Fisher
+@onready var _exclaim: Label = $Exclaim
 
 var _state: State = State.IDLE
 var _casts_left := 0
@@ -51,6 +52,8 @@ var _mods: Array[ModifierDef] = []
 var _tile_species: Array[SpeciesDef] = []
 var _filler: Texture2D
 var _reel_tween: Tween
+var _reel_target := 0.0
+var _settled := true
 
 
 func _ready() -> void:
@@ -90,8 +93,11 @@ func _load_content() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") or event.is_action_pressed("p1_interact"):
+	if event.is_action_pressed("ui_accept"):
 		_on_cast()
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("p1_interact"):
+		_skip_reveal()  # E skips the crate animation
 		get_viewport().set_input_as_handled()
 
 
@@ -133,9 +139,9 @@ func _stop_reel() -> void:
 		_pending_mod = _mods[RunState.rng.randi_range(0, _mods.size() - 1)]
 
 	_state = State.REVEAL
+	_settled = false
 	_fisher.play("fishing bite")
-	await _run_reel()
-	_settle_catch()
+	_run_reel()
 
 
 ## Bias the species roll toward expensive fish as quality rises.
@@ -152,14 +158,23 @@ func _roll_species(quality: float) -> SpeciesDef:
 func _run_reel() -> void:
 	_build_strip(_pending_species)
 	_strip.position = Vector2.ZERO
-	var target := VIEW_W * 0.5 - (WIN_INDEX * PITCH + TILE_W * 0.5)
+	_reel_target = VIEW_W * 0.5 - (WIN_INDEX * PITCH + TILE_W * 0.5)
 	if _reel_tween != null and _reel_tween.is_valid():
 		_reel_tween.kill()
+	# 20% longer than before, with a pronounced crawl at the end.
 	_reel_tween = create_tween()
-	_reel_tween.tween_property(_strip, "position:x", target, 1.8) \
-		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	await _reel_tween.finished
-	_strip.position.x = target
+	_reel_tween.tween_property(_strip, "position:x", _reel_target, 2.16) \
+		.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+
+
+## E during the reveal: jump straight to the result.
+func _skip_reveal() -> void:
+	if _state != State.REVEAL or _settled:
+		return
+	if _reel_tween != null and _reel_tween.is_valid():
+		_reel_tween.kill()
+	_strip.position.x = _reel_target
+	_settle_catch()
 
 
 func _build_strip(winner: SpeciesDef) -> void:
@@ -223,6 +238,8 @@ func _process(delta: float) -> void:
 			_bar_marker.position.x = BAR_X + p * (BAR_W - MARKER_W)
 		State.REVEAL:
 			_update_reel_name()
+			if _reel_tween == null or not _reel_tween.is_running():
+				_settle_catch()
 
 
 ## Name of whichever tile currently sits under the centre marker.
@@ -237,6 +254,9 @@ func _update_reel_name() -> void:
 
 
 func _settle_catch() -> void:
+	if _settled:
+		return
+	_settled = true
 	var fish := FishInstance.new(_pending_species, _pending_size, _pending_mod)
 	RunState.add_to_stock(fish)
 	_casts_left -= 1
@@ -252,10 +272,18 @@ func _settle_catch() -> void:
 		_pending_species.display_name, _pending_size, fish.value()
 	]
 	_update_counts()
+	_flash_exclaim()
+
+
+func _flash_exclaim() -> void:
+	_exclaim.visible = true
+	await get_tree().create_timer(0.7).timeout
+	if is_instance_valid(_exclaim):
+		_exclaim.visible = false
 
 
 func _update_counts() -> void:
-	_stock.text = "Casts left: %d   ·   stock: %d fish   ·   freezer: %d/%d" % [
-		_casts_left, RunState.stock.size(), RunState.freezer.size(), RunState.freezer_capacity
+	_stock.text = "Casts left: %d   ·   stock: %d fish   ·   tank: %d/%d" % [
+		_casts_left, RunState.stock.size(), RunState.tank.size(), RunState.tank_capacity
 	]
 	_status.text = "Casts left: %d" % _casts_left

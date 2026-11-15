@@ -25,7 +25,7 @@ assets/
   sprites/fish/          species sprites, named by SpeciesDef.id (lean_tuna.png)
   sprites/characters/    player_<dir>_<frame>.png (down/up/side, 0-3), customers
   sprites/restaurant/    tiles_floor.png, table_2/4.png, cutting_board.png,
-                         stove.png, sink.png, freezer.png, tank.png
+                         stove.png, sink.png, tank.png, freezer.png (unused)
   sprites/ui/            heart_full/empty.png, weather_clear/hot/rain.png,
                          crate_frame.png, coin.png, ticket_bubble.png
   audio/sfx/             serve.ogg, angry.ogg, coin.ogg, crate_open.ogg, reel_tick.ogg
@@ -46,7 +46,7 @@ that folder so Godot never imports it.
 
 1. Drop the PNG in `assets/sprites/fish/`.
 2. Open the matching `data/species/<id>.tres` and set `sprite`.
-3. Nothing else — the fishing tank and freezer read `sprite` and fall back to
+3. Nothing else — the fishing screen and tank read `sprite` and fall back to
    a debug rectangle when it's null.
 
 Character and table art is wired in their component scenes:

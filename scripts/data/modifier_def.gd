@@ -20,13 +20,13 @@ extends Resource
 ## Permanent luck for this run (chroma is the only one that grants it).
 @export var luck_bonus := 0
 
-## Ice cold: ignores aging loss and hot-day spoilage. The freezer-safety pick.
+## Ice cold: ignores aging loss and hot-day spoilage. The tank-safety pick.
 @export var never_spoils := false
 
 ## Double serving: +1 plate from the same fish.
 @export var extra_plates := 0
 
-## Tint the sprite in the tank/freezer so the player can see a rare at a
+## Tint the sprite in the tank/tank so the player can see a rare at a
 ## glance. White = no tint.
 @export var tint: Color = Color.WHITE
 

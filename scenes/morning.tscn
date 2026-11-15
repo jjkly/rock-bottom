@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" path="res://scripts/phases/morning.gd" id="1_morning"]
+[ext_resource type="Texture2D" path="res://assets/sprites/backgrounds/makebead-99x66.png" id="2_store"]
 
 [node name="Morning" type="Control"]
 layout_mode = 3
@@ -9,12 +10,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_morning")
 
+[node name="StoreBg" type="TextureRect" parent="."]
+offset_left = 244.0
+offset_top = 96.0
+offset_right = 1036.0
+offset_bottom = 624.0
+texture_filter = 3
+texture = ExtResource("2_store")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.06, 0.07, 0.09, 1)
+color = Color(0.03, 0.04, 0.06, 0.55)
 
 [node name="Title" type="Label" parent="."]
 offset_left = 80.0
@@ -74,7 +85,7 @@ offset_right = 380.0
 offset_bottom = 494.0
 focus_mode = 0
 theme_override_font_sizes/font_size = 24
-text = "Take the boat"
+text = "Go to dock"
 
 [node name="HelpLabel" type="Label" parent="."]
 offset_left = 80.0

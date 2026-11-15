@@ -53,6 +53,16 @@ static func panel(bg := Color(0.07, 0.07, 0.10, 0.92)) -> PanelContainer:
 	return p
 
 
+## Colour per table preference/tag. One place so tables and inventory agree.
+static func tag_color(tag: String) -> Color:
+	match tag:
+		"lean": return Color(0.45, 0.7, 1.0)
+		"fatty": return Color(0.78, 0.55, 1.0)
+		"cheap": return Color(0.5, 0.9, 0.6)
+		"rare": return Color(1.0, 0.82, 0.35)
+	return Color(0.85, 0.85, 0.85)
+
+
 ## Full-screen flat background for Control roots.
 static func backdrop(color := Color(0.05, 0.06, 0.08)) -> ColorRect:
 	var c := ColorRect.new()

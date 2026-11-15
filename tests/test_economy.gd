@@ -89,8 +89,10 @@ static func _test_installment(t) -> void:
 static func _test_value(t) -> void:
 	var f = _fish(28, 8)
 	t.eq(f.value(), 42, "8-slice fish: 28 x 1.5")
+	f.age_days = 1
+	t.eq(f.value(), 42, "one day in the tank keeps full value")
 	f.age_days = 2
-	t.eq(f.value(), 59, "two days aged: 42 x 1.4")
+	t.eq(f.value(), 0, "two days in the tank spoils it")
 	var g = ModifierDefScript.new()
 	g.sale_mult = 1.75
 	var golden = _fish(28, 8, g)
@@ -99,17 +101,19 @@ static func _test_value(t) -> void:
 
 static func _test_aging(t) -> void:
 	var f = _fish(28, 8)
-	t.eq(f.aging_multiplier(), 1.0, "fresh fish has no aging bonus")
+	t.eq(f.aging_multiplier(), 1.0, "fresh fish is worth full value")
+	f.age_days = 1
+	t.eq(f.aging_multiplier(), 1.0, "one day in the tank is safe")
 	f.age_days = 2
-	t.eq(f.aging_multiplier(), 1.4, "peaks at two days")
-	f.age_days = 5
-	t.eq(f.aging_multiplier(), 0.5, "rots after four days")
+	t.eq(f.aging_multiplier(), 0.0, "the second day spoils it")
+	f.spoiled = true
+	t.eq(f.aging_multiplier(), 0.0, "spoiled fish stays worthless")
 
 	var m = ModifierDefScript.new()
 	m.never_spoils = true
 	var ice = _fish(28, 8, m)
 	ice.age_days = 5
-	t.eq(ice.aging_multiplier(), 1.0, "ice cold never ages")
+	t.eq(ice.aging_multiplier(), 1.0, "ice cold never spoils")
 
 
 static func _test_serving_money(t) -> void:
@@ -161,7 +165,7 @@ static func _test_hot_weather(t) -> void:
 
 	rs.weather = 1  # HOT
 	rs.end_day()
-	t.eq(normal.spoiled, true, "hot day spoils freezer fish")
+	t.eq(normal.spoiled, true, "hot day spoils tank fish")
 	t.eq(normal.value(), 0, "spoiled fish is worthless")
 	t.eq(ice.spoiled, false, "ice cold survives a hot day")
 	t.eq(ice.value(), 42, "ice cold keeps its value")

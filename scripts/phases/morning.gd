@@ -1,7 +1,7 @@
 extends Control
 ## ============================================================================
 ## MORNING — the plan screen. Nodes live in scenes/morning.tscn.
-## Weather must be read before casting: hot spoils the freezer tonight, rain
+## Weather must be read before casting: hot spoils the tank tonight, rain
 ## opens the rain-only species.
 ## ============================================================================
 
@@ -29,7 +29,7 @@ func _ready() -> void:
 			_hint.text = "Clear water. The usual catch."
 			_hint.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
 		1:
-			_hint.text = "Heat warning: every fish in the freezer spoils tonight."
+			_hint.text = "Heat warning: every fish in the tank spoils tonight."
 			_hint.add_theme_color_override("font_color", Color(1, 0.55, 0.4))
 		_:
 			_hint.text = "Rain. Deep-water fish are moving in."
