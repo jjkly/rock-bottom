@@ -9,8 +9,8 @@ not block play.
 | Asset | Path | Size | Used by | Notes |
 |---|---|---|---|---|
 | Eel nigiri | `assets/sprites/fish/eel.png` | 16×16 | stock once cut, served plate | Raw eel art now exists (`eel2.png`); the nigiri is still the placeholder. Rain-only, $32. |
-| Table (2 seat) | `assets/sprites/restaurant/2 table.png` | 49×50 | `scenes/table.tscn` | **Added.** Origin: floor contact, bottom-centre. |
-| Table (4 seat) | `assets/sprites/restaurant/4 table.png` | 49×50 | `scenes/table.tscn` | **Added.** Swapped by `TableDef.seats`. |
+| Table (2 seat) | `assets/sprites/restaurant/2 table.png` | 64×64 | `scenes/table.tscn` | **Added.** Origin: floor contact, bottom-centre. |
+| Table (4 seat) | `assets/sprites/restaurant/4 table.png` | 96×64 | `scenes/table.tscn` | **Added.** Swapped by `TableDef.seats`. |
 | Cutting board | `assets/sprites/restaurant/cutting_board.png` | 64×64 | evening `Props/CuttingBoard` | Interaction point is its centre. |
 | Stove | `assets/sprites/restaurant/stove.png` | 64×64 | evening `Props/Stove` | Not interactive yet. |
 | Sink | `assets/sprites/restaurant/sink.png` | 64×64 | evening `Props/Sink` | Not interactive yet. |
