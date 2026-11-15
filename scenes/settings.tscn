@@ -111,6 +111,23 @@ offset_right = 540.0
 offset_bottom = 350.0
 text = ""
 
+[node name="CreditsTitle" type="Label" parent="Panel"]
+offset_left = 40.0
+offset_top = 366.0
+offset_right = 560.0
+offset_bottom = 392.0
+theme_override_font_sizes/font_size = 16
+text = "Credits"
+
+[node name="Credits" type="Label" parent="Panel"]
+offset_left = 40.0
+offset_top = 392.0
+offset_right = 560.0
+offset_bottom = 452.0
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+text = "Click — complex_waveform (CC BY 4.0) · Bright Bell — mokasza (CC BY 4.0) · Wooden Door Knock — Cpfcfan10 (CC BY 4.0), via freesound.org. Music: Seaside Village — Leonardo Paz (CC BY 4.0); restaurant ambience — Alex Morgan."
+
 [node name="BackButton" type="Button" parent="Panel"]
 offset_left = 40.0
 offset_top = 460.0

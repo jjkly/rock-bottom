@@ -13,11 +13,14 @@
 
 ## Music
 
-Licences are **not yet verified** for these two files — check the source page
-before release.
+| File | Work / author | Licence | Credit |
+|---|---|---|---|
+| `02_seaside_village (main theme).wav` | Seaside Village — Leonardo Paz (leohpaz), OpenGameArt Ocean Music Pack | CC BY 4.0 | **required** |
+| `alex-morgan-restaurant-dinner-table-ambience-578503(restraunt theme).mp3` | Restaurant Dinner Table Ambience — Alex Morgan | Pixabay Content License (filename matches Pixabay's naming; source page now 404s, so **unverified**) | not required if Pixabay |
 
-- `02_seaside_village (main theme).wav`
-- `alex-morgan-restaurant-dinner-table-ambience-578503(restraunt theme).mp3` — Alex Morgan
+Music attribution: `Seaside Village by Leonardo Paz — opengameart.org/content/ocean-music-pack — CC BY 4.0`.
+The ambience is fine for a jam build; for a commercial release, confirm where it
+was downloaded or replace it with a verified CC0 track.
 
 ## SFX
 
