@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf2fcojwdxsiy"
-path="res://.godot/imported/Trout.png-2afde0a013bf19d265e63eac4fa914b2.ctex"
+uid="uid://c7h3g1onff3j6"
+path="res://.godot/imported/Sea bream.png-750768ac11d39a243c8ac1e4296e572f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/fish/Trout.png"
-dest_files=["res://.godot/imported/Trout.png-2afde0a013bf19d265e63eac4fa914b2.ctex"]
+source_file="res://assets/sprites/fish/Sea bream.png"
+dest_files=["res://.godot/imported/Sea bream.png-750768ac11d39a243c8ac1e4296e572f.ctex"]
 
 [params]
 
