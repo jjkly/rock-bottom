@@ -1,22 +1,27 @@
 class_name Player
 extends CharacterBody2D
 ## ============================================================================
-## The player during evening service. Movement only.
+## The player during evening service. Movement + animation state only.
 ##
-## The node tree lives in scenes/player.tscn (Sprite + CollisionShape2D), so
-## the sprite can be swapped in the editor. Left is the side frame flipped.
-## Carrying plates is the evening scene's job, not this one.
+## Art: 16px character drawn at 1x, displayed at 2x (32px tall) so it sits on
+## the 32px tile grid. Animations come from player_frames.tres, sliced from
+## emma's sheets by tools/build_character.py:
+##   idle (7) · walk (4) · hold idle (7) · hold walk (4)
+## The art is front-facing; there are no directional frames.
+##
+## Carrying is not wired into service yet. When it is, call set_holding(true)
+## while the player holds a plate and the hold animations take over.
 ## ============================================================================
 
 const SPEED := 215.0
 
-@onready var _sprite: Sprite2D = $Sprite
-var _tex := {}
+@onready var _anim: AnimatedSprite2D = $AnimatedSprite
+
+var _holding := false
 
 
-func _ready() -> void:
-	for dir in ["down", "up", "side"]:
-		_tex[dir] = load("res://assets/sprites/characters/player_%s_0.png" % dir)
+func set_holding(value: bool) -> void:
+	_holding = value
 
 
 func _physics_process(_delta: float) -> void:
@@ -24,10 +29,11 @@ func _physics_process(_delta: float) -> void:
 	velocity = dir * SPEED
 	move_and_slide()
 
-	if dir.length() > 0.01:
-		if absf(dir.x) > absf(dir.y):
-			_sprite.texture = _tex["side"]
-			_sprite.flip_h = dir.x < 0.0
-		else:
-			_sprite.texture = _tex["up"] if dir.y < 0.0 else _tex["down"]
-			_sprite.flip_h = false
+	var moving := dir.length() > 0.01
+	var next := "idle"
+	if _holding:
+		next = "hold walk" if moving else "hold idle"
+	elif moving:
+		next = "walk"
+	if _anim.animation != next:
+		_anim.play(next)

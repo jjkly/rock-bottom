@@ -1,343 +1,41 @@
-[gd_scene format=3 uid="uid://ctx318paihxw8"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" uid="uid://buls2lgum02qe" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Texture2D" uid="uid://ctqc1ahncegvb" path="res://assets/sprites/characters/fishing bite v2.png" id="2_tipki"]
-[ext_resource type="Texture2D" uid="uid://br58822ealgy6" path="res://assets/sprites/characters/fishing idle.png" id="3_85g3d"]
-[ext_resource type="Texture2D" uid="uid://dkv5h5fx1pcq2" path="res://assets/sprites/characters/fishing1.png" id="4_choun"]
-[ext_resource type="Texture2D" uid="uid://c4j8yvtsr1ueu" path="res://assets/sprites/characters/holdidle.png" id="5_ya4ey"]
-[ext_resource type="Texture2D" uid="uid://brnp45vt54m8y" path="res://assets/sprites/characters/hold walk.png" id="6_eb6dy"]
-[ext_resource type="Texture2D" uid="uid://biafl71vehoyr" path="res://assets/sprites/characters/idle.png" id="7_trceg"]
-[ext_resource type="Texture2D" uid="uid://bg8qa53b7yyas" path="res://assets/sprites/characters/walk.png" id="8_a8y0u"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
-atlas = ExtResource("2_tipki")
-region = Rect2(0, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jbj1t"]
-atlas = ExtResource("2_tipki")
-region = Rect2(29, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
-atlas = ExtResource("3_85g3d")
-region = Rect2(0, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dp3eg"]
-atlas = ExtResource("3_85g3d")
-region = Rect2(29, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0ld40"]
-atlas = ExtResource("3_85g3d")
-region = Rect2(58, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gqmmt"]
-atlas = ExtResource("3_85g3d")
-region = Rect2(87, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yc10j"]
-atlas = ExtResource("3_85g3d")
-region = Rect2(116, 0, 28, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jscy8"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(0, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pm3ni"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(11, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_y6deb"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(22, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_og1vs"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(33, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2wyq8"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(44, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_vxglm"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(55, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2f3dj"]
-atlas = ExtResource("5_ya4ey")
-region = Rect2(66, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yq6so"]
-atlas = ExtResource("6_eb6dy")
-region = Rect2(0, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fv21b"]
-atlas = ExtResource("6_eb6dy")
-region = Rect2(11, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_tel4y"]
-atlas = ExtResource("6_eb6dy")
-region = Rect2(22, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qkpxi"]
-atlas = ExtResource("6_eb6dy")
-region = Rect2(33, 0, 10, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5q0nq"]
-atlas = ExtResource("7_trceg")
-region = Rect2(0, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dgi5k"]
-atlas = ExtResource("7_trceg")
-region = Rect2(8, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_j8jky"]
-atlas = ExtResource("7_trceg")
-region = Rect2(16, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kmb1v"]
-atlas = ExtResource("7_trceg")
-region = Rect2(24, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fuf3a"]
-atlas = ExtResource("7_trceg")
-region = Rect2(32, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pibwh"]
-atlas = ExtResource("7_trceg")
-region = Rect2(40, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_c6pm6"]
-atlas = ExtResource("7_trceg")
-region = Rect2(48, 0, 7, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5he1u"]
-atlas = ExtResource("8_a8y0u")
-region = Rect2(0, 0, 7, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5poiv"]
-atlas = ExtResource("8_a8y0u")
-region = Rect2(8, 0, 7, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2cjbq"]
-atlas = ExtResource("8_a8y0u")
-region = Rect2(16, 0, 7, 18)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_chjal"]
-atlas = ExtResource("8_a8y0u")
-region = Rect2(24, 0, 7, 18)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_ip871"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jkv2x")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jbj1t")
-}],
-"loop": 1,
-"name": &"fishing bite",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_muem4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dp3eg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0ld40")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_gqmmt")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yc10j")
-}],
-"loop": 1,
-"name": &"fishing idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_choun")
-}],
-"loop": 1,
-"name": &"fishing initiate",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jscy8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pm3ni")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_y6deb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_og1vs")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2wyq8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_vxglm")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2f3dj")
-}],
-"loop": 1,
-"name": &"hold idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yq6so")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fv21b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_tel4y")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qkpxi")
-}],
-"loop": 1,
-"name": &"hold walk",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5q0nq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dgi5k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_j8jky")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kmb1v")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_fuf3a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pibwh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_c6pm6")
-}],
-"loop": 1,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5he1u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5poiv")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2cjbq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_chjal")
-}],
-"loop": 1,
-"name": &"walk",
-"speed": 5.0
-}]
-
-[node name="Main" type="Node" unique_id=1749163682]
+[node name="Main" type="Node"]
 script = ExtResource("1_main")
-metadata/_tc_uuid = "4466678571359894573"
 
-[node name="PhaseHolder" type="Node" parent="." unique_id=1670567211]
-metadata/_tc_uuid = "1133843196590860147"
+[node name="PhaseHolder" type="Node" parent="."]
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1157869470]
+[node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
-metadata/_tc_uuid = "2932685282601165567"
 
-[node name="HudBg" type="ColorRect" parent="HUD" unique_id=439313121]
-
-[node name="Main" type="Node" unique_id=1721246786]
-script = ExtResource("1_main")
-metadata/_tc_uuid = "515341849491253406"
-
-[node name="PhaseHolder" type="Node" parent="." unique_id=163016812]
-metadata/_tc_uuid = "8153952081468894618"
-
-[node name="HUD" type="CanvasLayer" parent="." unique_id=1785461602]
-layer = 10
-metadata/_tc_uuid = "5001108397688181012"
-
-[node name="HudBg" type="ColorRect" parent="HUD" unique_id=917560772]
+[node name="HudBg" type="ColorRect" parent="HUD"]
 offset_left = 12.0
 offset_top = 10.0
 offset_right = 620.0
 offset_bottom = 54.0
 color = Color(0.07, 0.07, 0.1, 0.92)
-metadata/_tc_uuid = "6104367593683264672"
 
-[node name="Row" type="HBoxContainer" parent="HUD" unique_id=908093905]
-metadata/_tc_uuid = "6926203504097015196"
-
-[node name="Row" type="HBoxContainer" parent="HUD" unique_id=1950594333]
+[node name="Row" type="HBoxContainer" parent="HUD"]
 offset_left = 26.0
 offset_top = 18.0
 offset_right = 610.0
 offset_bottom = 48.0
 theme_override_constants/separation = 22
-metadata/_tc_uuid = "4065439771368040446"
 
-[node name="DayLabel" type="Label" parent="HUD/Row" unique_id=1950368422]
+[node name="DayLabel" type="Label" parent="HUD/Row"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Day 1/7"
-metadata/_tc_uuid = "3314140708447878590"
 
-[node name="MoneyLabel" type="Label" parent="HUD/Row" unique_id=1722931367]
+[node name="MoneyLabel" type="Label" parent="HUD/Row"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "$0  ·  debt $2000"
-metadata/_tc_uuid = "1315669844452340833"
 
-[node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=895549718]
-metadata/_tc_uuid = "5151537901869117101"
-
-[node name="DayLabel" type="Label" parent="HUD/Row" unique_id=849864063]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Day 1/7"
-metadata/_tc_uuid = "3939321956070685201"
-
-[node name="MoneyLabel" type="Label" parent="HUD/Row" unique_id=560170074]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "$0  ·  debt $2000"
-metadata/_tc_uuid = "8791862810948052965"
-
-[node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=1368632242]
+[node name="WeatherLabel" type="Label" parent="HUD/Row"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "CLEAR"
-metadata/_tc_uuid = "194990202352345834"
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1420664022]
-position = Vector2(-425, -469)
-scale = Vector2(8, 8)
-metadata/_tc_offline_added = true
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1572421480]
-position = Vector2(91, 106)
-sprite_frames = SubResource("SpriteFrames_ip871")
-animation = &"fishing bite"
-metadata/_tc_offline_added = true
-metadata/_tc_uuid = "2883304671228580753"
