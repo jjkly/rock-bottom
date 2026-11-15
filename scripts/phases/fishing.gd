@@ -274,6 +274,8 @@ func _settle_catch() -> void:
 	if _settled:
 		return
 	_settled = true
+	if _pending_mod != null:
+		UI.sfx("rare")
 	var fish := FishInstance.new(_pending_species, _pending_size, _pending_mod)
 	RunState.add_to_stock(fish)
 	_casts_left -= 1

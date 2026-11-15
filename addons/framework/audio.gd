@@ -19,6 +19,7 @@ const SFX := {
 	"plate": "res://assets/audio/sfx/614246__meklips__iron_plates_flick.wav",
 	"bell": "res://assets/audio/sfx/810323__mokasza__bright-bell.mp3",
 	"knock": "res://assets/audio/sfx/847234__cpfcfan10__wooden-door-knock.wav",
+	"rare": "res://assets/audio/sfx/878617__qvantor__rare-item-found.wav",
 }
 
 const SFX_VOICES := 8
