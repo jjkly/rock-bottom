@@ -231,19 +231,33 @@ func add_to_stock(fish: FishInstance) -> void:
 
 
 ## Serve one plate from a stock fish. Returns the cash earned (0 if invalid).
-## Preference match is the omakase decision: serve what this table likes.
+## Kept for one-shot callers/tests; carrying uses take_plate + pay_plate.
 func serve_plate(fish: FishInstance, table_preference: String) -> int:
 	if not stock.has(fish) or fish.plates_left <= 0:
 		return 0
-	var value := fish.value()
-	if fish.matches(table_preference):
-		value = int(round(value * 1.2))
+	var value := pay_plate(fish, table_preference)
+	take_plate(fish)
+	return value
+
+
+## Remove one plate from a stock fish (for carrying). False if unavailable.
+func take_plate(fish: FishInstance) -> bool:
+	if not stock.has(fish) or fish.plates_left <= 0:
+		return false
 	fish.plates_left -= 1
 	if fish.plates_left <= 0:
 		stock.erase(fish)
+	stock_changed.emit()
+	return true
+
+
+## Pay for a plate that was already taken. Preference match gives +20%.
+func pay_plate(fish: FishInstance, table_preference: String) -> int:
+	var value := fish.value()
+	if fish.matches(table_preference):
+		value = int(round(value * 1.2))
 	cash += value
 	cash_changed.emit(cash)
-	stock_changed.emit()
 	return value
 
 

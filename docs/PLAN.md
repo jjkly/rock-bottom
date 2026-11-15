@@ -30,11 +30,16 @@ Do not edit a `.tscn` that another person owns, and do not edit
 ## Playable now (2026-11-14)
 
 The whole week runs: morning news -> fishing (reel + crate) -> evening (cut,
-serve, patience) -> night (shop, pay) -> results. Art is placeholder.
+serve, patience, **two local players**) -> night (shop, pay) -> results.
+Art is the character sheets + nigiri; tables and stations are still placeholders.
 
 Every phase is a real scene tree in `scenes/` (open one and the Scene tab
 shows its labels, panels and sprites); scripts only fill text and wire
 signals. `scenes/player.tscn` and `scenes/table.tscn` are reusable pieces.
+
+Controls in the evening: **P1 WASD + E**, **P2 arrows + Enter**. Stand at the
+cutting board to take a plate, at a table to serve it. Fishing and shop use
+the mouse / Space.
 
 ```bash
 godot --path .                                        # play

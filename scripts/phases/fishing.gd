@@ -26,6 +26,8 @@ const ZONE_W := 150.0
 @onready var _status: Label = $StatusLabel
 @onready var _cast_btn: Button = $CastButton
 @onready var _next_btn: Button = $NextButton
+@onready var _fisher: AnimatedSprite2D = $Fisher
+@onready var _crate_icon: TextureRect = $CrateIcon
 
 var _state: State = State.IDLE
 var _casts_left := 0
@@ -89,6 +91,8 @@ func _on_cast() -> void:
 		_cast_btn.disabled = true
 		_caught.text = "Stop the marker in the green zone."
 		_rare.text = ""
+		_crate_icon.texture = null
+		_fisher.play("fishing initiate")
 
 
 func _stop_reel() -> void:
@@ -115,6 +119,7 @@ func _stop_reel() -> void:
 	_reveal_tick = 0.0
 	_caught.text = "Crate opening..."
 	_status.text = ""
+	_fisher.play("fishing bite")
 
 
 func _process(delta: float) -> void:
@@ -131,12 +136,19 @@ func _process(delta: float) -> void:
 				_slot_a.text = _rand_name()
 				_slot_b.text = _rand_name()
 				_slot_c.text = _rand_name()
+				var preview := _rand_species()
+				if preview.sprite != null:
+					_crate_icon.texture = preview.sprite
 			if _reveal_t >= 1.0:
 				_settle_catch()
 
 
+func _rand_species() -> SpeciesDef:
+	return _pool[RunState.rng.randi_range(0, _pool.size() - 1)]
+
+
 func _rand_name() -> String:
-	return _pool[RunState.rng.randi_range(0, _pool.size() - 1)].display_name
+	return _rand_species().display_name
 
 
 func _settle_catch() -> void:
@@ -147,6 +159,9 @@ func _settle_catch() -> void:
 	_cast_btn.disabled = _casts_left <= 0
 	_next_btn.disabled = _casts_left > 0
 
+	if _pending_species.sprite != null:
+		_crate_icon.texture = _pending_species.sprite
+	_fisher.play("fishing idle")
 	_slot_a.text = _pending_species.display_name
 	_slot_b.text = "%d slices" % _pending_size
 	_slot_c.text = "+1 plate" if _pending_mod != null and _pending_mod.extra_plates > 0 else "—"

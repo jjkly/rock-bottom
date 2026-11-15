@@ -43,21 +43,27 @@ func _ready() -> void:
 	var evening: Node = _phase()
 	if evening._tables.is_empty():
 		_fail("no table spawned during service")
+	elif evening._players.size() != 2:
+		_fail("evening should have two players")
 	else:
+		var p1: Player = evening._players[0]
 		var fish: FishInstance = RunState.stock[0]
-		evening._selected = fish
-		evening._player.position = evening._board_pos
-		evening._cut()
-		if not fish.prepared:
-			_fail("cut did not prepare the fish")
+		p1.position = evening._board_pos
+		evening._on_interact(p1)
+		if p1.carrying == null:
+			_fail("taking a plate did not fill the player's hands")
+		elif not fish.prepared:
+			_fail("taking a plate did not prepare the fish")
 		var table = evening._tables[0]
-		evening._player.position = table.position
+		p1.position = table.position
 		var before := RunState.cash
-		evening._serve()
+		evening._on_interact(p1)
 		if RunState.cash <= before:
 			_fail("serving did not pay")
 		elif table.plates_served < 1:
 			_fail("table did not record the plate")
+		elif p1.carrying != null:
+			_fail("hands not cleared after serving")
 		else:
 			print("  ok   served $%d, table %d/%d" % [
 				RunState.cash - before, table.plates_served, table.definition.plates_wanted

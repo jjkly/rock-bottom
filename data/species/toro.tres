@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="SpeciesDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_ro5ds"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/toro.png" id="2_p0f6o"]
+
+[resource]
+script = ExtResource("1_ro5ds")
+id = "toro"
+display_name = "Fatty Tuna"
+base_price = 44
+preference = "fatty"
+sprite = ExtResource("2_p0f6o")

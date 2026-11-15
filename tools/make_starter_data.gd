@@ -50,6 +50,12 @@ func _make_species() -> void:
 	_species("sea_bream", "Sea Bream", 26, "lean", false)
 	_species("mackerel", "Mackerel", 14, "cheap", false)
 	_species("eel", "Eel", 32, "fatty", true)
+	_species("toro", "Fatty Tuna", 44, "fatty", false)
+	_species("hokkigai", "Surf Clam", 30, "fatty", false)
+	_species("ebi", "Sweet Shrimp", 24, "lean", false)
+	_species("tako", "Octopus", 20, "lean", false)
+	_species("cured_saba", "Cured Saba", 18, "cheap", false)
+	_species("tamago", "Tamago", 12, "cheap", false)
 
 
 func _species(id: String, display: String, price: int, preference: String, rain_only: bool) -> void:

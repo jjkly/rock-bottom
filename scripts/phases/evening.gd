@@ -1,13 +1,15 @@
 extends Node2D
 ## ============================================================================
-## EVENING — Overcooked-style service, solo.
+## EVENING — two-player, Overcooked-style service.
 ##
-## Node tree lives in scenes/evening.tscn: floor, props, player instance,
-## Tables container, and the UI layer. This script only runs the rules.
+## P1: WASD + E      P2: arrows + Enter
+## Workflow per player: stand at the cutting board -> press interact to take a
+## plate (the fish is prepared automatically for now) -> stand at a table ->
+## press interact to serve it. `hold idle` / `hold walk` animations play while
+## a plate is carried.
 ##
-## Loop: select a fish -> walk to the cutting board (E) -> walk to a table (E).
-## Tables seat themselves? No: this scene seats them on the spawn schedule.
-## Service ends early when every table is closed, or at the 55 s window.
+## Node tree lives in scenes/evening.tscn. The stock panel picks which fish the
+## next plate comes from; plates are per-player (`Player.carrying`).
 ## ============================================================================
 
 const TABLE_SCENE := preload("res://scenes/table.tscn")
@@ -18,8 +20,10 @@ const TABLE_SLOTS: Array[Vector2] = [
 ]
 const SPAWN_MARKS: Array[float] = [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
 const SERVICE_WINDOW := 55.0
+const BOARD_RANGE := 110.0
+const TABLE_RANGE := 120.0
 
-@onready var _player: Player = $Player
+@onready var _players: Array[Player] = [$Players/Player1, $Players/Player2]
 @onready var _tables_node: Node2D = $Tables
 @onready var _stock_box: VBoxContainer = $UI/StockPanel/StockList
 @onready var _msg: Label = $UI/Message
@@ -29,7 +33,7 @@ const SERVICE_WINDOW := 55.0
 
 var _tables: Array[Table] = []
 var _table_defs: Array[TableDef] = []
-var _selected: FishInstance = null
+var _next_fish: FishInstance = null
 var _service_time := 0.0
 var _spawned := 0
 var _table_total := 4
@@ -42,6 +46,8 @@ func _ready() -> void:
 	_table_total = clampi(4 + int((RunState.day - 1) / 2.0), 4, 6)
 	_continue.visible = false
 	_continue.pressed.connect(func(): RunState.advance_phase())
+	for player in _players:
+		player.interact_requested.connect(_on_interact.bind(player))
 	RunState.stock_changed.connect(_rebuild_stock)
 	_rebuild_stock()
 	set_process(true)
@@ -87,6 +93,77 @@ func _spawn_table(index: int) -> void:
 	t.seat()
 
 
+func _on_interact(player: Player) -> void:
+	if _ended:
+		return
+	if player.position.distance_to(_board_pos) < BOARD_RANGE:
+		_take_plate(player)
+	else:
+		_serve(player)
+
+
+func _take_plate(player: Player) -> void:
+	if player.carrying != null:
+		_msg.text = "%s is already carrying a plate — serve it first." % player.player_prefix.to_upper()
+		return
+	var fish := _pick_fish()
+	if fish == null:
+		_msg.text = "No fish in stock. Go fishing."
+		return
+	if not fish.prepared:
+		fish.prepared = true  # cutting minigame is still a stub
+	if not RunState.take_plate(fish):
+		_msg.text = "That fish has no plates left."
+		return
+	player.set_carrying(fish)
+	_next_fish = null
+	_msg.text = "%s takes %s — $%d per plate" % [
+		player.player_prefix.to_upper(), fish.species.display_name, fish.value()
+	]
+	_rebuild_stock()
+
+
+func _pick_fish() -> FishInstance:
+	if _next_fish != null and RunState.stock.has(_next_fish) and _next_fish.plates_left > 0:
+		return _next_fish
+	for fish in RunState.stock:
+		if fish.plates_left > 0:
+			return fish
+	return null
+
+
+func _serve(player: Player) -> void:
+	if player.carrying == null:
+		_msg.text = "%s has empty hands — take a plate at the board." % player.player_prefix.to_upper()
+		return
+	var t := _nearest_table(player)
+	if t == null:
+		_msg.text = "No table in reach."
+		return
+	var fish := player.carrying
+	var matched := fish.matches(t.definition.preference)
+	var value := RunState.pay_plate(fish, t.definition.preference)
+	t.serve_plate(value, matched)
+	player.set_carrying(null)
+	_msg.text = "%s served +$%d%s" % [
+		player.player_prefix.to_upper(), value, "  (preference match)" if matched else ""
+	]
+	_rebuild_stock()
+
+
+func _nearest_table(player: Player) -> Table:
+	var best: Table = null
+	var best_d := TABLE_RANGE
+	for t in _tables:
+		if not t.seated or t.closed:
+			continue
+		var d := player.position.distance_to(t.position)
+		if d < best_d:
+			best_d = d
+			best = t
+	return best
+
+
 func _rebuild_stock() -> void:
 	for child in _stock_box.get_children():
 		child.queue_free()
@@ -96,9 +173,13 @@ func _rebuild_stock() -> void:
 	for fish in RunState.stock:
 		var b := UI.button("%s  $%d  ×%d" % [_short_name(fish), fish.value(), fish.plates_left], 230, 15)
 		b.custom_minimum_size.y = 34
+		if fish.species.sprite != null:
+			b.icon = fish.species.sprite
+			b.expand_icon = true
+			b.add_theme_constant_override("icon_max_width", 24)
 		b.pressed.connect(func():
-			_selected = fish
-			_msg.text = "Selected %s" % fish.display_name()
+			_next_fish = fish
+			_msg.text = "Next plate: %s" % fish.display_name()
 		)
 		_stock_box.add_child(b)
 
@@ -106,70 +187,6 @@ func _rebuild_stock() -> void:
 func _short_name(fish: FishInstance) -> String:
 	var tag := " (raw)" if not fish.prepared else ""
 	return "%s%s" % [fish.species.display_name, tag]
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("interact"):
-		_interact()
-		get_viewport().set_input_as_handled()
-
-
-func _interact() -> void:
-	if _ended:
-		return
-	if _player.position.distance_to(_board_pos) < 110.0:
-		_cut()
-		return
-	_serve()
-
-
-func _cut() -> void:
-	if _selected == null:
-		_msg.text = "Pick a fish in the stock panel first."
-		return
-	if _selected.prepared:
-		_msg.text = "Already cut."
-		return
-	_selected.prepared = true
-	_msg.text = "Cut %s — ready to serve." % _selected.species.display_name
-	_rebuild_stock()
-
-
-func _serve() -> void:
-	if _selected == null:
-		_msg.text = "Pick a fish first."
-		return
-	if not _selected.prepared:
-		_msg.text = "It is raw — cut it at the board."
-		return
-	var t := _nearest_table()
-	if t == null:
-		_msg.text = "No table in reach."
-		return
-
-	var matched := _selected.matches(t.definition.preference)
-	var value := RunState.serve_plate(_selected, t.definition.preference)
-	if value <= 0:
-		_msg.text = "That table is done."
-		return
-	t.serve_plate(value, matched)
-	_msg.text = "+$%d%s" % [value, "  (preference match)" if matched else ""]
-	if _selected.plates_left <= 0:
-		_selected = null
-	_rebuild_stock()
-
-
-func _nearest_table() -> Table:
-	var best: Table = null
-	var best_d := 120.0
-	for t in _tables:
-		if not t.seated or t.closed:
-			continue
-		var d := _player.position.distance_to(t.position)
-		if d < best_d:
-			best_d = d
-			best = t
-	return best
 
 
 func _close_remaining() -> void:
