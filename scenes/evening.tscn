@@ -4,6 +4,14 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/restaurant/cutting_board.png" id="2_board"]
 [ext_resource type="Texture2D" path="res://assets/sprites/restaurant/tank.png" id="5_tank"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="6_player"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/plate.png" id="7_plate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/interior.png" id="8_room"]
+
+[sub_resource type="RectangleShape2D" id="Rect_h"]
+size = Vector2(1160, 16)
+
+[sub_resource type="RectangleShape2D" id="Rect_v"]
+size = Vector2(16, 640)
 
 [node name="Evening" type="Node2D"]
 script = ExtResource("1_evening")
@@ -16,6 +24,26 @@ offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0.1, 0.09, 0.08, 1)
 
+[node name="Bounds" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Top" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(640, 94)
+shape = SubResource("Rect_h")
+
+[node name="Bottom" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(640, 706)
+shape = SubResource("Rect_h")
+
+[node name="Left" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(56, 400)
+shape = SubResource("Rect_v")
+
+[node name="Right" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(1224, 400)
+shape = SubResource("Rect_v")
+
 [node name="Floor" type="ColorRect" parent="."]
 z_index = -9
 offset_left = 60.0
@@ -23,6 +51,17 @@ offset_top = 100.0
 offset_right = 1220.0
 offset_bottom = 700.0
 color = Color(0.16, 0.14, 0.12, 1)
+
+[node name="RoomBg" type="TextureRect" parent="."]
+z_index = -8
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+texture = ExtResource("8_room")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Props" type="Node2D" parent="."]
 
@@ -145,6 +184,30 @@ horizontal_scroll_mode = 0
 custom_minimum_size = Vector2(284, 0)
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+
+[node name="PlatePreview" type="Control" parent="UI"]
+visible = false
+offset_left = 20.0
+offset_top = 470.0
+offset_right = 150.0
+offset_bottom = 600.0
+
+[node name="Plate" type="TextureRect" parent="UI/PlatePreview"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 130.0
+offset_bottom = 130.0
+texture = ExtResource("7_plate")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FishIcon" type="TextureRect" parent="UI/PlatePreview"]
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 100.0
+offset_bottom = 100.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ContinueButton" type="Button" parent="UI"]
 visible = false

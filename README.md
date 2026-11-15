@@ -17,6 +17,7 @@ Full task order and file ownership: [docs/PLAN.md](docs/PLAN.md).
 3. [docs/GDD.md](docs/GDD.md) — the design and every design number
 4. [docs/contract.md](docs/contract.md) — names, RunState API, signals, scene contract
 5. [docs/art.md](docs/art.md) — pixel grid, import, folder map
+6. [docs/CREDITS.md](docs/CREDITS.md) — third-party art (Bitglow interior kit)
 
 ## Working together
 

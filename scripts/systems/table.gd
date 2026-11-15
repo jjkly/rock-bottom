@@ -19,6 +19,7 @@ signal patience_changed(hearts: int)
 const HEARTS := 3
 
 @onready var _sprite: Sprite2D = $Sprite
+@onready var _customer: Sprite2D = $Customer
 @onready var _info: Label = $Info
 
 var definition: TableDef
@@ -27,6 +28,8 @@ var closed := false
 var elapsed := 0.0
 var plates_served := 0
 var hearts := HEARTS
+## 0 = random seated customer, 1..6 = a specific variant.
+@export var customer_variant := 0
 
 
 func _ready() -> void:
@@ -35,6 +38,7 @@ func _ready() -> void:
 	finished.connect(func(_ok): _refresh_visual())
 	left_angry.connect(_refresh_visual)
 	_apply_texture()
+	_apply_customer()
 	_refresh_visual()
 
 
@@ -100,6 +104,17 @@ func _close(satisfied: bool) -> void:
 		left_angry.emit()
 
 
+func _apply_customer() -> void:
+	if _customer == null:
+		return
+	var variant := customer_variant
+	if variant <= 0:
+		variant = randi_range(1, 6)
+	var path := "res://assets/sprites/characters/customers/customer_%d.png" % variant
+	if ResourceLoader.exists(path):
+		_customer.texture = load(path)
+
+
 func _apply_texture() -> void:
 	if definition == null or _sprite == null:
 		return
@@ -117,12 +132,14 @@ func _refresh_visual() -> void:
 	if _info == null or definition == null:
 		return
 	if closed:
+		_customer.visible = false
 		_info.text = "closed"
 		_info.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 		return
 	var hearts_text := ""
 	for i in HEARTS:
 		hearts_text += "♥" if i < hearts else "·"
+	_customer.visible = true
 	_info.add_theme_color_override("font_color", UI.tag_color(definition.preference))
 	_info.text = "%s  %s\n%d/%d plates" % [
 		definition.preference, hearts_text, plates_served, definition.plates_wanted

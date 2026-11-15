@@ -156,6 +156,9 @@ presentation one.
 | Crate and rares | implemented | MVP | CS:GO-style scrolling raw-fish reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |
 | Weather and news | implemented | MVP | Clear / hot / rain, announced each morning | `scripts/phases/morning.gd` |
 | Evening service | implemented | MVP | Single chef, 4–6 tables, plates carried from the top-row board | `scenes/evening.tscn` |
+| Seated customers | implemented | MVP | 6 recoloured variants (hair, eyes, shirt), static at tables | `scenes/table.tscn` |
+| Room and bounds | implemented | MVP | Composed interior, kitchen counter/door/fridge, wall colliders | `scenes/evening.tscn` |
+| Plate preview | implemented | MVP | Selected raw fish or nigiri shown on a plate | `scripts/phases/evening.gd` |
 | Cut station | implemented | MVP | Instant cut at the board; cooking/washing removed | `scenes/evening.tscn` |
 | Shop and draft | implemented | MVP | Equipment rows + 3 unique training offers | `scripts/phases/shop.gd` |
 | Tutorial | implemented | MVP | Day-1 popup per phase, pauses, More section, HUD "?" | `scenes/tutorial.tscn` |
@@ -233,6 +236,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.7 (2026-11-15):** 6 seated customer variants (hair/eyes/shirt); composed restaurant interior with bounds; selected fish shown on a plate; RARE label becomes BONUS.
 
 **0.6 (2026-11-15):** tank store by selection + E; rare→expensive; tutorial More fits; table slots clear of inventory; backgrounds cover-fill; cooking/washing and dishwasher removed; flounder naming.
 

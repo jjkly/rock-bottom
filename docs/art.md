@@ -23,9 +23,9 @@ settings; this page is what the art owner needs so nothing fights the engine.
 ```
 assets/
   sprites/fish/          species sprites, named by SpeciesDef.id (lean_tuna.png)
-  sprites/characters/    player_<dir>_<frame>.png (down/up/side, 0-3), customers
-  sprites/restaurant/    tiles_floor.png, table_2/4.png, cutting_board.png,
-                         stove.png, sink.png, tank.png, freezer.png (unused)
+  sprites/characters/    player frames + customers/customer_1..6.png
+  sprites/restaurant/    interior.png, 2/4 table.png, cutting_board.png,
+                         tank.png, tiles_floor.png
   sprites/ui/            heart_full/empty.png, weather_clear/hot/rain.png,
                          crate_frame.png, coin.png, ticket_bubble.png
   audio/sfx/             serve.ogg, angry.ogg, coin.ogg, crate_open.ogg, reel_tick.ogg

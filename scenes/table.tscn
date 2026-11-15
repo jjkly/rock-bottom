@@ -6,14 +6,18 @@
 [node name="Table" type="Node2D"]
 script = ExtResource("1_table")
 
+[node name="Customer" type="Sprite2D" parent="."]
+position = Vector2(0, -30)
+scale = Vector2(3, 3)
+
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_table")
 
 [node name="Info" type="Label" parent="."]
 offset_left = -60.0
-offset_top = -96.0
+offset_top = -118.0
 offset_right = 60.0
-offset_bottom = -54.0
+offset_bottom = -76.0
 theme_override_colors/font_color = Color(0.95, 0.95, 0.9, 1)
 theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1

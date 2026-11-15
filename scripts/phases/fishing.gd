@@ -267,7 +267,7 @@ func _settle_catch() -> void:
 
 	_result.text = _pending_species.display_name
 	_result.add_theme_color_override("font_color", _rarity_color(_pending_species.base_price))
-	_rare.text = ("RARE: %s" % _pending_mod.display_name) if _pending_mod != null else ""
+	_rare.text = ("BONUS: %s" % _pending_mod.display_name) if _pending_mod != null else ""
 	_caught.text = "Caught %s — %d slices, $%d per plate" % [
 		_pending_species.display_name, _pending_size, fish.value()
 	]

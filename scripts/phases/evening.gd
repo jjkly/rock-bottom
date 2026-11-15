@@ -33,6 +33,8 @@ const TABLE_RANGE := 120.0
 @onready var _continue: Button = $UI/ContinueButton
 @onready var _tank_panel: ColorRect = $UI/TankPanel
 @onready var _tank_items: VBoxContainer = $UI/TankPanel/TankList/TankItems
+@onready var _preview: Control = $UI/PlatePreview
+@onready var _preview_fish: TextureRect = $UI/PlatePreview/FishIcon
 @onready var _board_pos: Vector2 = $Props/CuttingBoard.position
 @onready var _tank_pos: Vector2 = $Props/Tank.position
 
@@ -132,6 +134,7 @@ func _store_selected() -> void:
 	if RunState.freeze(_next_fish):
 		_msg.text = "Stored %s in the fish tank." % _next_fish.species.display_name
 		_next_fish = null
+		_show_preview(null)
 		_rebuild_stock()
 		_rebuild_tank()
 	else:
@@ -153,6 +156,7 @@ func _take_plate() -> void:
 		return
 	_player.set_carrying(fish)
 	_next_fish = null
+	_show_preview(null)
 	_msg.text = "Took %s — $%d per plate" % [fish.species.display_name, fish.value()]
 	_rebuild_stock()
 
@@ -197,6 +201,9 @@ func _nearest_table() -> Table:
 
 
 func _rebuild_stock() -> void:
+	if _next_fish != null and not RunState.stock.has(_next_fish):
+		_next_fish = null
+		_show_preview(null)
 	for child in _stock_box.get_children():
 		child.queue_free()
 	if RunState.stock.is_empty():
@@ -216,9 +223,23 @@ func _rebuild_stock() -> void:
 			b.add_theme_constant_override("icon_max_width", 24)
 		b.pressed.connect(func():
 			_next_fish = fish
+			_show_preview(fish)
 			_msg.text = "Next plate: %s" % fish.display_name()
 		)
 		_stock_box.add_child(b)
+
+
+## Selected fish sits on the plate preview under the stock panel.
+func _show_preview(fish: FishInstance) -> void:
+	if fish == null:
+		_preview.visible = false
+		_preview_fish.texture = null
+		return
+	var tex: Texture2D = fish.species.sprite if fish.prepared else fish.species.raw_sprite
+	if tex == null:
+		tex = fish.species.sprite
+	_preview_fish.texture = tex
+	_preview.visible = tex != null
 
 
 func _short_name(fish: FishInstance) -> String:

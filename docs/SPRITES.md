@@ -13,14 +13,14 @@ not block play.
 | Table (4 seat) | `assets/sprites/restaurant/4 table.png` | 96×64 | `scenes/table.tscn` | **Added.** Swapped by `TableDef.seats`. |
 | Cutting board | `assets/sprites/restaurant/cutting_board.png` | 64×64 | evening `Props/CuttingBoard` | Interaction point is its centre. |
 | Tank | `assets/sprites/restaurant/tank.png` | 64×36 | evening `Props/Tank`, tank panel | **Added** from `makebead-64x36 13.png`. |
-| Floor tiles | `assets/sprites/restaurant/tiles_floor.png` | 32×32 tiles in a sheet | evening `Floor` (currently a flat color) | Needs a TileMapLayer in the scene. |
 
 ## Backgrounds
 
-Present: store (`backgrounds/makebead-99x66.png`) on the morning screen, dock
-(`-2`) on fishing, and a "To Dock" sign (`-3`, unused). Backgrounds cover-fill
-the 1280×720 frame (aspect-preserving crop) with mipmaps and a dim overlay.
-Restaurant interior art is still missing.
+Present: store (`backgrounds/makebead-99x66.png`) on the morning screen and dock
+(`-2`) on fishing (cover-fill, mipmaps, dim overlay). The evening room uses a
+composed `restaurant/interior.png` built from the Bitglow interior kit
+(`assets/art_source/pixelinterior`, see `docs/CREDITS.md`): wall, stone floor,
+counter, cabinets, door, fridge.
 
 ## Raw fish (pre-cut)
 
@@ -42,8 +42,8 @@ Wired through `SpeciesDef.raw_sprite` and shown in the crate reel and raw stock 
 
 | Asset | Size | Notes |
 |---|---|---|
-| Customer walk-in | 16px tall, 4 directions × 4 frames | Tables currently spawn with nobody walking to them. |
-| Customer seated | 16px tall, 1 frame per direction | Eating pose would sell the service. |
+| Customer seated | 12×18, 6 variants | **Added** in `characters/customers/`; hair, eyes and shirt recoloured from the chef idle frame. Static, seated behind tables. |
+| Customer walk-in | 16px tall, 4 directions × 4 frames | Missing; tables currently just appear with a seated customer. |
 | Player up/down/side walk | 16px tall | The current sheet is **front-facing only**, so facing never changes. |
 | Player carrying, directional | 16px tall | Hold frames exist front-on only. |
 | Chef idle variant | 16px | Optional; idle currently loops on 7 near-identical frames. |
@@ -57,7 +57,7 @@ Wired through `SpeciesDef.raw_sprite` and shown in the crate reel and raw stock 
 | Coin | `coin.png` | 16×16 | Cash popups / HUD. |
 | Ticket bubble | `ticket_bubble.png` | 32×32 | Table order bubble. |
 | Crate filler | `crate_frame.png` | 16×16 | Used for species without art (eel) — currently the magenta placeholder, which is actually the intended "unknown" look. |
-| Plate | — | 16×16 | Hold animations bake the plate in; a separate plate sprite is needed if plates become physical items. |
+| Plate | `fish/plate.png` | **Added** 260×258 | Selected fish is drawn on it in the stock preview under the panel. |
 | Fish whole-body | — | 16×16 per species | Nigiri in a tank reads wrong; needed if the tank shows live fish. |
 
 ## Environment

@@ -64,7 +64,10 @@ Still stubbed: bestiary, meta unlocks, difficulty presets, audio, and all real a
 - [x] Store/dock backgrounds cover-fill with dim; "Go to dock"
 - [x] 5x fisherman, E skips the crate, 2.16s reel, catch "!"
 - [x] Shop confirm when a purchase would break the installment; confirm before a short sleep
-- [ ] Customer walk-in / seated sprites
+- [x] 6 seated customer variants (hair, eyes, shirt)
+- [x] Composed interior + wall colliders (can't leave the stage)
+- [x] Selected fish drawn on a plate preview
+- [ ] Customer walk-in animation (seated variants done)
 - [ ] Angry tables actually reduce tomorrow's flow
 - [ ] Audio
 
