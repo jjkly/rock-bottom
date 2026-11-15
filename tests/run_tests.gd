@@ -24,7 +24,7 @@ var failures := 0
 func _initialize() -> void:
 	print("== sashimi-debt tests ==")
 	# project.godot is hand-edited; prove the input map actually parsed.
-	for action in ["move_left", "move_right", "move_up", "move_down", "interact"]:
+	for action in ["p1_left", "p1_right", "p1_up", "p1_down", "p1_interact"]:
 		check(InputMap.has_action(action), "input action exists: " + action)
 	TestEconomy.run(self)
 	TestService.run(self)

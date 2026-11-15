@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SpeciesDef" format=3]
+
+[ext_resource type="Script" path="res://scripts/data/species_def.gd" id="1_eijju"]
+[ext_resource type="Texture2D" path="res://assets/sprites/fish/ebi.png" id="2_ngjgv"]
+
+[resource]
+script = ExtResource("1_eijju")
+id = "ebi"
+display_name = "Sweet Shrimp"
+base_price = 24
+sprite = ExtResource("2_ngjgv")

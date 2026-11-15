@@ -1,27 +1,54 @@
-# Characters — the minimum, not a sprite sheet
+# Characters
 
-You need **12 files**, no more:
+Emmy's 16px character. Source sheets are packed horizontally with a 1px gap
+between frames; `tools/build_character.py` slices them into individual PNGs and
+regenerates the `SpriteFrames` resources. **Do not hand-edit the generated
+frames** — edit the sheet and re-run the script.
+
+## Source sheets (edit these)
+
+| File | Frames | Frame size | Used for |
+|---|---|---|---|
+| `idle.png` | 7 | 7×16 (8px pitch) | standing |
+| `walk.png` | 4 | 7×18 (8px pitch) | walking |
+| `hold.png` | 1 | 10×16 | carried item, static |
+| `holdidle.png` | 7 | 10×18 (11px pitch) | standing with a plate |
+| `hold walk.png` | 4 | 10×18 (11px pitch) | walking with a plate |
+| `fishing idle.png` | 5 | 28×16 (29px pitch) | fishing screen |
+| `fishing bite v2.png` | 2 | 28×16 (29px pitch) | fishing bite |
+| `fishing1.png` | 1 | 16×16 | fishing initiate |
+
+The character is front-facing; there are no up/down/side variants.
+
+## Generated (do not edit)
 
 ```
-player_down_0.png  .. player_down_3.png   32x48   walk toward camera
-player_up_0.png    .. player_up_3.png     32x48   walk away
-player_side_0.png  .. player_side_3.png   32x48   walk facing right
+player/
+  idle_0..6.png           12x18 padded, feet at bottom
+  walk_0..3.png
+  hold_idle_0..6.png
+  hold_walk_0..3.png
+  player_frames.tres      animations: idle, walk, hold idle, hold walk
+fishing/
+  fishing_idle_0..4.png   28x16
+  fishing_bite_0..1.png
+  fishing_initiate_0.png  16x16
+  fishing_frames.tres     animations: fishing idle, fishing bite, fishing initiate
 ```
 
-- **Left** is the side frames mirrored. Don't draw a left set.
-- **Idle** is frame `_0`. Don't draw idle frames.
-- Frame order: contact, pass, contact, pass — 8 fps in the `AnimatedSprite2D`.
-- Origin: bottom-centre (feet). Collision goes on a separate
-  `CollisionShape2D` in the scene, not in the art.
+Player frames share a 12×18 canvas so the feet stay planted when the animation
+changes. `scenes/player.tscn` shows it at **2×** (32px tall), which matches the
+32px tile grid.
 
-Customers later reuse the same 12-file layout: `customer_<dir>_<n>.png`.
+## Rebuild after editing a sheet
 
-## Fish: one image each
+```bash
+pip install pillow            # once, for the slicing script
+python tools/build_character.py
+godot --headless --path . --import
+godot --headless --path . -s res://tests/run_tests.gd
+```
 
-`assets/sprites/fish/<species id>.png` — a single still. The tank bob is a
-tween on the sprite, not animation frames. No fish needs more than one PNG.
-
-## Everything else: one image each
-
-`restaurant/` props and `ui/` icons are static. If something must animate
-later (a sizzle), add a numbered sequence then, not now.
+Animation names contain spaces (`hold walk`); `player.gd` uses them verbatim.
+Speeds live in the `.tres` (idle 5 fps, walk 8 fps) — change them there, not in
+code.

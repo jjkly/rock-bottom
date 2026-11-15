@@ -27,7 +27,7 @@ func _ready() -> void:
 	fishing._on_cast()
 	fishing._reel_t = 0.0          # marker at centre -> 8 slices
 	fishing._stop_reel()
-	fishing._settle_catch()
+	await get_tree().create_timer(2.2).timeout   # reel scroll + settle
 	if RunState.stock.size() != 1:
 		_fail("cast did not add a fish to stock")
 	elif RunState.stock[0].size_slices != 8:
@@ -44,34 +44,36 @@ func _ready() -> void:
 	if evening._tables.is_empty():
 		_fail("no table spawned during service")
 	else:
+		var p1: Player = evening._player
 		var fish: FishInstance = RunState.stock[0]
-		evening._selected = fish
-		evening._player.position = evening._board_pos
-		evening._cut()
-		if not fish.prepared:
-			_fail("cut did not prepare the fish")
+		p1.position = evening._board_pos
+		evening._on_interact()
+		if p1.carrying == null:
+			_fail("taking a plate did not fill the player's hands")
+		elif not fish.prepared:
+			_fail("taking a plate did not prepare the fish")
 		var table = evening._tables[0]
-		evening._player.position = table.position
+		p1.position = table.position
 		var before := RunState.cash
-		evening._serve()
+		evening._on_interact()
 		if RunState.cash <= before:
 			_fail("serving did not pay")
 		elif table.plates_served < 1:
 			_fail("table did not record the plate")
+		elif p1.carrying != null:
+			_fail("hands not cleared after serving")
 		else:
 			print("  ok   served $%d, table %d/%d" % [
 				RunState.cash - before, table.plates_served, table.definition.plates_wanted
 			])
 
-	# --- shop: pay the minimum and sleep into day 2 -------------------------
+	# --- shop: sleep, auto-charging the installment -------------------------
 	RunState.advance_phase()
 	await _frames(3)
 	_expect("Shop")
 	RunState.earn(500)
-	if not RunState.pay_minimum():
-		_fail("could not pay the day minimum")
 	if not RunState.end_day():
-		_fail("end_day refused after paying")
+		_fail("end_day refused with enough cash for the installment")
 	await _frames(3)
 	_expect("Morning")
 	if RunState.day != 2:
@@ -80,7 +82,7 @@ func _ready() -> void:
 	# --- results: force the week's end --------------------------------------
 	RunState.day = 7
 	RunState.phase = 3  # NIGHT
-	RunState.minimum_paid_today = true
+	RunState.earn(1000)  # cover the $700 balloon
 	RunState.end_day()
 	await _frames(3)
 	_expect("Results")

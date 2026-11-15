@@ -8,7 +8,8 @@ settings; this page is what the art owner needs so nothing fights the engine.
 - 1280×720 viewport, `canvas_items` stretch, **integer scaling** (set in
   `project.godot`). Never scale sprites by fractional values.
 - Tile size: **32×32**. One tile = 32 px in the source, 32 px on screen.
-- Character sprites: 32×48 (body) with a 32×32 feet tile for collision.
+- Character sprites: 16px tall art, displayed at **3×** (≈48px) so one character
+  reads against a 64px table; feet tile 12×8 for collision.
 - Tables: 64×64 (2-seat) / 96×64 (4-seat). Stations: 32×48 or 64×64.
 
 ## Import settings (per texture)
@@ -65,8 +66,12 @@ colours and let the data tint Golden/Chroma/Ice Cold.
 
 ## Animation — the minimum
 
-- Player: **4 frames × 3 directions** (`down`, `up`, `side`) at 32×48. Left is
-  the side frames flipped. Idle is frame `_0`. Total 12 PNGs, no sprite sheet.
+- Player: 16px character (emma's sheets), shown at **2×** so it is 32px tall on
+  the 32px grid. Frames: idle 7, walk 4, hold idle 7, hold walk 4. Front-facing
+  only — no direction variants. See `assets/sprites/characters/README.md` and
+  `tools/build_character.py`.
+- Fishing: 28×16 fishing idle (5), bite (2), initiate (1) in
+  `characters/fishing/`; not wired into the fishing screen yet.
 - Fish: **one still image** per species. The tank bob is a tween on the
   sprite — do not author bob frames.
 - Tables, stations, props, UI: static, one image each.

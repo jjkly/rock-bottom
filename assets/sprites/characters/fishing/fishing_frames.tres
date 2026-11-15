@@ -1,0 +1,67 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_idle_0.png" id="1_fishing_idle_0_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_idle_1.png" id="2_fishing_idle_1_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_idle_2.png" id="3_fishing_idle_2_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_idle_3.png" id="4_fishing_idle_3_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_idle_4.png" id="5_fishing_idle_4_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_bite_0.png" id="6_fishing_bite_0_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_bite_1.png" id="7_fishing_bite_1_png"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/fishing/fishing_initiate_0.png" id="8_fishing_initiate_0_png"]
+
+[resource]
+animations = [
+{
+"frames": [
+{
+"duration": 1.0,
+"texture": ExtResource("1_fishing_idle_0_png")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("2_fishing_idle_1_png")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("3_fishing_idle_2_png")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("4_fishing_idle_3_png")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("5_fishing_idle_4_png")
+}
+],
+"loop": true,
+"name": &"fishing idle",
+"speed": 5.0
+},
+{
+"frames": [
+{
+"duration": 1.0,
+"texture": ExtResource("6_fishing_bite_0_png")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("7_fishing_bite_1_png")
+}
+],
+"loop": true,
+"name": &"fishing bite",
+"speed": 5.0
+},
+{
+"frames": [
+{
+"duration": 1.0,
+"texture": ExtResource("8_fishing_initiate_0_png")
+}
+],
+"loop": true,
+"name": &"fishing initiate",
+"speed": 5.0
+}
+]
