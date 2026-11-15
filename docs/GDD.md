@@ -169,7 +169,7 @@ presentation one.
 | Backgrounds | implemented | MVP | Store on morning, dock on fishing, cover-fill with dim overlay | `scenes/morning.tscn` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
-| Audio | in progress | MVP | Menu/day/restaurant music; click, spin, plate, bell, knock SFX | `addons/framework/audio.gd` |
+| Audio | in progress | MVP | Menu/day/restaurant music; click, spin, plate, chime, knock SFX | `addons/framework/audio.gd` |
 
 ## Milestones and work checklist
 

@@ -17,9 +17,9 @@ const SFX := {
 	"spin": "res://assets/audio/sfx/244774__door15studio__spin-tick.mp3",
 	"inventory": "res://assets/audio/sfx/580825__obrymec__inventory_combine.wav",
 	"plate": "res://assets/audio/sfx/614246__meklips__iron_plates_flick.wav",
-	"bell": "res://assets/audio/sfx/810323__mokasza__bright-bell.mp3",
 	"knock": "res://assets/audio/sfx/847234__cpfcfan10__wooden-door-knock.wav",
 	"rare": "res://assets/audio/sfx/878617__qvantor__rare-item-found.wav",
+	"chime": "res://assets/audio/sfx/soundshelfstudio-ui-chime-notification-sound-553111.mp3",
 }
 
 const SFX_VOICES := 8
@@ -40,7 +40,7 @@ func _ready() -> void:
 		add_child(p)
 		_voices.append(p)
 
-	RunState.quota_paid.connect(func(_d, _a): play("bell"))
+	RunState.quota_paid.connect(func(_d, _a): play("chime"))
 	RunState.quota_missed.connect(func(_d): play("knock"))
 
 

@@ -33,15 +33,14 @@ states the licence. Only the CC BY files need credit.
 | `244774__door15studio__spin-tick.mp3` | spin-tick — door15studio | CC0 | no |
 | `580825__obrymec__inventory_combine.wav` | inventory_combine — obrymec | CC0 | no |
 | `614246__meklips__iron_plates_flick.wav` | iron_plates_flick — Meklips | CC0 | no |
-| `810323__mokasza__bright-bell.mp3` | Bright Bell — mokasza (AI-generated) | CC BY 4.0 | **required** |
 | `847234__cpfcfan10__wooden-door-knock.wav` | Wooden Door Knock — Cpfcfan10 | CC BY 4.0 | **required** |
 | `878617__qvantor__rare-item-found.wav` | Rare Item Found — Qvantor | CC0 | no |
+| `soundshelfstudio-ui-chime-notification-sound-553111.mp3` | UI Chime Notification Sound — SoundShelfStudio | Pixabay Content License | no |
 
 Attribution text for a store page or credits screen:
 
 ```
 Click by complex_waveform — freesound.org/s/213148/ — CC BY 4.0
-Bright Bell by mokasza — freesound.org/s/810323/ — CC BY 4.0
 Wooden Door Knock by Cpfcfan10 — freesound.org/s/847234/ — CC BY 4.0
 ```
 
