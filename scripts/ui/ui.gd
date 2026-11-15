@@ -59,7 +59,7 @@ static func tag_color(tag: String) -> Color:
 		"lean": return Color(0.45, 0.7, 1.0)
 		"fatty": return Color(0.78, 0.55, 1.0)
 		"cheap": return Color(0.5, 0.9, 0.6)
-		"rare": return Color(1.0, 0.82, 0.35)
+		"expensive": return Color(1.0, 0.82, 0.35)
 	return Color(0.85, 0.85, 0.85)
 
 

@@ -19,6 +19,7 @@ static func run(t) -> void:
 	_test_serving_money(t)
 	_test_carry_plates(t)
 	_test_extra_payment(t)
+	_test_tank_move(t)
 
 
 static func _new_run(seed_value: int = 7):
@@ -146,6 +147,19 @@ static func _test_carry_plates(t) -> void:
 	t.eq(rs.take_plate(f), false, "cannot take from an emptied fish")
 	t.eq(rs.pay_plate(f, "lean"), 60, "pay_plate pays the +20% match")
 	t.eq(rs.cash, 60, "cash rose for the carried plate")
+	rs.free()
+
+
+static func _test_tank_move(t) -> void:
+	var rs = _new_run()
+	var f = _fish(28, 8)
+	rs.add_to_stock(f)
+	t.eq(rs.freeze(f), true, "fish stored in the tank")
+	t.eq(rs.tank.size(), 1, "tank holds the fish")
+	t.eq(rs.stock.size(), 0, "stored fish leaves stock")
+	t.eq(rs.take_from_tank(f), true, "fish taken out of the tank")
+	t.eq(rs.stock.size(), 1, "taken fish returns to stock")
+	t.eq(rs.tank.size(), 0, "tank is empty again")
 	rs.free()
 
 

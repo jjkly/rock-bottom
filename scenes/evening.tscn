@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/phases/evening.gd" id="1_evening"]
 [ext_resource type="Texture2D" path="res://assets/sprites/restaurant/cutting_board.png" id="2_board"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/stove.png" id="3_stove"]
-[ext_resource type="Texture2D" path="res://assets/sprites/restaurant/sink.png" id="4_sink"]
 [ext_resource type="Texture2D" path="res://assets/sprites/restaurant/tank.png" id="5_tank"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="6_player"]
 
@@ -32,14 +30,6 @@ color = Color(0.16, 0.14, 0.12, 1)
 position = Vector2(520, 160)
 texture = ExtResource("2_board")
 
-[node name="Stove" type="Sprite2D" parent="Props"]
-position = Vector2(640, 160)
-texture = ExtResource("3_stove")
-
-[node name="Sink" type="Sprite2D" parent="Props"]
-position = Vector2(760, 160)
-texture = ExtResource("4_sink")
-
 [node name="Tank" type="Sprite2D" parent="Props"]
 position = Vector2(1180, 640)
 texture = ExtResource("5_tank")
@@ -52,24 +42,6 @@ offset_bottom = 122.0
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 14
 text = "CUT"
-
-[node name="StoveLabel" type="Label" parent="."]
-offset_left = 620.0
-offset_top = 98.0
-offset_right = 680.0
-offset_bottom = 122.0
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_font_sizes/font_size = 14
-text = "STOVE"
-
-[node name="SinkLabel" type="Label" parent="."]
-offset_left = 740.0
-offset_top = 98.0
-offset_right = 800.0
-offset_bottom = 122.0
-theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
-theme_override_font_sizes/font_size = 14
-text = "SINK"
 
 [node name="Tables" type="Node2D" parent="."]
 
@@ -111,9 +83,9 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
 [node name="TimerLabel" type="Label" parent="UI"]
-offset_left = 860.0
+offset_left = 690.0
 offset_top = 90.0
-offset_right = 1260.0
+offset_right = 890.0
 offset_bottom = 120.0
 theme_override_colors/font_color = Color(0.9, 0.9, 0.6, 1)
 theme_override_font_sizes/font_size = 18
@@ -160,7 +132,7 @@ offset_right = 310.0
 offset_bottom = 54.0
 theme_override_colors/font_color = Color(0.6, 0.65, 0.7, 1)
 theme_override_font_sizes/font_size = 13
-text = "one day safe - click a fish to move it to stock"
+text = "select + E to store - click to take"
 
 [node name="TankList" type="ScrollContainer" parent="UI/TankPanel"]
 offset_left = 12.0

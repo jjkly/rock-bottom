@@ -24,8 +24,8 @@ extends Resource
 @export var base_price := 20
 
 ## What this table likes. Must match TableDef.preference for the +20% bonus.
-## lean / fatty / rare / cheap
-@export_enum("lean", "fatty", "rare", "cheap") var preference := "lean"
+## lean / fatty / expensive / cheap
+@export_enum("lean", "fatty", "expensive", "cheap") var preference := "lean"
 
 ## Rain-only species never appear on clear or hot days. The bestiary logs
 ## them the first time they are caught, which is the point of rain.

@@ -47,9 +47,9 @@ func _save(res: Resource, path: String) -> void:
 func _make_species() -> void:
 	_species("lean_tuna", "Lean Tuna", 28, "lean", false)
 	_species("salmon", "Salmon", 22, "fatty", false)
-	_species("sea_bream", "Sea Bream", 26, "lean", false)
+	_species("sea_bream", "Flounder", 26, "lean", false)
 	_species("mackerel", "Mackerel", 14, "cheap", false)
-	_species("eel", "Eel", 32, "fatty", true)
+	_species("eel", "Eel", 32, "expensive", true)
 	_species("toro", "Fatty Tuna", 44, "fatty", false)
 	_species("hokkigai", "Surf Clam", 30, "fatty", false)
 	_species("ebi", "Sweet Shrimp", 24, "lean", false)
@@ -107,8 +107,6 @@ func _make_gear() -> void:
 		"Longer reel bar: easier perfect catches, which means bigger fish.")
 	_gear("knife", "Knife", "knife", "cut_speed", [50, 120, 220], [0.0, 0.2, 0.4, 0.6],
 		"Faster cutting at the board.")
-	_gear("dishwasher", "Dishwasher", "dishwasher", "auto_wash", [80], [0.0, 1.0],
-		"Removes the end-of-day wash minigame entirely.")
 	_gear("tank", "Fish Tank", "tank", "tank_slots", [90, 180], [0.0, 1.0, 2.0],
 		"Two more slots for holding fish. Pairs with Ice Cold and hot days.")
 	_gear("tray", "Tray", "tray", "carry_slots", [120, 240], [0.0, 1.0, 2.0],

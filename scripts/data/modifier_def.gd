@@ -26,7 +26,7 @@ extends Resource
 ## Double serving: +1 plate from the same fish.
 @export var extra_plates := 0
 
-## Tint the sprite in the tank/tank so the player can see a rare at a
+## Tint the sprite in the tank/stock so the player can see a rare at a
 ## glance. White = no tint.
 @export var tint: Color = Color.WHITE
 

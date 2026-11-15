@@ -18,7 +18,7 @@ const TABLE_SCENE := preload("res://scenes/table.tscn")
 const TABLE_SLOTS: Array[Vector2] = [
 	Vector2(400, 330), Vector2(880, 330),
 	Vector2(400, 540), Vector2(880, 540),
-	Vector2(1080, 440), Vector2(270, 440),
+	Vector2(1080, 440), Vector2(340, 610),
 ]
 const SPAWN_MARKS: Array[float] = [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
 const SERVICE_WINDOW := 55.0
@@ -39,7 +39,7 @@ const TABLE_RANGE := 120.0
 var _tables: Array[Table] = []
 var _table_defs: Array[TableDef] = []
 var _slots: Array[Vector2] = []
-const PREFERENCES := ["lean", "fatty", "cheap", "rare"]
+const PREFERENCES := ["lean", "fatty", "cheap"]
 var _next_fish: FishInstance = null
 var _service_time := 0.0
 var _spawned := 0
@@ -55,7 +55,9 @@ func _ready() -> void:
 	_continue.pressed.connect(func(): RunState.advance_phase())
 	_player.interact_requested.connect(_on_interact)
 	# Fresh table layout every service: unique slots, random preferences.
-	_slots = TABLE_SLOTS.duplicate()
+	# Never place a table under the stock panel.
+	var panel_rect := Rect2(20, 90, 270, 380)
+	_slots = TABLE_SLOTS.filter(func(p): return not panel_rect.has_point(p))
 	_slots.shuffle()
 	RunState.stock_changed.connect(_rebuild_stock)
 	RunState.tank_changed.connect(_rebuild_tank)
@@ -98,7 +100,10 @@ func _process(delta: float) -> void:
 func _spawn_table(index: int) -> void:
 	# Duplicate the def so the shared resource's preference is never mutated.
 	var definition: TableDef = _table_defs[index % _table_defs.size()].duplicate()
-	definition.preference = PREFERENCES[RunState.rng.randi_range(0, PREFERENCES.size() - 1)]
+	var prefs := PREFERENCES.duplicate()
+	if RunState.weather == 2:  # expensive only makes sense when eel is around
+		prefs.append("expensive")
+	definition.preference = prefs[RunState.rng.randi_range(0, prefs.size() - 1)]
 	var t: Table = TABLE_SCENE.instantiate()
 	t.position = _slots[index % _slots.size()]
 	t.setup(definition)
@@ -110,10 +115,27 @@ func _spawn_table(index: int) -> void:
 func _on_interact() -> void:
 	if _ended:
 		return
+	if _player.position.distance_to(_tank_pos) < 160.0:
+		_store_selected()
+		return
 	if _player.position.distance_to(_board_pos) < BOARD_RANGE:
 		_take_plate()
 	else:
 		_serve()
+
+
+## Select a stock fish, stand at the tank, press E to store it.
+func _store_selected() -> void:
+	if _next_fish == null or not RunState.stock.has(_next_fish):
+		_msg.text = "Select a fish in stock first, then E at the tank."
+		return
+	if RunState.freeze(_next_fish):
+		_msg.text = "Stored %s in the fish tank." % _next_fish.species.display_name
+		_next_fish = null
+		_rebuild_stock()
+		_rebuild_tank()
+	else:
+		_msg.text = "The fish tank is full."
 
 
 func _take_plate() -> void:

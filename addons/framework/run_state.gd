@@ -85,7 +85,7 @@ var tank: Array[FishInstance] = []
 var tank_capacity := START_TANK_SLOTS
 
 # Gear tiers, 0 = stock starter item. Keys are fixed; the shop reads them.
-var gear := {"rod": 0, "knife": 0, "dishwasher": 0, "tank": 0, "tray": 0}
+var gear := {"rod": 0, "knife": 0, "tank": 0, "tray": 0}
 # Per-run training stats (bought in the nightly 3-of-N draft).
 var stats := {"luck": 0, "fishing": 0, "speed": 0}
 
@@ -117,7 +117,7 @@ func start_run(seed_value: int = 0) -> void:
 
 	stock.clear()
 	tank.clear()
-	gear = {"rod": 0, "knife": 0, "dishwasher": 0, "tank": 0, "tray": 0}
+	gear = {"rod": 0, "knife": 0, "tank": 0, "tray": 0}
 	stats = {"luck": 0, "fishing": 0, "speed": 0}
 	tank_capacity = START_TANK_SLOTS
 

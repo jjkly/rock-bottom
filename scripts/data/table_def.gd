@@ -15,6 +15,6 @@ extends Resource
 ## How many plates this table will order in total (shared, omakase).
 @export var plates_wanted := 2
 ## What they enjoy; matching plates get +20%. Must match SpeciesDef.preference.
-@export_enum("lean", "fatty", "rare", "cheap") var preference := "lean"
+@export_enum("lean", "fatty", "expensive", "cheap") var preference := "lean"
 ## Total time before they leave angry. 45s with 3 hearts = 15s per heart.
 @export var patience_seconds := 45.0

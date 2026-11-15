@@ -45,8 +45,7 @@ godot --path .                                        # play
 godot --headless --path . res://tests/smoke_flow.tscn # drives one day + results
 ```
 
-Still stubbed: cooking, the wash minigame, bestiary, meta unlocks, difficulty
-presets, audio, and all real art. Everything below still describes the target.
+Still stubbed: bestiary, meta unlocks, difficulty presets, audio, and all real art. Everything below still describes the target.
 
 ---
 
@@ -62,10 +61,9 @@ presets, audio, and all real art. Everything below still describes the target.
 - [x] Fish tank replaces the freezer (one day safe, heat still spoils, click to take)
 - [x] Preference tags + colours; tables shuffle position and preference per service
 - [x] Day-1 tutorial popups (pause, More, HUD "?")
-- [x] Store/dock backgrounds at 8x with dim; "Go to dock"
+- [x] Store/dock backgrounds cover-fill with dim; "Go to dock"
 - [x] 5x fisherman, E skips the crate, 2.16s reel, catch "!"
 - [x] Shop confirm when a purchase would break the installment; confirm before a short sleep
-- [ ] Cooking and wash minigames (stations still decorative)
 - [ ] Customer walk-in / seated sprites
 - [ ] Angry tables actually reduce tomorrow's flow
 - [ ] Audio
@@ -79,7 +77,7 @@ size, so the game can load art before art exists.
 |---|---|---|
 | `assets/sprites/fish/` | one PNG per species — **one image, no frames** | name **must** equal `SpeciesDef.id`: `lean_tuna.png`, `mackerel.png`, `eel.png` |
 | `assets/sprites/characters/` | player and customers | `player_<dir>_<frame>.png`, `<dir>` = `down`/`up`/`side`, `<frame>` = 0–3 (12 files total; left = flipped side, idle = frame 0) |
-| `assets/sprites/restaurant/` | tables, stations, tileset | fixed names: `table_2.png`, `cutting_board.png`, `stove.png`, `sink.png`, `tiles_floor.png` |
+| `assets/sprites/restaurant/` | tables, cutting board, tank, tileset | fixed names: `2 table.png`, `4 table.png`, `cutting_board.png`, `tank.png`, `tiles_floor.png` |
 | `assets/sprites/ui/` | 16×16 icons | fixed names: `heart_full.png`, `heart_empty.png`, `weather_clear.png`, `weather_hot.png`, `weather_rain.png`, `crate_frame.png`, `coin.png` |
 | `assets/audio/sfx/`, `assets/audio/music/` | sound | `sfx/<event>.ogg` (`serve.ogg`, `angry.ogg`, `crate_open.ogg`, `coin.ogg`, `reel_tick.ogg`) |
 
@@ -98,34 +96,31 @@ Godot, set **sprite** to the PNG, save. That is the only wiring step.
 
 ## Phase 1 — the evening scene (the big one)
 
-**Status:** playable. Player movement, stock panel, cut (instant), serve,
-preferences, patience, angry flow, auto-end. Cooking and wash are not wired.
+**Status:** playable. Player movement, stock panel, instant cut, serve,
+preferences, patience, tank storage, auto-end. No cooking or washing.
 
 **Owner:** one person. **You own `scenes/evening.tscn`; nobody else opens it.**
 
 Create in this order, saving after each step:
 
-1. `scenes/evening.tscn`, root `Node2D`, add a `TileMapLayer` named `Floor`
-   using `assets/sprites/restaurant/tiles_floor.png` as its TileSet.
-2. Add `Player` (`CharacterBody2D`): `CollisionShape2D` (capsule, 12×10 at the
-   feet), `Sprite2D`, and `scripts/systems/player.gd` reading `move_*` actions.
-   Put it on physics layer 2, mask 1.
-3. Add a `Node2D` named `YSort`, **Y Sort Enabled**. Player, tables and props
-   all go inside it so depth is automatic.
-4. Add `Stations` with three `Station` nodes (script
-   `scripts/systems/station.gd`): `CuttingBoard`, `Stove`, `Sink`. Each gets an
-   `Area2D` child on layer 3 that calls `station.interact()` on `interact`.
-5. Add `scenes/table.tscn`: `Node2D` + `Table` script + a `Sprite2D` and a
-   ticket bubble. The evening scene instantiates it once per `TableDef`.
-6. Spawn tables: for each `data/tables/*.tres`, instantiate, `setup(def)`,
-   place at a seat tile, `seat()` at the start of the evening phase.
-7. Carry: player has `carry_slots` from `RunState.gear["tray"]` (1 or 2). Plate
-   attach at 0.3 m, detach at 0.55 m.
-8. Service: `Station.plate_ready` → plate becomes carryable → player presses
-   `interact` at a table → `RunState.serve_plate(fish, table.definition.preference)`.
-9. Count `Table.left_angry`; every 2 → −1 table tomorrow (floor 3).
-10. End of day: run the `Sink` batch minigame unless
-	`RunState.gear["dishwasher"] >= 1`, then call `RunState.advance_phase()`.
+1. `scenes/evening.tscn`: `Background`, `Floor`, `Props` (CuttingBoard, Tank),
+   `Tables`, `Players/Player1`, and a `UI` CanvasLayer (stock, tank panel,
+   timer, message, continue).
+2. `Player` reads `p1_*` actions, `MOTION_MODE_FLOATING`, speed 300, and emits
+   `interact_requested`; the evening scene decides what E means.
+3. Tables: instantiate `scenes/table.tscn`, duplicate the `TableDef` so the
+   shared resource is never mutated, and reroll slot + preference per service.
+   Slots are filtered so none sit under the stock panel.
+4. Cut: click a stock fish to select it, stand at the board, press E. The fish
+   is marked `prepared` and a plate goes into the player's hands
+   (`RunState.take_plate`). Hold animations play while carrying.
+5. Serve: stand at a table, press E. `RunState.pay_plate` pays (with the +20%
+   preference match) and `Table.serve_plate` records satisfaction.
+6. Tank: select a stock fish + E to store; click a fish in the tank panel to
+   move it back to stock. One day safe, then spoils.
+7. Service ends when every table is closed or the 55 s window expires; the
+   Continue button calls `RunState.advance_phase()`.
+8. Cooking and washing do **not** exist; there is no stove/sink station.
 
 **Done when:** four tables seat, two get served and close satisfied, one
 starves and fires `left_angry`, and the day advances — all with magenta

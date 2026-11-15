@@ -67,8 +67,8 @@ day 7:   all cash settles the debt -> score = paid_total / 2000
 |---|---|---|---|
 | Morning | reads weather + news, opens shipments | none | today's plan |
 | Fishing | casts, reel bar, crate reveal | cast count (6→8 by day 7) | stock |
-| Evening | prep, cook, carry, serve, wash | table patience (45 s each) | cash |
-| Night | pays minimum, buys gear/training | none | next day, or score |
+| Evening | prep, carry, serve | table patience (45 s each) | cash |
+| Night | pays the installment, buys gear/training | none | next day, or score |
 
 ## Weather
 
@@ -89,9 +89,10 @@ Value chain: `species.base_price × size × modifier × aging`.
 - Crate → species, plus one rare slot at ~8% per cast (~3 rares per week).
 - Rares: **Golden** ×1.75 value · **Chroma** ×1.3 and +1 Luck · **Ice Cold**
   never ages or spoils · **Double Serving** +1 plate.
-- Aging: ×1.00 / ×1.25 / **×1.40 at 2 days** / ×1.15 / ×0.80 / ×0.50.
+- Tank: one day safe, the second night spoils. Ice Cold ignores the clock;
+  heat spoils everything except Ice Cold.
 - Serving pays full value, +20% when the fish matches the table's preference.
-  Selling raw pays 60% — the gap is the reason to cook and serve.
+  Selling raw pays 60% — the gap is the reason to serve.
 - Odds are hidden until a species is caught, then logged in the bestiary.
 
 ## Evening service
@@ -104,8 +105,8 @@ Overcooked with one player: walk, carry, plate, serve.
 | Ticket | 2–3 plates, shared, one preference tag |
 | Patience | 45 s, 3 hearts (15 s each), telegraphed by ring + audio |
 | Angry tables | every 2 → −1 table tomorrow (floor 3) |
-| Stations | cut (per fish), cook (optional), wash (end-of-day batch) |
-| Upgrade effect | dishwasher deletes the wash phase; tray carries 2 plates |
+| Stations | cut (per fish). Cooking and washing were cut from the design. |
+| Upgrade effect | tray carries 2 plates |
 
 Customers are a 4-state FSM (arriving → seated → eating → leaving); six
 agents, so tile A* or pre-baked seat paths, not a navmesh.
@@ -127,7 +128,7 @@ agents, so tile A* or pre-baked seat paths, not a navmesh.
 - Difficulty: Easy = unlimited free replays, −20% installments, ~100% clear.
   Medium = one replay costing the day's earnings, baseline, ~85%. Hard = no
   replay, +15% installments, ~70%.
-- Night shop: Equipment (rod, knife, dishwasher, fish tank, tray; durable,
+- Night shop: Equipment (rod, knife, fish tank, tray; durable,
   3 tiers each) and Training (one 3-of-N offer of Luck / Fishing / Speed,
   Luck may discount one). Both run-scoped.
 - Meta unlocks at 50/70/90% repaid: species, prep methods, bait, starting
@@ -155,10 +156,10 @@ presentation one.
 | Crate and rares | implemented | MVP | CS:GO-style scrolling raw-fish reel, rarity frames, rare slot | `scripts/phases/fishing.gd` |
 | Weather and news | implemented | MVP | Clear / hot / rain, announced each morning | `scripts/phases/morning.gd` |
 | Evening service | implemented | MVP | Single chef, 4–6 tables, plates carried from the top-row board | `scenes/evening.tscn` |
-| Stations and minigames | in progress | MVP | Cut works (instant); cook and wash are stubs | `scripts/systems/station.gd` |
+| Cut station | implemented | MVP | Instant cut at the board; cooking/washing removed | `scenes/evening.tscn` |
 | Shop and draft | implemented | MVP | Equipment rows + 3 unique training offers | `scripts/phases/shop.gd` |
 | Tutorial | implemented | MVP | Day-1 popup per phase, pauses, More section, HUD "?" | `scenes/tutorial.tscn` |
-| Backgrounds | implemented | MVP | Store on morning, dock on fishing, 8× with dim overlay | `scenes/morning.tscn` |
+| Backgrounds | implemented | MVP | Store on morning, dock on fishing, cover-fill with dim overlay | `scenes/morning.tscn` |
 | Bestiary | idea | later | Logs species and observed odds after first catch | — |
 | Meta unlocks | idea | later | Milestone pool-widening across runs | — |
 | Audio pass | idea | later | Service diegetics, crate reveal, debt sting | — |
@@ -174,7 +175,7 @@ screen with placeholder art and `tests/` is green. Tasks: PLAN.md phases 1–3.
 
 | Owner | Task | Done when |
 |---|---|---|
-| Evening | Player CharacterBody2D, carry (0.3/0.55 m band), seat assignment, Table spawn/serve, Station hookup, end-of-day wash | One table seated, served, satisfied; one table starves and fires `left_angry` |
+| Evening | Player CharacterBody2D, carry (0.3/0.55 m band), seat assignment, Table spawn/serve, cut station | One table seated, served, satisfied; one table starves and fires `left_angry` |
 | Fishing | Reel bar minigame → `size_slices`, crate reveal → species + rare, stock handoff | A cast produces a `FishInstance` in `RunState.stock` |
 | Run/UI | Morning news, night shop + draft, phase scene flow, HUD (cash, debt, day, weather), difficulty presets | Seven days advance without touching a debug key |
 | Art | Species silhouettes, player 4-dir walk, table + ticket bubble, stations | Placeholders replaced in the evening scene |
@@ -232,6 +233,8 @@ milestones. Only after M2 is fun.
   the contract says one owner per scene, and that has to be enforced socially.
 
 ## Change log
+
+**0.6 (2026-11-15):** tank store by selection + E; rare→expensive; tutorial More fits; table slots clear of inventory; backgrounds cover-fill; cooking/washing and dishwasher removed; flounder naming.
 
 **0.5 (2026-11-15):** tank replaces freezer (one day safe, heat still spoils); preference tags with colours; tables randomize per service; 5× fisherman, dock/store backgrounds, E skip, 2.16s reel; day-1 tutorial popups; shop confirmations.
 
