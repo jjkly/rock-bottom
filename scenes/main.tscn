@@ -1,41 +1,49 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://ctx318paihxw8"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://buls2lgum02qe" path="res://scripts/main.gd" id="1_main"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=403578298]
 script = ExtResource("1_main")
+metadata/_tc_uuid = "543940832878552373"
 
-[node name="PhaseHolder" type="Node" parent="."]
+[node name="PhaseHolder" type="Node" parent="." unique_id=2124300926]
+metadata/_tc_uuid = "1780532384193722890"
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=313023631]
 layer = 10
+metadata/_tc_uuid = "3056329218141304284"
 
-[node name="HudBg" type="ColorRect" parent="HUD"]
+[node name="HudBg" type="ColorRect" parent="HUD" unique_id=1976231749]
 offset_left = 12.0
 offset_top = 10.0
 offset_right = 620.0
 offset_bottom = 54.0
 color = Color(0.07, 0.07, 0.1, 0.92)
+metadata/_tc_uuid = "2168362377383861894"
 
-[node name="Row" type="HBoxContainer" parent="HUD"]
+[node name="Row" type="HBoxContainer" parent="HUD" unique_id=920288341]
 offset_left = 26.0
 offset_top = 18.0
 offset_right = 610.0
 offset_bottom = 48.0
 theme_override_constants/separation = 22
+metadata/_tc_uuid = "1921082944374641509"
 
-[node name="DayLabel" type="Label" parent="HUD/Row"]
+[node name="DayLabel" type="Label" parent="HUD/Row" unique_id=732639593]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Day 1/7"
+metadata/_tc_uuid = "5265363120149601140"
 
-[node name="MoneyLabel" type="Label" parent="HUD/Row"]
+[node name="MoneyLabel" type="Label" parent="HUD/Row" unique_id=704074121]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "$0  ·  debt $2000"
+metadata/_tc_uuid = "7884878914185162008"
 
-[node name="WeatherLabel" type="Label" parent="HUD/Row"]
+[node name="WeatherLabel" type="Label" parent="HUD/Row" unique_id=2052711310]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 18
 text = "CLEAR"
+metadata/_tc_uuid = "5817076199582192631"
