@@ -100,3 +100,5 @@ Art, design and code: the Rock Bottom team. Interior kit by **Bitglow**
 Freesound and Pixabay contributors. Full licence details are in
 [`docs/CREDITS.md`](docs/CREDITS.md) and in the in-game Settings → Credits
 panel.
+
+Have Fun!
