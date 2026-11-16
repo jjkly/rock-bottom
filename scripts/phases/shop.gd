@@ -7,6 +7,8 @@ extends Control
 ## content, not layout.
 ## ============================================================================
 
+const ContentCatalog := preload("res://scripts/data/content_catalog.gd")
+
 @onready var _cash_label: Label = $CashLabel
 @onready var _due_label: Label = $DueLabel
 @onready var _msg: Label = $Message
@@ -42,11 +44,10 @@ func _ready() -> void:
 
 
 func _load_gear() -> void:
-	for f in DirAccess.get_files_at("res://data/gear"):
-		if f.ends_with(".tres"):
-			var g := load("res://data/gear/" + f) as GearDef
-			if g != null:
-				_gear.append(g)
+	for f in ContentCatalog.tres_files("res://data/gear"):
+		var g := load("res://data/gear/" + f) as GearDef
+		if g != null:
+			_gear.append(g)
 	_gear.sort_custom(func(a, b): return a.id < b.id)
 
 

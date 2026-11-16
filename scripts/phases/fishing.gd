@@ -26,6 +26,7 @@ const PITCH := TILE_W + TILE_SEP
 const TILE_COUNT := 40
 const WIN_INDEX := 34
 const FILLER := "res://assets/sprites/ui/crate_frame.png"
+const ContentCatalog := preload("res://scripts/data/content_catalog.gd")
 
 @onready var _title: Label = $Title
 @onready var _caught: Label = $CaughtLabel
@@ -76,9 +77,7 @@ func _ready() -> void:
 
 func _load_content() -> void:
 	_pool.clear()
-	for f in DirAccess.get_files_at("res://data/species"):
-		if not f.ends_with(".tres"):
-			continue
+	for f in ContentCatalog.tres_files("res://data/species"):
 		var s := load("res://data/species/" + f) as SpeciesDef
 		if s == null:
 			continue
@@ -86,11 +85,10 @@ func _load_content() -> void:
 			continue
 		_pool.append(s)
 
-	for f in DirAccess.get_files_at("res://data/modifiers"):
-		if f.ends_with(".tres"):
-			var m := load("res://data/modifiers/" + f) as ModifierDef
-			if m != null:
-				_mods.append(m)
+	for f in ContentCatalog.tres_files("res://data/modifiers"):
+		var m := load("res://data/modifiers/" + f) as ModifierDef
+		if m != null:
+			_mods.append(m)
 
 
 func _unhandled_input(event: InputEvent) -> void:

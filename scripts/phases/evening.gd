@@ -24,6 +24,7 @@ const SPAWN_MARKS: Array[float] = [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
 const SERVICE_WINDOW := 55.0
 const BOARD_RANGE := 120.0
 const TABLE_RANGE := 120.0
+const ContentCatalog := preload("res://scripts/data/content_catalog.gd")
 
 @onready var _player: Player = $Players/Player1
 @onready var _tables_node: Node2D = $Tables
@@ -69,11 +70,10 @@ func _ready() -> void:
 
 
 func _load_tables() -> void:
-	for f in DirAccess.get_files_at("res://data/tables"):
-		if f.ends_with(".tres"):
-			var d := load("res://data/tables/" + f) as TableDef
-			if d != null:
-				_table_defs.append(d)
+	for f in ContentCatalog.tres_files("res://data/tables"):
+		var d := load("res://data/tables/" + f) as TableDef
+		if d != null:
+			_table_defs.append(d)
 	if _table_defs.is_empty():
 		_table_defs.append(TableDef.new())
 
